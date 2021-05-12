@@ -1,12 +1,17 @@
 import React from "react";
+import {useHistory} from 'react-router-dom'
 import styled from "styled-components";
 
 const SignUpEmail = ({ setToggleSignInMethod }) => {
+
+  const history = useHistory();
+
   const SignUpContainer = styled.div`
     display: grid;
+    padding-top:15%;
     height: 100vh;
     justify-content: end;
-    align-items: center;
+    align-items: flex-start;
     position: relative;
     grid-template-columns: minmax(15rem, 25em);
     padding-right: 10%;
@@ -30,7 +35,7 @@ const SignUpEmail = ({ setToggleSignInMethod }) => {
       color: #424242;
     }
 
-    button {
+      button {
       height:3em;
       width:50%;
       display:block;
@@ -78,14 +83,15 @@ const SignUpEmail = ({ setToggleSignInMethod }) => {
       <div>
         <h4>Sign Up</h4>
         <p>
-          Sign in with Google or Facebook, Click
+          Register with Google or Facebook, Click
           <span onClick={() => setToggleSignInMethod(false)}> here</span>
-          <InputField />
-          <InputField />
+          <InputField type="text" placeholder="Email" />
+          <InputField type="password" placeholder="Ange lösenord" />
+          <InputField type="password" placeholder="Bekräfta lösenord" />
           <button>Logga in</button>
         </p>
         <p>
-          Already have an account, Sign in <span> here</span>
+          Already have an account, Sign in <span onClick={()=> history.push('/login')}> here</span>
         </p>
       </div>
     </SignUpContainer>

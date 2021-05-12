@@ -1,11 +1,19 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import signin from "../assets/images/signin.jpg";
 import googleIcon from "../assets/icons/google-icon.svg";
 import facebookIcon from "../assets/icons/facebook-icon.svg";
+import SignInEmail from "./SignInEmail"
 
 const SignIn = () => {
+
+  const [toggleSignInMethod, setToggleSignInMethod] = useState(false);
+
+  const handleSignInMethod = () => {
+    setToggleSignInMethod(!toggleSignInMethod);
+  };
+
   const history = useHistory();
 
   const Wrapper = styled.section`
@@ -28,15 +36,17 @@ const SignIn = () => {
   `;
 
   const SignInContainer = styled.div`
+    padding-top:15%;
     display: grid;
-    height: 100vh;
+    height:100vh;
     justify-content: end;
-    align-items: center;
+    align-items: flex-start;
     position: relative;
     grid-template-columns: minmax(15rem, 25em);
     padding-right: 10%;
     padding-left: 10%;
     padding-bottom: 10em;
+
 
     h1 {
       -webkit-text-stroke: 3px #424242;
@@ -99,11 +109,11 @@ const SignIn = () => {
 
   return (
     <Wrapper>
-      <SignInContainer>
+      {toggleSignInMethod ? <SignInEmail setToggleSignInMethod={setToggleSignInMethod}/> : <SignInContainer>
         <div>
           <h4>Sign In</h4>
           <p>
-            Sign in with email and password, click <span>here</span>
+            Sign in with email and password, click <span onClick={handleSignInMethod}>here</span>
           </p>
           <SignInButton>
             <img src={googleIcon} alt="" />
@@ -117,7 +127,7 @@ const SignIn = () => {
             Don have an account, Click <span onClick={() => history.push('/register')}>here</span>
           </p>
         </div>
-      </SignInContainer>
+      </SignInContainer>}
     </Wrapper>
   );
 };

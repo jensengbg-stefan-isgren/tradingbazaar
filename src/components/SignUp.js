@@ -12,7 +12,7 @@ const SignUp = () => {
   const [toggleSignInMethod, setToggleSignInMethod] = useState(false);
 
   const handleSignInMethod = () => {
-    setToggleSignInMethod(true);
+    setToggleSignInMethod(!toggleSignInMethod);
   };
 
   const history = useHistory();
@@ -37,10 +37,11 @@ const SignUp = () => {
   `;
 
   const SignUpContainer = styled.div`
+    padding-top:15%;
     display: grid;
-    height: 100vh;
+    height:100vh;
     justify-content: end;
-    align-items: center;
+    align-items: flex-start;
     position: relative;
     grid-template-columns: minmax(15rem, 25em);
     padding-right: 10%;
