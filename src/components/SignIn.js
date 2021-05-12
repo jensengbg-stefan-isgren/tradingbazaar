@@ -48,17 +48,9 @@ const SignIn = () => {
     padding-bottom: 10em;
 
 
-    h1 {
-      -webkit-text-stroke: 3px #424242;
-      -webkit-text-fill-color: transparent;
-      font-family: "Passion One", cursive;
-      font-size: 4em;
-      font-weight: 700;
-    }
-
     p,span {
       color: ${props => props.theme.color.main};
-      font-family: "Open Sans", sans-serif;
+      font-family: ${props => props.theme.color.body};
       font-size: 1em;
     }
 
@@ -68,7 +60,7 @@ const SignIn = () => {
     }
 
     h4 {
-      font-family: "Passion One", cursive;
+      font-family: ${props => props.theme.font.title};
       font-size: 2em;
       color: ${props => props.theme.color.main}
     }
@@ -86,6 +78,7 @@ const SignIn = () => {
   `;
   const SignInButton = styled.button`
     padding-left: 1em;
+    border-radius:5px;
     width: 100%;
     display: grid;
     grid-template-columns: 10% 90%;
@@ -101,7 +94,7 @@ const SignIn = () => {
     p,
     img {
       justify-self: center;
-      font-family: "Open Sans", sans-serif;
+      font-family: ${props => props.theme.font.body};
       font-size: 1.2em;
       color: ${props => props.theme.color.main}
     }

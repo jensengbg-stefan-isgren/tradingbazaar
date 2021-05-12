@@ -78,6 +78,7 @@ const SignUp = () => {
   `;
   const RegisterButton = styled.button`
     padding-left: 1em;
+    border-radius:5px;
     cursor: pointer;
     width: 100%;
     display: grid;

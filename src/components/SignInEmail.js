@@ -1,9 +1,8 @@
 import React from "react";
-import {useHistory} from 'react-router-dom'
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 
 const SignInEmail = ({ setToggleSignInMethod }) => {
-
   const history = useHistory();
 
   const SignUpContainer = styled.div`
@@ -19,8 +18,8 @@ const SignInEmail = ({ setToggleSignInMethod }) => {
     padding-bottom: 10em;
 
     p {
-      color: #424242;
-      font-family: "Open Sans", sans-serif;
+      color: ${(props) => props.theme.color.main};
+      font-family: ${(props) => props.theme.font.body};
       font-size: 1em;
     }
 
@@ -30,16 +29,23 @@ const SignInEmail = ({ setToggleSignInMethod }) => {
     }
 
     h4 {
-      font-family: "Passion One", cursive;
+      font-family: ${(props) => props.theme.font.title};
       font-size: 2em;
-      color: #424242;
+      color: ${(props) => props.theme.color.main};
     }
 
       button {
-      height:3em;
+      outline:none;
+      border:none;
+      border-radius:5px;
+      height:2.5em;
       width:50%;
       display:block;
       margin: .5em 0em .5em auto;
+      cursor:pointer;
+      font-family: ${props => props.theme.font.title};
+      color: ${props => props.theme.color.main};
+      font-size:1em;
     }
 
     p:nth-child(2) {
@@ -57,7 +63,9 @@ const SignInEmail = ({ setToggleSignInMethod }) => {
       align-items: center;
     }
   `;
-  const InputField = styled.input`
+
+    const InputField = styled.input`
+    font-family: ${props => props.theme.font.body};
     padding-left: 1em;
     cursor: pointer;
     width: 100%;
@@ -69,29 +77,35 @@ const SignInEmail = ({ setToggleSignInMethod }) => {
     background-color: white;
     border-radius: 5px;
 
+    ::placeholder {
+      opacity: 0.8;
+      color: ${(props) => props.theme.color.main};
+      font-family: ${(props) => props.theme.font.body};
+    }
+
     p,
     img {
       justify-self: center;
-      font-family: "Open Sans", sans-serif;
+      font-family: ${(props) => props.theme.font.body};
       font-size: 1.2em;
-      color: #424242;
+      color: ${(props) => props.theme.color.main};
     }
   `;
 
   return (
     <SignUpContainer>
       <div>
-        <h4>Sign Up</h4>
+        <h4>Sign In</h4>
         <p>
-          Register with Google or Facebook, Click
+          Sign in with Google of Facebook, Click
           <span onClick={() => setToggleSignInMethod(false)}> here</span>
           <InputField type="text" placeholder="Email" />
-          <InputField type="password" placeholder="Ange lösenord" />
-          <InputField type="password" placeholder="Bekräfta lösenord" />
-          <button>Logga in</button>
+          <InputField type="password" placeholder="Enter password" />
+          <button>Login</button>
         </p>
         <p>
-          Already have an account, Sign in <span onClick={() => history.push('/register')}> here</span>
+          Already have an account, Sign in{" "}
+          <span onClick={() => history.push("/register")}> here</span>
         </p>
       </div>
     </SignUpContainer>
