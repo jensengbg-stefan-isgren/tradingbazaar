@@ -110,10 +110,20 @@ const SignInEmail = ({ setToggleSignInMethod }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+
+
+
+
   useEffect(() => {
-    validate();
+    
+      if (!email || password.length <= 0) {
+        setValid(false);
+      } else {
+        setValid(true);
+      }
+  
     return () => {};
-  }, [email, password]);
+  }, [email,password]);
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -129,14 +139,6 @@ const SignInEmail = ({ setToggleSignInMethod }) => {
       history.push("/profile/overview");
     } catch (error) {
       setErrorMessage(error.message)
-    }
-  };
-
-  const validate = () => {
-    if (!email || password.length <= 0) {
-      setValid(false);
-    } else {
-      setValid(true);
     }
   };
 

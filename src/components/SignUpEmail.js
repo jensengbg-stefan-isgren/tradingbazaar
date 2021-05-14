@@ -109,22 +109,22 @@ const SignUpEmail = ({ setToggleSignInMethod }) => {
   const [verifyPassword, setVerifyPassword] = useState("");
 
   useEffect(() => {
-    validate();
+   
+      if (
+        !email ||
+        password !== verifyPassword ||
+        password.length <= 0 ||
+        verifyPassword.length <= 0
+      ) {
+        setValid(false);
+      } else {
+        setValid(true);
+      }
+    
+  
     return () => {};
   }, [email, password, verifyPassword]);
 
-  const validate = () => {
-    if (
-      !email ||
-      password !== verifyPassword ||
-      password.length <= 0 ||
-      verifyPassword.length <= 0
-    ) {
-      setValid(false);
-    } else {
-      setValid(true);
-    }
-  };
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
