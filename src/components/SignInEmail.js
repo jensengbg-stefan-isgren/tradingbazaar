@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { auth } from "../services/firebase";
 import { useHistory } from "react-router-dom";
-import React, { useState, useEffect } from "react";
-import exclamationIcon from '../assets/icons/exclamation.svg'
+import React, { useState, useEffect, useRef } from "react";
+import exclamationIcon from "../assets/icons/exclamation.svg";
 
 const SignUpContainer = styled.div`
   display: grid;
@@ -63,7 +63,9 @@ const SignUpContainer = styled.div`
     text-align: center;
   }
 
-  p:nth-child(3) {
+
+
+  p:nth-child(4,3) {
     margin-left: auto;
   }
 
@@ -72,6 +74,11 @@ const SignUpContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  @media only screen and (max-width: 600px) {
+    padding-top: 5em;
+    align-items: flex-start;
   }
 `;
 
@@ -94,6 +101,10 @@ const InputField = styled.input`
     font-family: ${(props) => props.theme.font.body};
   }
 
+  :focus {
+      border: 2px solid rgba(0,0,0,.4)
+    }
+
   p,
   img {
     justify-self: center;
@@ -103,27 +114,28 @@ const InputField = styled.input`
   }
 `;
 
-const SignInEmail = ({ setToggleSignInMethod }) => {
-
-  const [errorMessage,setErrorMessage] = useState('')
-  const [valid, setValid] = useState(false);
+const SignInEmail = ({ setToggleSignInMethod,setToggleForgotCredentials }) => {
+  const emailInput = useRef();
   const [email, setEmail] = useState("");
+  const [valid, setValid] = useState(false);
   const [password, setPassword] = useState("");
-
-
-
-
+  const [isFocused, setIsFocused] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    
-      if (!email || password.length <= 0) {
-        setValid(false);
-      } else {
-        setValid(true);
-      }
-  
+    if (!isFocused) {
+      emailInput.current.focus();
+      setIsFocused(true);
+    }
+
+    if (!email && password.length <= 0) {
+      setValid(false);
+    } else {
+      setValid(true);
+    }
+
     return () => {};
-  }, [email,password]);
+  }, [email, password]);
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -138,7 +150,7 @@ const SignInEmail = ({ setToggleSignInMethod }) => {
       await auth.signInWithEmailAndPassword(email, password);
       history.push("/profile/overview");
     } catch (error) {
-      setErrorMessage(error.message)
+      setErrorMessage(error.message);
     }
   };
 
@@ -152,6 +164,7 @@ const SignInEmail = ({ setToggleSignInMethod }) => {
           Sign in with Google of Facebook, Click
           <span onClick={() => setToggleSignInMethod(false)}> here</span>
           <InputField
+            ref={emailInput}
             value={email}
             onChange={handleEmail}
             type="text"
@@ -167,14 +180,19 @@ const SignInEmail = ({ setToggleSignInMethod }) => {
             Login
           </button>
         </p>
+        <p>Forgot your credentials, no worries. Click <span onClick={() => setToggleForgotCredentials(true)}>here</span></p>
         <p>
           Already have an account, Sign in{" "}
           <span onClick={() => history.push("/register")}> here</span>
         </p>
-        {errorMessage ?   <div className="error-container">
-                <img className="warning-icon" src={exclamationIcon} alt="" />
-                <p>{errorMessage}</p>
-              </div> : <React.Fragment></React.Fragment>}
+        {errorMessage ? (
+          <div className="error-container">
+            <img className="warning-icon" src={exclamationIcon} alt="" />
+            <p>{errorMessage}</p>
+          </div>
+        ) : (
+          <React.Fragment></React.Fragment>
+        )}
       </div>
     </SignUpContainer>
   );

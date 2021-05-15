@@ -1,9 +1,10 @@
 const theme = {
   color: {
-    main:'#424242'
+    main:'#424242',
+    input: 'white'
   },
   button: {
-    color: 'FFFFFF'
+    color: 'white'
   },
   font: {
     title: '"Passion One", cursive;',

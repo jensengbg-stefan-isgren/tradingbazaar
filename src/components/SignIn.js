@@ -5,11 +5,12 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import firebase from "../services/firebase";
 import { useHistory } from "react-router-dom";
-import signin from "../assets/images/signin.jpg";
-import googleIcon from "../assets/icons/google-icon.svg";
-import facebookIcon from "../assets/icons/facebook-icon.svg";
-import exclamationIcon from "../assets/icons/exclamation.svg";
-import { checkIfRegistered } from "../features/auth/authSlice";
+import signin from "assets/images/signin.jpg";
+import googleIcon from "assets/icons/google-icon.svg";
+import facebookIcon from "assets/icons/facebook-icon.svg";
+import exclamationIcon from "assets/icons/exclamation.svg";
+import { checkIfRegistered } from "features/auth/authSlice";
+import ForgotCredentials from "../components/ForgotCredentials";
 
 const Wrapper = styled.section`
   position: relative;
@@ -26,7 +27,16 @@ const Wrapper = styled.section`
     background-image: url(${signin});
     opacity: 0.9;
     background-size: cover;
+    // blir konstigt i mobilvy behöver kolla på detta!
     background-position: center bottom 0%;
+  }
+
+  @media only screen and (max-width: 600px) {
+    ::before {
+      /* opacity: 0.4; */
+      min-height: 100vh;
+      background-position: 40% bottom;
+    }
   }
 `;
 
@@ -60,7 +70,7 @@ const SignInContainer = styled.div`
   }
 
   div > p:nth-child(5) {
-    margin-left: auto;
+    text-align: center;
   }
 
   div {
@@ -80,6 +90,11 @@ const SignInContainer = styled.div`
   .warning-icon {
     margin-bottom: 1em;
     height: 2em;
+  }
+
+  @media only screen and (max-width: 600px) {
+    padding-top: 15em;
+    align-items: flex-start;
   }
 `;
 const SignInButton = styled.button`
@@ -112,7 +127,7 @@ const SignInButton = styled.button`
 
 const SignIn = () => {
   const dispatch = useDispatch();
-
+  const [toggleForgotCredentials, setToggleForgotCredentials] = useState(false);
   const errorMessage = useSelector((state) => state.auth.errorMessage);
 
   const [toggleSignInMethod, setToggleSignInMethod] = useState(false);
@@ -133,7 +148,7 @@ const SignIn = () => {
       case "facebook":
         authProvider = new firebase.auth.FacebookAuthProvider();
         break;
-        default:
+      default:
     }
 
     try {
@@ -149,43 +164,61 @@ const SignIn = () => {
     }
   };
 
+  const SigninMethod = () => {
+    return (
+      <React.Fragment>
+        {toggleSignInMethod ? (
+          <SignInEmail
+            setToggleSignInMethod={setToggleSignInMethod}
+            setToggleForgotCredentials={setToggleForgotCredentials}
+          />
+        ) : (
+          <SignInContainer>
+            <div>
+              <h4>Sign In</h4>
+              <p>
+                Sign in with email and password, click
+                <span onClick={handleSignInMethod}> here</span>
+              </p>
+              <SignInButton onClick={() => registerAccount("google")}>
+                <img src={googleIcon} alt="" />
+                <p>Sign in with Google account</p>
+              </SignInButton>
+              <SignInButton
+                onClick={() => registerAccount("facebook")}
+                disabled={errorMessage}
+              >
+                <img src={facebookIcon} alt="" />
+                <p>Sign in with Facebook account</p>
+              </SignInButton>
+              <p>
+                Dont have an account, Click
+                <span onClick={() => history.push("/register")}> here</span>
+              </p>
+              {errorMessage ? (
+                <div className="error-container">
+                  <img className="warning-icon" src={exclamationIcon} alt="" />
+                  <p>{errorMessage}</p>
+                </div>
+              ) : (
+                <React.Fragment></React.Fragment>
+              )}
+            </div>
+          </SignInContainer>
+        )}
+      </React.Fragment>
+    );
+  };
+
   return (
     <Wrapper>
-      {toggleSignInMethod ? (
-        <SignInEmail setToggleSignInMethod={setToggleSignInMethod} />
+      {toggleForgotCredentials ? (
+        <ForgotCredentials
+          toggleForgotCredentials={toggleForgotCredentials}
+          setToggleForgotCredentials={setToggleForgotCredentials}
+        />
       ) : (
-        <SignInContainer>
-          <div>
-            <h4>Sign In</h4>
-            <p>
-              Sign in with email and password, click{" "}
-              <span onClick={handleSignInMethod}>here</span>
-            </p>
-            <SignInButton onClick={() => registerAccount("google")}>
-              <img src={googleIcon} alt="" />
-              <p>Sign in with Google account</p>
-            </SignInButton>
-            <SignInButton
-              onClick={() => registerAccount("facebook")}
-              disabled={errorMessage}
-            >
-              <img src={facebookIcon} alt="" />
-              <p>Sign in with Facebook account</p>
-            </SignInButton>
-            <p>
-              Dont have an account, Click{" "}
-              <span onClick={() => history.push("/register")}>here</span>
-            </p>
-            {errorMessage ? (
-              <div className="error-container">
-                <img className="warning-icon" src={exclamationIcon} alt="" />
-                <p>{errorMessage}</p>
-              </div>
-            ) : (
-              <React.Fragment></React.Fragment>
-            )}
-          </div>
-        </SignInContainer>
+        <SigninMethod />
       )}
     </Wrapper>
   );
