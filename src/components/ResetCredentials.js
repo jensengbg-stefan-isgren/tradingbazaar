@@ -165,10 +165,11 @@ const InputField = styled.input`
 `;
 
 const ResetCredentials = () => {
-  const [password, setPassword] = useState("");
-  const [verifyPassword, setVerifyPassword] = useState("");
   const [code, setCode] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [verifyPassword, setVerifyPassword] = useState("");
+  const [btnText,setBtnText] = useState('Save password')
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search); // id=123
@@ -182,8 +183,17 @@ const ResetCredentials = () => {
   const setNewPassword = async () => {
     const email = await firebase.auth().verifyPasswordResetCode(code);
     setEmail(email);
-    let response = await firebase.auth().confirmPasswordReset(code, password);
-    console.log(response);
+
+    try {
+      await firebase.auth().confirmPasswordReset(code, password);
+      setBtnText('Success, new password is set')
+      setPassword('')
+      setVerifyPassword('')
+    } catch (error) {
+      console.log(error)
+    }
+
+    
   };
 
   const handlePassword = (e) => {
@@ -199,7 +209,6 @@ const ResetCredentials = () => {
       <SignInContainer>
         <div>
           <h4>Reset your password</h4>
-
           <InputField
             onChange={handlePassword}
             value={password}
@@ -212,8 +221,7 @@ const ResetCredentials = () => {
             type="password"
             placeholder="Confirm password"
           />
-
-          <button disabled={(password !== verifyPassword) || password.length <= 0 || verifyPassword.length <= 0 } onClick={setNewPassword}>Save password</button>
+          <button disabled={(password !== verifyPassword) || password.length <= 0 || verifyPassword.length <= 0 } onClick={setNewPassword}>{btnText}</button>
         </div>
       </SignInContainer>
     </Wrapper>

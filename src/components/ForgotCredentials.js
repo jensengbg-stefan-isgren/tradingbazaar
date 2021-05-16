@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { auth } from "../services/firebase";
 import styled from "styled-components";
 
@@ -111,27 +111,46 @@ const InputField = styled.input`
 `;
 
 const ForgotCredentials = ({ setToggleForgotCredentials }) => {
+  const emailInput = useRef();
   const [email, setEmail] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const [btnText,setBtnText] = useState('Send me the link please')
+
+  useEffect(() => {
+    if (!isFocused) {
+      emailInput.current.focus();
+      setIsFocused(true);
+    }
+    return () => {};
+  }, []);
 
   const sendResetLink = async () => {
-    let response = await auth.sendPasswordResetEmail(email);
-    console.log(response);
+
+    try {
+      await auth.sendPasswordResetEmail(email);
+      setBtnText('Success, go check your email')
+    } catch (error) {
+      console.log(error)
+    }
+
+
+    
   };
 
   return (
     <SignUpContainer>
       <div>
         <h4>Send me a reset link</h4>
-
         <InputField
+          ref={emailInput}
           onChange={(e) => setEmail(e.target.value)}
           value={email}
           type="text"
           placeholder="Email"
         />
-
-        <button disabled={!email} onClick={sendResetLink}>Send me the link please</button>
-
+        <button disabled={!email} onClick={sendResetLink}>
+         {btnText}
+        </button>
         <p>
           Go back to login page{" "}
           <span onClick={() => setToggleForgotCredentials(false)}>here</span>
