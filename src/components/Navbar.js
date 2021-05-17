@@ -2,64 +2,86 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-const Navbar = () => {
-  const Navigation = styled.nav`
-    .container {
-      height: 4em;
-      padding: 0 2em;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
+const Navigation = styled.nav`
+.container {
+  height: 4em;
+  display:grid;
+  padding: 0 1em;
+  justify-content:center;
+  align-items:center;
+  grid-template-columns: repeat(3, 1fr);
+  
+  .logo {
+    display:grid;
+    place-content:flex-start;
+  }
 
-      select {
-        width: 100px;
-        height: 40px;
-        background-color: ${(props) => props.theme.color.main};
-        color: white;
-        outline: none;
-        border: none;
-        font-family: ${(props) => props.theme.font.body};
-        font-weight: 600;
-        font-size: 0.8em;
-        padding-left: .5em;
-      }
+  select {
+    height: 40px;
+    background-color: ${(props) => props.theme.color.main};
+    color: white;
+    outline: none;
+    border: none;
+    font-family: ${(props) => props.theme.font.body};
+    font-weight: 600;
+    font-size: 0.8em;
+    padding-left: .5em;
+  }
 
-      p {
-        font-family: ${(props) => props.theme.font.title};
-        color: ${(props) => props.theme.color.main};
-        font-size: 2em;
-      }
-    }
-
-    a {
-      margin: 0 1em;
-      text-decoration: none;
-    }
-  `;
-
-  const StyledLink = styled(Link)`
-    text-decoration: none;
+  p {
     font-family: ${(props) => props.theme.font.title};
     color: ${(props) => props.theme.color.main};
-    font-size: 1.4em;
-  `;
+    font-size: 2em;
+  }
+}
 
-  const StyledInput = styled.input`
-    border: 3px solid ${(props) => props.theme.color.main};
-    height: 40px;
-    width: 400px;
-    outline: none;
-    padding-left: 0.5em;
-    font-family: ${(props) => props.theme.font.body};
-    color: ${(props) => props.theme.color.body};
+.search-container {
+  width:100%;
+  display:grid;
+  place-content:center;
+  grid-template-columns: 6em 14em;
+}
 
-    ::placeholder {
-      font-family: ${(props) => props.theme.font.body};
-      color: ${(props) => props.theme.color.body};
-    }
-  `;
+a {
+  text-decoration: none;
+}
+.nav-links {
+  display:flex;
+  place-content:flex-end;
+  
+}
+`;
 
+const StyledLink = styled(Link)`
+text-decoration: none;
+font-family: ${(props) => props.theme.font.title};
+color: ${(props) => props.theme.color.main};
+font-size: 1.4em;
+
+:nth-child(2) {
+  margin-left:1em;
+}
+
+`;
+
+const StyledInput = styled.input`
+border: 3px solid ${(props) => props.theme.color.main};
+height: 40px;
+outline: none;
+padding-left: 0.5em;
+font-family: ${(props) => props.theme.font.body};
+color: ${(props) => props.theme.color.body};
+
+::placeholder {
+  font-family: ${(props) => props.theme.font.body};
+  color: ${(props) => props.theme.color.body};
+}
+
+`;
+
+
+const Navbar = () => {
+ 
   return (
     <Navigation>
       <div className="container">
