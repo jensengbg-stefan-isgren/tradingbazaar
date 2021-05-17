@@ -121,7 +121,7 @@ const SignUpEmail = ({ setToggleSignInMethod }) => {
   useEffect(() => {
     if (!isFocused) {
       emailInput.current.focus();
-      setIsFocused(true);
+      setIsFocused(true)
     }
     if (
       !email ||
@@ -135,7 +135,7 @@ const SignUpEmail = ({ setToggleSignInMethod }) => {
     }
 
     return () => {};
-  }, [email, password, verifyPassword]);
+  }, [email, password, verifyPassword,isFocused]);
 
   const handleEmail = (e) => {
     setEmail(e.target.value);

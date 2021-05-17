@@ -122,7 +122,7 @@ const ForgotCredentials = ({ setToggleForgotCredentials }) => {
       setIsFocused(true);
     }
     return () => {};
-  }, []);
+  }, [isFocused]);
 
   const sendResetLink = async () => {
 
