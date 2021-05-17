@@ -1,0 +1,22 @@
+{
+  "sellingProducts": [
+    {
+      "id": 10001,
+      "sellingUserId": 120001,
+      "sellingAlias": "Lillen",
+      "title": "Mina gamla tofflor",
+      "description": "Ett par tofflor köpta nere hos Pelle Gustavson på Valbogatan år 1985. Använt väldigt lite de första 3 åren, har glömt dem i pannrummet sedan dess. Parassitfria. Väldigt fint skick.",
+      "category": "shoes"
+    }
+  ],
+  "soldProducts": [],
+  "categories": [{ "id": 132, "name": "shoes", "searchCount": 2321 }],
+  "users": [
+    {
+      "id": 120001,
+      "firstName": "Lille",
+      "lastName": "Gubben",
+      "alias": "Lillen"
+    }
+  ]
+}
