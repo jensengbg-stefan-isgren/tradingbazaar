@@ -37,9 +37,10 @@ const Navigation = styled.nav`
 
 .search-container {
   width:100%;
+  grid-gap:5em;
   display:grid;
   place-content:center;
-  grid-template-columns: 6em 14em;
+  grid-template-columns: 10em 16em;
 }
 
 a {
@@ -90,7 +91,7 @@ const Navbar = () => {
         </div>
         <div className="search-container">
           <select name="category" id="category">
-            <option value="">nojjan</option>
+            <option value="">Categories</option>
           </select>
           <StyledInput placeholder="What are you looking for today?" />
         </div>
