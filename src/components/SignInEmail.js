@@ -135,7 +135,7 @@ const SignInEmail = ({ setToggleSignInMethod,setToggleForgotCredentials }) => {
     }
 
     return () => {};
-  }, [email, password]);
+  }, [email, password,isFocused]);
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
