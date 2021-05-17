@@ -102,33 +102,33 @@ const SignInContainer = styled.div`
     align-items: flex-start;
   }
 `;
-const SignInButton = styled.button`
-  padding-left: 1em;
-  border-radius: 5px;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 10% 90%;
-  align-items: center;
-  height: 55px;
-  outline: none;
-  border: none;
-  margin: 0.5em 0;
-  background-color: ${(props) => props.theme.button.color};
-  border-radius: 5px;
-  cursor: pointer;
+// const SignInButton = styled.button`
+//   padding-left: 1em;
+//   border-radius: 5px;
+//   width: 100%;
+//   display: grid;
+//   grid-template-columns: 10% 90%;
+//   align-items: center;
+//   height: 55px;
+//   outline: none;
+//   border: none;
+//   margin: 0.5em 0;
+//   background-color: ${(props) => props.theme.button.color};
+//   border-radius: 5px;
+//   cursor: pointer;
 
-  p,
-  img {
-    justify-self: center;
-    font-family: ${(props) => props.theme.font.body};
-    font-size: 1.2em;
-    color: ${(props) => props.theme.color.main};
-  }
+//   p,
+//   img {
+//     justify-self: center;
+//     font-family: ${(props) => props.theme.font.body};
+//     font-size: 1.2em;
+//     color: ${(props) => props.theme.color.main};
+//   }
 
-  :disabled {
-    cursor: not-allowed;
-  }
-`;
+//   :disabled {
+//     cursor: not-allowed;
+//   }
+// `;
 
 
 

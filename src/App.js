@@ -9,7 +9,7 @@ import firebase from "./services/firebase";
 import NavbarMobile from 'components/NavbarMobile'
 import {useMediaQuery} from 'functions/UseMediaQuery'
 import { ThemeProvider } from "styled-components";
-import React, { useEffect,useContext } from "react";
+import React, { useEffect } from "react";
 import { createGlobalStyle } from "styled-components";
 import NavbarProfile from "./components/NavbarProfile";
 import { useSelector, useDispatch } from "react-redux";
@@ -61,7 +61,7 @@ const App = () => {
                 <Route path={"/register"} component={Register} />
                 <Route path={"/login"} component={Login} />
                 {showMobileNav && <NavbarMobile/>}
-                {isAuthenticated ? <NavbarProfile /> : <Navbar />}
+            {isAuthenticated  ? <NavbarProfile /> : <Navbar />}
                 <Route path={"/profile/overview"} component={Profile} />
               </Switch>
             </div>
