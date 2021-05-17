@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import exclamationIcon from "../assets/icons/exclamation.svg";
-import { auth } from "../services/firebase";
+import exclamationIcon from "assets/icons/exclamation.svg";
+import { auth } from "services/firebase";
 import { useHistory } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const SignUpContainer = styled.div`
   display: grid;
-  padding-top: 15%;
+  padding-top: 28vh;
   height: 100vh;
   justify-content: end;
   align-items: flex-start;
@@ -63,15 +63,17 @@ const SignUpContainer = styled.div`
     text-align: center;
   }
 
-  p:nth-child(3) {
-    margin-left: auto;
-  }
 
   div {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  @media only screen and (max-width: 600px) {
+    padding-top: 5em;
+    align-items: flex-start;
   }
 `;
 const InputField = styled.input`
@@ -99,32 +101,41 @@ const InputField = styled.input`
     font-size: 1.2em;
     color: #424242;
   }
+
+  :focus {
+      border: 2px solid rgba(0,0,0,.4)
+    }
+
 `;
 
 const SignUpEmail = ({ setToggleSignInMethod }) => {
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [valid, setValid] = useState(false);
+  
+  const emailInput = useRef();
   const [email, setEmail] = useState("");
+  const [valid, setValid] = useState(false);
   const [password, setPassword] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [verifyPassword, setVerifyPassword] = useState("");
 
   useEffect(() => {
-   
-      if (
-        !email ||
-        password !== verifyPassword ||
-        password.length <= 0 ||
-        verifyPassword.length <= 0
-      ) {
-        setValid(false);
-      } else {
-        setValid(true);
-      }
-    
-  
+    if (!isFocused) {
+      emailInput.current.focus();
+      setIsFocused(true);
+    }
+    if (
+      !email ||
+      password !== verifyPassword ||
+      password.length <= 0 ||
+      verifyPassword.length <= 0
+    ) {
+      setValid(false);
+    } else {
+      setValid(true);
+    }
+
     return () => {};
   }, [email, password, verifyPassword]);
-
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -141,8 +152,7 @@ const SignUpEmail = ({ setToggleSignInMethod }) => {
   const registerEmail = async () => {
     try {
       await auth.createUserWithEmailAndPassword(email, password);
-      history.push('/profile/overview')
-      
+      history.push("/profile/overview");
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -158,6 +168,7 @@ const SignUpEmail = ({ setToggleSignInMethod }) => {
           Register with Google or Facebook, Click
           <span onClick={() => setToggleSignInMethod(false)}> here</span>
           <InputField
+            ref={emailInput}
             value={email}
             onChange={handleEmail}
             type="text"

@@ -1,26 +1,29 @@
-import {createSlice} from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
-export const authSlice = createSlice({
-  name:'auth', 
-    initialState: {
-      isAuthenticated: null,
-      isRegistered: null,
-      errorMessage: null
+export const adSlice = createSlice({
+  name: 'newAd',
+  initialState: {
+    title: '',
+    description: '',
+    category: '',
+    startPrice: 0,
+    acceptedPrice: 0,
+    productConditions: '',
+    adEndDate: 0,
+    imgLink1: '',
+    imgLink2: '',
+    imgLink3: '',
+    imgLink4: '',
+    imgLink5: '',
   },
 
-reducers: {
-  authenticateUser : (state,action) => {
-    state.isAuthenticated = action.payload
+  reducers: {
+    adInputEdit: (state, action) => {
+      const { field, value } = action.payload
+      state[field] = value
+    },
   },
-  checkIfRegistered : (state, action) => {
-    const {status,message} = action.payload
-    state.isRegistered = status
-    state.errorMessage = message
-  }
-}
 })
 
-
-
-export const {authenticateUser,checkIfRegistered} = authSlice.actions
-export default authSlice.reducer
+export const { adInputEdit } = adSlice.actions
+export default adSlice.reducer

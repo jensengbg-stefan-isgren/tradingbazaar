@@ -2,12 +2,12 @@ import styled from "styled-components";
 import SignUpEmail from "./SignUpEmail";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import firebase from "services/firebase";
 import { useHistory } from "react-router-dom";
-import signup from "../assets/images/signup.jpg";
-import firebase from "../services/firebase";
-import googleIcon from "../assets/icons/google-icon.svg";
-import facebookIcon from "../assets/icons/facebook-icon.svg";
-import { checkIfRegistered } from "../features/auth/authSlice";
+import signup from "assets/images/signup.jpg";
+import googleIcon from "assets/icons/google-icon.svg";
+import facebookIcon from "assets/icons/facebook-icon.svg";
+import { checkIfRegistered } from "features/auth/authSlice";
 
 const Wrapper = styled.section`
   position: relative;
@@ -26,19 +26,25 @@ const Wrapper = styled.section`
     background-size: cover;
     background-position: center center;
   }
+
+  @media only screen and (max-width: 600px) {
+    ::before {
+      /* opacity: 0.4; */
+      background-position-x: 30%;
+    }
+  }
 `;
 
 const SignUpContainer = styled.div`
-  padding-top: 15%;
+  padding-top: 28vh;
   display: grid;
-  height: 100vh;
+  height: auto;
   justify-content: end;
   align-items: flex-start;
   position: relative;
   grid-template-columns: minmax(15rem, 25em);
   padding-right: 10%;
   padding-left: 10%;
-  padding-bottom: 10em;
 
   p {
     color: ${(props) => props.theme.color.main};
@@ -58,7 +64,7 @@ const SignUpContainer = styled.div`
   }
 
   div > p:nth-child(5) {
-    margin-left: auto;
+    text-align:center;
   }
 
   div {
@@ -66,6 +72,10 @@ const SignUpContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+  @media only screen and (max-width: 600px) {
+    padding-top: 15em;
+    align-items: flex-start;
   }
 `;
 const RegisterButton = styled.button`
@@ -113,7 +123,7 @@ const SignUp = () => {
       case "facebook":
         authProvider = new firebase.auth.FacebookAuthProvider();
         break;
-        default:
+      default:
     }
 
     try {
@@ -122,15 +132,13 @@ const SignUp = () => {
       //Skapa profil under users i databasen!
 
       history.push("/profile/overview");
-    } catch ({ code,message }) {
+    } catch ({ code, message }) {
       if (code === "auth/account-exists-with-different-credential") {
-        await dispatch(checkIfRegistered({status:true,message:message}));
+        await dispatch(checkIfRegistered({ status: true, message: message }));
         history.push("/login");
       }
     }
   };
-
-
 
   return (
     <Wrapper>
@@ -142,7 +150,7 @@ const SignUp = () => {
             <h4>Sign Up</h4>
             <p>
               Register with email and password, Click
-              <span onClick={handleSignInMethod}> here</span>
+              <span onClick={() => handleSignInMethod()}> here</span>
             </p>
             <RegisterButton onClick={() => registerAccount("google")}>
               <img src={googleIcon} alt="google icon" />

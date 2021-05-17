@@ -4,14 +4,18 @@ import styled from 'styled-components'
 const Navigation = styled.nav`
   .container {
     height: 4em;
-    padding: 0 2em;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    display: grid;
+    padding: 0 1em;
+    justify-content: center;
     align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+
+    .logo {
+      display: grid;
+      place-content: flex-start;
+    }
 
     select {
-      width: 100px;
       height: 40px;
       background-color: ${(props) => props.theme.color.main};
       color: white;
@@ -30,9 +34,19 @@ const Navigation = styled.nav`
     }
   }
 
+  .search-container {
+    width: 100%;
+    display: grid;
+    place-content: center;
+    grid-template-columns: 6em 14em;
+  }
+
   a {
-    margin: 0 1em;
     text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    place-content: flex-end;
   }
 `
 
@@ -41,12 +55,15 @@ const StyledLink = styled(Link)`
   font-family: ${(props) => props.theme.font.title};
   color: ${(props) => props.theme.color.main};
   font-size: 1.4em;
+
+  :nth-child(2) {
+    margin-left: 1em;
+  }
 `
 
 const StyledInput = styled.input`
   border: 3px solid ${(props) => props.theme.color.main};
   height: 40px;
-  width: 400px;
   outline: none;
   padding-left: 0.5em;
   font-family: ${(props) => props.theme.font.body};

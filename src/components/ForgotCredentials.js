@@ -1,8 +1,6 @@
-import styled from "styled-components";
+import React, { useState, useRef, useEffect } from "react";
 import { auth } from "services/firebase";
-import { useHistory } from "react-router-dom";
-import React, { useState, useEffect, useRef } from "react";
-import exclamationIcon from "assets/icons/exclamation.svg";
+import styled from "styled-components";
 
 const SignUpContainer = styled.div`
   display: grid;
@@ -63,9 +61,7 @@ const SignUpContainer = styled.div`
     text-align: center;
   }
 
-
-
-  p:nth-child(4,3) {
+  p:nth-child(4, 3) {
     margin-left: auto;
   }
 
@@ -102,8 +98,8 @@ const InputField = styled.input`
   }
 
   :focus {
-      border: 2px solid rgba(0,0,0,.4)
-    }
+    border: 2px solid rgba(0, 0, 0, 0.4);
+  }
 
   p,
   img {
@@ -114,88 +110,54 @@ const InputField = styled.input`
   }
 `;
 
-const SignInEmail = ({ setToggleSignInMethod,setToggleForgotCredentials }) => {
+const ForgotCredentials = ({ setToggleForgotCredentials }) => {
   const emailInput = useRef();
   const [email, setEmail] = useState("");
-  const [valid, setValid] = useState(false);
-  const [password, setPassword] = useState("");
   const [isFocused, setIsFocused] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [btnText,setBtnText] = useState('Send me the link please')
 
   useEffect(() => {
     if (!isFocused) {
       emailInput.current.focus();
       setIsFocused(true);
     }
-
-    if (!email && password.length <= 0) {
-      setValid(false);
-    } else {
-      setValid(true);
-    }
-
     return () => {};
-  }, [email, password]);
+  }, []);
 
-  const handleEmail = (e) => {
-    setEmail(e.target.value);
-  };
+  const sendResetLink = async () => {
 
-  const handlePassword = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const login = async () => {
     try {
-      await auth.signInWithEmailAndPassword(email, password);
-      history.push("/profile/overview");
+      await auth.sendPasswordResetEmail(email);
+      setBtnText('Success, go check your email')
     } catch (error) {
-      setErrorMessage(error.message);
+      console.log(error)
     }
-  };
 
-  const history = useHistory();
+
+    
+  };
 
   return (
     <SignUpContainer>
       <div>
-        <h4>Sign In</h4>
+        <h4>Send me a reset link</h4>
+        <InputField
+          ref={emailInput}
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          type="text"
+          placeholder="Email"
+        />
+        <button disabled={!email} onClick={sendResetLink}>
+         {btnText}
+        </button>
         <p>
-          Sign in with Google of Facebook, Click
-          <span onClick={() => setToggleSignInMethod(false)}> here</span>
-          <InputField
-            ref={emailInput}
-            value={email}
-            onChange={handleEmail}
-            type="text"
-            placeholder="Email"
-          />
-          <InputField
-            value={password}
-            onChange={handlePassword}
-            type="password"
-            placeholder="Enter password"
-          />
-          <button disabled={!valid} onClick={login}>
-            Login
-          </button>
+          Go back to login page{" "}
+          <span onClick={() => setToggleForgotCredentials(false)}>here</span>
         </p>
-        <p>Forgot your credentials, no worries. Click <span onClick={() => setToggleForgotCredentials(true)}>here</span></p>
-        <p>
-          Already have an account, Sign in{" "}
-          <span onClick={() => history.push("/register")}> here</span>
-        </p>
-        {errorMessage ? (
-          <div className="error-container">
-            <img className="warning-icon" src={exclamationIcon} alt="" />
-            <p>{errorMessage}</p>
-          </div>
-        ) : (
-          <React.Fragment></React.Fragment>
-        )}
       </div>
     </SignUpContainer>
   );
 };
 
-export default SignInEmail;
+export default ForgotCredentials;
