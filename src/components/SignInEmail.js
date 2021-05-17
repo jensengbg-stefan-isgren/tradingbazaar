@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import { auth } from "../services/firebase";
+import { auth } from "services/firebase";
 import { useHistory } from "react-router-dom";
 import React, { useState, useEffect, useRef } from "react";
-import exclamationIcon from "../assets/icons/exclamation.svg";
+import exclamationIcon from "assets/icons/exclamation.svg";
 
 const SignUpContainer = styled.div`
   display: grid;
-  padding-top: 15%;
+  padding-top: 28vh;
   height: 100vh;
   justify-content: end;
   align-items: flex-start;

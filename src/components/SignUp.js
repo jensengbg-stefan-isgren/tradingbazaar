@@ -2,12 +2,12 @@ import styled from "styled-components";
 import SignUpEmail from "./SignUpEmail";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import firebase from "../services/firebase";
+import firebase from "services/firebase";
 import { useHistory } from "react-router-dom";
-import signup from "../assets/images/signup.jpg";
-import googleIcon from "../assets/icons/google-icon.svg";
-import facebookIcon from "../assets/icons/facebook-icon.svg";
-import { checkIfRegistered } from "../features/auth/authSlice";
+import signup from "assets/images/signup.jpg";
+import googleIcon from "assets/icons/google-icon.svg";
+import facebookIcon from "assets/icons/facebook-icon.svg";
+import { checkIfRegistered } from "features/auth/authSlice";
 
 const Wrapper = styled.section`
   position: relative;
@@ -36,7 +36,7 @@ const Wrapper = styled.section`
 `;
 
 const SignUpContainer = styled.div`
-  padding-top: 15%;
+  padding-top: 28vh;
   display: grid;
   height: auto;
   justify-content: end;

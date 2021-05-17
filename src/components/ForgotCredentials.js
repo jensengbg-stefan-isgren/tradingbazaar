@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { auth } from "../services/firebase";
+import { auth } from "services/firebase";
 import styled from "styled-components";
 
 const SignUpContainer = styled.div`
   display: grid;
-  padding-top: 15%;
+  padding-top: 28vh;
   height: 100vh;
   justify-content: end;
   align-items: flex-start;

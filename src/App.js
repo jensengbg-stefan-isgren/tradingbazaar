@@ -2,17 +2,19 @@ import "./App.css";
 import "./styles/fonts.css";
 import Login from "./pages/Login";
 import theme from "./styles/theme";
-import Profile from './pages/Profile'
+import Profile from "./pages/Profile";
 import Register from "./pages/Register";
-import React, { useEffect } from "react";
 import Navbar from "./components/Navbar";
 import firebase from "./services/firebase";
+import NavbarMobile from 'components/NavbarMobile'
+import {useMediaQuery} from 'functions/UseMediaQuery'
 import { ThemeProvider } from "styled-components";
+import React, { useEffect,useContext } from "react";
 import { createGlobalStyle } from "styled-components";
 import NavbarProfile from "./components/NavbarProfile";
 import { useSelector, useDispatch } from "react-redux";
-import { authenticateUser } from "./features/auth/authSlice";
 import ResetCredentials from "components/ResetCredentials";
+import { authenticateUser } from "./features/auth/authSlice";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 const GlobalStyle = createGlobalStyle`
@@ -25,16 +27,18 @@ const GlobalStyle = createGlobalStyle`
 
 const App = () => {
 
-  const dispatch = useDispatch()
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
+  const showMobileNav = useMediaQuery('(max-width:768px)')
   
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log(user)
-        dispatch((authenticateUser(true)))
+        console.log(user);
+        dispatch(authenticateUser(true));
       } else {
-        dispatch((authenticateUser(false)))
+        dispatch(authenticateUser(false));
       }
     });
     return () => {
@@ -43,22 +47,27 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <React.Fragment>
-      <Router>
-        <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          <div className="App">
-            <Switch>
-              <Route path={"/resetcredentials"} component={ResetCredentials} />
-              <Route path={"/register"} component={Register} />
-              <Route path={"/login"} component={Login} />
-              {isAuthenticated ? <NavbarProfile /> : <Navbar />}
-              <Route path={"/profile/overview"} component={Profile} />
-            </Switch>
-          </div>
-        </ThemeProvider>
-      </Router>
-    </React.Fragment>
+
+      <React.Fragment>
+        <Router>
+          <ThemeProvider theme={theme}>
+            <GlobalStyle />
+            <div className="App">
+              <Switch>
+                <Route
+                  path={"/resetcredentials"}
+                  component={ResetCredentials}
+                />
+                <Route path={"/register"} component={Register} />
+                <Route path={"/login"} component={Login} />
+                {showMobileNav && <NavbarMobile/>}
+                {isAuthenticated ? <NavbarProfile /> : <Navbar />}
+                <Route path={"/profile/overview"} component={Profile} />
+              </Switch>
+            </div>
+          </ThemeProvider>
+        </Router>
+      </React.Fragment>
   );
 };
 

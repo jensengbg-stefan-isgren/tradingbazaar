@@ -1,21 +1,21 @@
 import styled from "styled-components";
 import React, { useState } from "react";
 import SignInEmail from "./SignInEmail";
+import firebase from "services/firebase";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import firebase from "../services/firebase";
 import { useHistory } from "react-router-dom";
 import signin from "assets/images/signin.jpg";
 import googleIcon from "assets/icons/google-icon.svg";
 import facebookIcon from "assets/icons/facebook-icon.svg";
 import exclamationIcon from "assets/icons/exclamation.svg";
 import { checkIfRegistered } from "features/auth/authSlice";
-import ForgotCredentials from "../components/ForgotCredentials";
+import ForgotCredentials from "components/ForgotCredentials";
 
 const Wrapper = styled.section`
   position: relative;
   height: 100vh;
-  width: 100%;
+  width: 100vw;
 
   ::before {
     content: "";
@@ -41,7 +41,7 @@ const Wrapper = styled.section`
 `;
 
 const SignInContainer = styled.div`
-  padding-top: 15%;
+  padding-top: 28vh;
   display: grid;
   height: 100vh;
   justify-content: end;

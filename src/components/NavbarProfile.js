@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import firebase,{auth} from '../services/firebase'
+import firebase,{auth} from 'services/firebase'
 
 
 const Navigation = styled.nav`
