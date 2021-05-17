@@ -166,7 +166,7 @@ const InputField = styled.input`
 
 const ResetCredentials = () => {
   const [code, setCode] = useState("");
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [verifyPassword, setVerifyPassword] = useState("");
   const [btnText,setBtnText] = useState('Save password')
@@ -181,8 +181,8 @@ const ResetCredentials = () => {
   }, []);
 
   const setNewPassword = async () => {
-    const email = await firebase.auth().verifyPasswordResetCode(code);
-    setEmail(email);
+    await firebase.auth().verifyPasswordResetCode(code);
+   
 
     try {
       await firebase.auth().confirmPasswordReset(code, password);
