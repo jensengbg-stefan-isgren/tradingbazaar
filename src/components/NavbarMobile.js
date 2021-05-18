@@ -1,8 +1,60 @@
-import React, { useState, useRef, useEffect } from "react";
-import menuIcon from "assets/icons/menu.svg";
+import firebase from "firebase";
+import {auth} from "services/firebase"
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import menuIcon from "assets/icons/menu.svg";
 import userIcon from "assets/icons/user.svg";
+import { useHistory } from "react-router-dom";
 import searchIcon from "assets/icons/search.svg";
+import googleIcon from "assets/icons/google-icon.svg";
+import facebookIcon from "assets/icons/facebook-icon.svg";
+import React, { useState, useRef, useEffect } from "react";
+import { checkIfRegistered } from "features/auth/authSlice";
+
+const Menu = styled.div`
+  position: absolute;
+  padding-top: 2em;
+  top: 64px;
+  left: -250px;
+  background-color: #525253;
+  height: 100vh;
+  width: 250px;
+  transition: transform 0.5s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  h3 {
+    font-family: ${(props) => props.theme.font.title};
+    font-weight: normal;
+  }
+
+  .email-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      width: 100%;
+      display: block;
+    }
+  }
+
+  .member-container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      width: 100%;
+      display: block;
+    }
+  }
+`;
 
 const SignInButton = styled.button`
   padding-left: 1em;
@@ -10,7 +62,7 @@ const SignInButton = styled.button`
   width: 50%;
   display: grid;
   grid-template-columns: 10% 90%;
-  place-content:center;
+  place-content: center;
   height: 40px;
   outline: none;
   border: none;
@@ -18,24 +70,58 @@ const SignInButton = styled.button`
   background-color: ${(props) => props.theme.button.color};
   border-radius: 5px;
   cursor: pointer;
-`;
 
+  p {
+    font-family: ${(props) => props.theme.font.title};
+    color: ${(props) => props.theme.color.main};
+    font-size: 1em;
+  }
+`;
 
 const User = styled.div`
   position: absolute;
-  padding-top:2em;
+  padding-top: 2em;
   top: 64px;
-  right: -200px;
+  right: -250px;
   background-color: #525253;
   height: 100vh;
-  width: 200px;
+  width: 250px;
   transition: transform 0.5s ease-in-out;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-start;
-  align-items:center;
-`;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 
+  h3 {
+    font-family: ${(props) => props.theme.font.title};
+    font-weight: normal;
+  }
+
+  .email-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      width: 100%;
+      display: block;
+    }
+  }
+
+  .member-container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      width: 100%;
+      display: block;
+    }
+  }
+`;
 
 const Navigation = styled.nav`
   height: 100vh;
@@ -51,7 +137,11 @@ const Navigation = styled.nav`
     position: relative;
 
     .sliding {
-      transform: translateX(-200px);
+      transform: translateX(-250px);
+    }
+
+    .sliding-left {
+      transform: translateX(250px);
     }
 
     .logo {
@@ -62,6 +152,12 @@ const Navigation = styled.nav`
 
       img {
         height: 20px;
+      }
+
+      p {
+        font-family: ${(props) => props.theme.font.title};
+        color: ${(props) => props.theme.color.main};
+        font-size: 2em;
       }
     }
 
@@ -79,12 +175,6 @@ const Navigation = styled.nav`
       font-weight: 600;
       font-size: 0.8em;
       padding-left: 0.5em;
-    }
-
-    p {
-      font-family: ${(props) => props.theme.font.title};
-      color: ${(props) => props.theme.color.main};
-      font-size: 2em;
     }
   }
 
@@ -131,7 +221,12 @@ const StyledInput = styled.input`
   }
 `;
 
+
+
 const NavbarMobile = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClick);
     return () => {
@@ -141,14 +236,18 @@ const NavbarMobile = () => {
 
   const handleClick = (e) => {
     if (node.current.contains(e.target)) {
-      return;
+    } else if (usr.current.contains(e.target)) {
     } else {
       setToggleUserMenu(false);
     }
   };
 
+  const [email,setEmail] = useState('')
+  const [password,setPassword] = useState('')
+  const [errorMessage,setErrorMessage] = useState('');
   const [toggleVisibleSearch, setToggleVisibleSearch] = useState(false);
   const [toggleUserMenu, setToggleUserMenu] = useState(false);
+  const [toggleMenu, setToggleMenu] = useState(false);
 
   const toggleSearchInput = () => {
     if (toggleUserMenu) {
@@ -157,27 +256,102 @@ const NavbarMobile = () => {
     setToggleVisibleSearch(!toggleVisibleSearch);
   };
 
+  const usr = useRef();
   const node = useRef();
 
-  const toggleMenu = () => {
- setToggleUserMenu(!toggleUserMenu)
+  const toggleAccountMenu = () => {
+    if (toggleVisibleSearch) {
+      setToggleVisibleSearch(!toggleVisibleSearch);
+    }
+
+    setToggleUserMenu(!toggleUserMenu);
+  };
+
+  const toggleMainMenu = () => {
+    setToggleMenu(!toggleMenu);
+  };
+
+
+  const login = async () => {
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      history.push("/profile/overview");
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
+
+
+  const registerAccount = async (provider) => {
+    let authProvider;
+
+    switch (provider) {
+      case "google":
+        authProvider = new firebase.auth.GoogleAuthProvider();
+        break;
+      case "facebook":
+        authProvider = new firebase.auth.FacebookAuthProvider();
+        break;
+      default:
+    }
+
+    try {
+      await firebase.auth().signInWithPopup(authProvider);
+
+      history.push("/profile/overview");
+      dispatch(checkIfRegistered({ status: null, message: null }));
+    } catch ({ code, message }) {
+      if (code === "auth/account-exists-with-different-credential") {
+        await dispatch(checkIfRegistered({ status: true, message: message }));
+        history.push("/login");
+      }
+    }
   };
 
   return (
     <Navigation>
       <div className="container">
-        <User ref={node} className={toggleUserMenu ? `sliding` : ""}>
-          <h3>LOGGA IN!</h3>
+        <Menu className={toggleMenu && `sliding-left`}>
+          <ul className="info-container">
+            <li>Sign up</li>
+            <li>Create ad</li>
+          </ul>
 
-          <SignInButton>dsadas</SignInButton>
+          <div className="categories-container">
+            <h4>All categories</h4>
+            <div className="search-input">
+              <input type="text" />
+            </div>
+          </div>
+        </Menu>
+        <User ref={node} className={toggleUserMenu ? `sliding` : ""}>
+          <h3>Sign in</h3>
+          <SignInButton onClick={() => registerAccount("google")}>
+            <img src={googleIcon} alt="" />
+            <p>Google</p>
+          </SignInButton>
+          <SignInButton onClick={() => registerAccount("facebook")}>
+            <img src={facebookIcon} alt="" />
+            <p>Facebook</p>
+          </SignInButton>
+          <div className="email-container">
+            <p>Sign in with email</p>
+            <input type="email" placeholder="Email" />
+            <input type="password" placeholder="Password" />
+            <button onClick={login}>Sign in</button>
+          </div>
+          <div className="member-container">
+            <h3>Sign up</h3>
+            <button>Sign up</button>
+          </div>
         </User>
         <div className="logo">
-          <img src={menuIcon} alt="" />
+          <img onClick={toggleMainMenu} src={menuIcon} alt="" />
           <p>TradingBazaar</p>
         </div>
         <div className="user-container">
           <img onClick={toggleSearchInput} src={searchIcon} alt="" />
-          <img onClick={toggleMenu} src={userIcon} alt="" />
+          <img ref={usr} onClick={toggleAccountMenu} src={userIcon} alt="" />
         </div>
       </div>
       {toggleVisibleSearch && (
