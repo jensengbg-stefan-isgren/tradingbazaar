@@ -34,3 +34,5 @@ export const addProduct = async () => {
     console.error('Error adding document: ', error)
   }
 }
+
+

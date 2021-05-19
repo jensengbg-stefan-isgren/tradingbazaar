@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import firebase from "services/firebase";
 import { useHistory } from "react-router-dom";
+import {usersCollection} from 'services/firebase'
 import signup from "assets/images/signup.jpg";
 import googleIcon from "assets/icons/google-icon.svg";
 import facebookIcon from "assets/icons/facebook-icon.svg";
@@ -127,9 +128,16 @@ const SignUp = () => {
     }
 
     try {
-      await firebase.auth().signInWithPopup(authProvider);
+     let response = await firebase.auth().signInWithPopup(authProvider);
+     console.log(response)
 
-      //Skapa profil under users i databasen!
+    console.log(usersCollection)
+
+
+
+
+
+
 
       history.push("/profile/overview");
     } catch ({ code, message }) {

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import {useHistory} from 'react-router-dom'
 import firebase,{auth} from 'services/firebase'
 
 
@@ -59,12 +60,15 @@ const Navigation = styled.nav`
 
 const NavbarProfile = () => {
 
+const history = useHistory();
+
 const linkFacebookAccount = async() => {
   await auth.currentUser.linkWithPopup(new firebase.auth.FacebookAuthProvider())
 }
 
 const logOut =  async () => {
   await firebase.auth().signOut()
+  history.push('/')
 }
 
 
