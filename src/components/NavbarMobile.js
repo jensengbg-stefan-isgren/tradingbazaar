@@ -1,6 +1,6 @@
 import firebase from "firebase";
-import {auth} from "services/firebase"
 import styled from "styled-components";
+import { auth } from "services/firebase";
 import { useDispatch } from "react-redux";
 import menuIcon from "assets/icons/menu.svg";
 import userIcon from "assets/icons/user.svg";
@@ -8,89 +8,37 @@ import { useHistory } from "react-router-dom";
 import searchIcon from "assets/icons/search.svg";
 import googleIcon from "assets/icons/google-icon.svg";
 import facebookIcon from "assets/icons/facebook-icon.svg";
+import exclamationIcon from "assets/icons/exclamation.svg";
 import React, { useState, useRef, useEffect } from "react";
 import { checkIfRegistered } from "features/auth/authSlice";
 
-const Menu = styled.div`
+const SignInButton = styled.button``;
+
+const UsrMenu = styled.div`
+  top: 64px;
+  right: 0;
+  width: 70%;
+  height: calc(100vh - 64px);
+  background-color: pink;
   position: absolute;
-  padding-top: 2em;
+  transition: transform 0.5s ease-in-out;
+  transform: translateX(100%);
+  &.sliding {
+    transform: translateX(0%);
+  }
+`;
+
+const Wrapper = styled.div`
+  padding: 0 1em;
+`;
+
+const MainMenu = styled.div`
+  height: calc(100vh - 64px);
+  width: 250px;
+  background-color: pink;
+  position: absolute;
   top: 64px;
   left: -250px;
-  background-color: #525253;
-  height: 100vh;
-  width: 250px;
-  transition: transform 0.5s ease-in-out;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-
-  h3 {
-    font-family: ${(props) => props.theme.font.title};
-    font-weight: normal;
-  }
-
-  .email-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    button {
-      width: 100%;
-      display: block;
-    }
-  }
-
-  .member-container {
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    button {
-      width: 100%;
-      display: block;
-    }
-  }
-`;
-
-const SignInButton = styled.button`
-  padding-left: 1em;
-  border-radius: 5px;
-  width: 50%;
-  display: grid;
-  grid-template-columns: 10% 90%;
-  place-content: center;
-  height: 40px;
-  outline: none;
-  border: none;
-  margin: 0.5em 0;
-  background-color: ${(props) => props.theme.button.color};
-  border-radius: 5px;
-  cursor: pointer;
-
-  p {
-    font-family: ${(props) => props.theme.font.title};
-    color: ${(props) => props.theme.color.main};
-    font-size: 1em;
-  }
-`;
-
-const User = styled.div`
-  position: absolute;
-  padding-top: 2em;
-  top: 64px;
-  right: -250px;
-  background-color: #525253;
-  height: 100vh;
-  width: 250px;
-  transition: transform 0.5s ease-in-out;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
 
   h3 {
     font-family: ${(props) => props.theme.font.title};
@@ -124,58 +72,44 @@ const User = styled.div`
 `;
 
 const Navigation = styled.nav`
-  height: 100vh;
-  overflow: hidden;
+  height: 4em;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-columns: repeat(2, 1fr);
+  position: relative;
 
-  .container {
-    height: 4em;
-    display: grid;
-    padding: 0 1em;
-    justify-content: center;
+  .logo {
+    display: flex;
+    gap: 1em;
+    justify-content: flex-start;
     align-items: center;
-    grid-template-columns: repeat(2, 1fr);
-    position: relative;
-
-    .sliding {
-      transform: translateX(-250px);
-    }
-
-    .sliding-left {
-      transform: translateX(250px);
-    }
-
-    .logo {
-      display: flex;
-      gap: 1em;
-      justify-content: flex-start;
-      align-items: center;
-
-      img {
-        height: 20px;
-      }
-
-      p {
-        font-family: ${(props) => props.theme.font.title};
-        color: ${(props) => props.theme.color.main};
-        font-size: 2em;
-      }
-    }
 
     img {
-      height: 30px;
+      height: 20px;
     }
 
-    select {
-      height: 40px;
-      background-color: ${(props) => props.theme.color.main};
-      color: white;
-      outline: none;
-      border: none;
-      font-family: ${(props) => props.theme.font.body};
-      font-weight: 600;
-      font-size: 0.8em;
-      padding-left: 0.5em;
+    p {
+      font-family: ${(props) => props.theme.font.title};
+      color: ${(props) => props.theme.color.main};
+      font-size: 2em;
     }
+  }
+
+  img {
+    height: 30px;
+  }
+
+  select {
+    height: 40px;
+    background-color: ${(props) => props.theme.color.main};
+    color: white;
+    outline: none;
+    border: none;
+    font-family: ${(props) => props.theme.font.body};
+    font-weight: 600;
+    font-size: 0.8em;
+    padding-left: 0.5em;
   }
 
   .search-container {
@@ -221,33 +155,26 @@ const StyledInput = styled.input`
   }
 `;
 
-
-
 const NavbarMobile = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClick);
-    return () => {
-      document.removeEventListener("mousedown", handleClick);
-    };
-  }, []);
-
-  const handleClick = (e) => {
-    if (node.current.contains(e.target)) {
-    } else if (usr.current.contains(e.target)) {
-    } else {
-      setToggleUserMenu(false);
-    }
-  };
-
-  const [email,setEmail] = useState('')
-  const [password,setPassword] = useState('')
-  const [errorMessage,setErrorMessage] = useState('');
+  const [valid, setValid] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [toggleVisibleSearch, setToggleVisibleSearch] = useState(false);
   const [toggleUserMenu, setToggleUserMenu] = useState(false);
   const [toggleMenu, setToggleMenu] = useState(false);
+
+  useEffect(() => {
+    if (!email || password.length <= 0) {
+      setValid(false);
+    } else {
+      setValid(true);
+    }
+    return () => {};
+  }, [email, password]);
 
   const toggleSearchInput = () => {
     if (toggleUserMenu) {
@@ -271,7 +198,6 @@ const NavbarMobile = () => {
     setToggleMenu(!toggleMenu);
   };
 
-
   const login = async () => {
     try {
       await auth.signInWithEmailAndPassword(email, password);
@@ -280,7 +206,6 @@ const NavbarMobile = () => {
       setErrorMessage(error.message);
     }
   };
-
 
   const registerAccount = async (provider) => {
     let authProvider;
@@ -308,43 +233,53 @@ const NavbarMobile = () => {
     }
   };
 
-  return (
-    <Navigation>
-      <div className="container">
-        <Menu className={toggleMenu && `sliding-left`}>
-          <ul className="info-container">
-            <li>Sign up</li>
-            <li>Create ad</li>
-          </ul>
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  };
 
-          <div className="categories-container">
-            <h4>All categories</h4>
-            <div className="search-input">
-              <input type="text" />
-            </div>
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
+  return (
+    <Wrapper>
+      <UsrMenu className={toggleUserMenu ? `sliding` : ""}>
+        <h3>Sign in</h3>
+        <SignInButton onClick={() => registerAccount("google")}>
+          <img src={googleIcon} alt="" />
+          <p>Google</p>
+        </SignInButton>
+        <SignInButton onClick={() => registerAccount("facebook")}>
+          <img src={facebookIcon} alt="" />
+          <p>Facebook</p>
+        </SignInButton>
+        <div className="email-container">
+          <p>Sign in with email</p>
+          <input onChange={handleEmail} type="email" placeholder="Email" />
+          <input
+            onChange={handlePassword}
+            type="password"
+            placeholder="Password"
+          />
+          <button disabled={!valid} onClick={login}>
+            Sign in
+          </button>
+        </div>
+        <div className="member-container">
+          <h3>Sign up</h3>
+          <button onClick={() => history.push("/register")}>Sign up</button>
+        </div>
+        {errorMessage ? (
+          <div className="error-container">
+            <img className="warning-icon" src={exclamationIcon} alt="" />
+            <p>{errorMessage}</p>
           </div>
-        </Menu>
-        <User ref={node} className={toggleUserMenu ? `sliding` : ""}>
-          <h3>Sign in</h3>
-          <SignInButton onClick={() => registerAccount("google")}>
-            <img src={googleIcon} alt="" />
-            <p>Google</p>
-          </SignInButton>
-          <SignInButton onClick={() => registerAccount("facebook")}>
-            <img src={facebookIcon} alt="" />
-            <p>Facebook</p>
-          </SignInButton>
-          <div className="email-container">
-            <p>Sign in with email</p>
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <button onClick={login}>Sign in</button>
-          </div>
-          <div className="member-container">
-            <h3>Sign up</h3>
-            <button>Sign up</button>
-          </div>
-        </User>
+        ) : (
+          <React.Fragment></React.Fragment>
+        )}
+      </UsrMenu>
+
+      <Navigation>
         <div className="logo">
           <img onClick={toggleMainMenu} src={menuIcon} alt="" />
           <p>TradingBazaar</p>
@@ -353,13 +288,14 @@ const NavbarMobile = () => {
           <img onClick={toggleSearchInput} src={searchIcon} alt="" />
           <img ref={usr} onClick={toggleAccountMenu} src={userIcon} alt="" />
         </div>
-      </div>
+      </Navigation>
+      <MainMenu></MainMenu>
       {toggleVisibleSearch && (
         <div className="search-container">
           <StyledInput placeholder="What are you looking for today?" />
         </div>
       )}
-    </Navigation>
+    </Wrapper>
   );
 };
 

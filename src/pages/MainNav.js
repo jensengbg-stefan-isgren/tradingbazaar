@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react'
-import { Route } from 'react-router'
-import NavbarProfile from 'components/NavbarProfile'
-import NavbarMobile from 'components/NavbarMobile'
 import Navbar from 'components/Navbar'
-import { useMediaQuery } from 'functions/UseMediaQuery'
-import { useDispatch, useSelector } from 'react-redux'
-import { authenticateUser } from 'features/auth/authSlice'
+import React, { useEffect } from 'react'
 import firebase from 'services/firebase'
+import NavbarProfileMobile from 'components/NavbarProfileMobile'
+import NavbarMobile from 'components/NavbarMobile'
+import NavbarProfile from 'components/NavbarProfile'
+import { useDispatch, useSelector } from 'react-redux'
+import { useMediaQuery } from 'functions/UseMediaQuery'
+import { authenticateUser } from 'features/auth/authSlice'
+import NavbarMobileProfile from 'components/NavbarProfileMobile'
 
-function MainNav({ exact, path, component: Component }) {
+function MainNav() {
   const showMobileNav = useMediaQuery('(max-width:768px)')
 
   const dispatch = useDispatch()
@@ -28,19 +29,29 @@ function MainNav({ exact, path, component: Component }) {
     }
   }, [dispatch])
 
+
+  const showNavigation = () => {
+    
+    if(isAuthenticated) {
+      if(showMobileNav) {
+        return <NavbarMobileProfile/>
+      } else {
+        return <NavbarProfile/>
+      }
+    } else {
+      if(showMobileNav) {
+        return <NavbarMobile/>
+      } else {
+        return <Navbar/>
+      }
+    }
+  }
+
   return (
-    <Route
-      exact={exact}
-      path={path}
-      render={(props) => (
         <>
-          {showMobileNav && <NavbarMobile />}
-          {isAuthenticated ? <NavbarProfile /> : <Navbar />}
-          <Component {...props} />
+        {showNavigation()}
+         
         </>
-      )}
-    />
-  )
-}
+  )}
 
 export default MainNav
