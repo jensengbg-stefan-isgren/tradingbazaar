@@ -28,3 +28,5 @@ export const addProduct = async (props) => {
     console.error('Error adding document: ', error)
   }
 }
+
+

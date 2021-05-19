@@ -6,7 +6,7 @@ import Profile from "../pages/Profile";
 import Register from "../pages/Register";
 import MainNav from '../pages/MainNav'
 
-export default  [
+export const routes = [
   {
     path: "/",
     exact: true,
