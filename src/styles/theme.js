@@ -1,15 +1,19 @@
 const theme = {
   color: {
-    main:'#424242',
-    input: 'white'
+    main: '#424242',
+    input: 'white',
   },
   button: {
-    color: 'white'
+    color: 'white',
+    bckDark: '#424242',
+    outlinez: '#e59700',
+    outline: '#f385b0',
   },
   font: {
     title: '"Passion One", cursive;',
-    body: '"Open Sans", sans-serif;'
-  }
+    body: '"Open Sans", sans-serif;',
+    dark: '#424242',
+  },
 }
 
 export default theme
