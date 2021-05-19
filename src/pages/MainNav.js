@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react'
-import NavbarProfile from 'components/NavbarProfile'
-import NavbarMobile from 'components/NavbarMobile'
 import Navbar from 'components/Navbar'
-import { useMediaQuery } from 'functions/UseMediaQuery'
-import { useDispatch, useSelector } from 'react-redux'
-import { authenticateUser } from 'features/auth/authSlice'
+import React, { useEffect } from 'react'
 import firebase from 'services/firebase'
+import NavbarProfileMobile from 'components/NavbarProfileMobile'
+import NavbarMobile from 'components/NavbarMobile'
+import NavbarProfile from 'components/NavbarProfile'
+import { useDispatch, useSelector } from 'react-redux'
+import { useMediaQuery } from 'functions/UseMediaQuery'
+import { authenticateUser } from 'features/auth/authSlice'
+import NavbarMobileProfile from 'components/NavbarProfileMobile'
 
 function MainNav() {
   const showMobileNav = useMediaQuery('(max-width:768px)')
@@ -32,7 +34,7 @@ function MainNav() {
     
     if(isAuthenticated) {
       if(showMobileNav) {
-        return <div></div>
+        return <NavbarMobileProfile/>
       } else {
         return <NavbarProfile/>
       }

@@ -1,6 +1,6 @@
 import firebase from "firebase";
-import { auth } from "services/firebase";
 import styled from "styled-components";
+import { auth } from "services/firebase";
 import { useDispatch } from "react-redux";
 import menuIcon from "assets/icons/menu.svg";
 import userIcon from "assets/icons/user.svg";
@@ -8,43 +8,28 @@ import { useHistory } from "react-router-dom";
 import searchIcon from "assets/icons/search.svg";
 import googleIcon from "assets/icons/google-icon.svg";
 import facebookIcon from "assets/icons/facebook-icon.svg";
+import exclamationIcon from "assets/icons/exclamation.svg";
 import React, { useState, useRef, useEffect } from "react";
 import { checkIfRegistered } from "features/auth/authSlice";
 
+const SignInButton = styled.button``;
 
-
-const X = styled.div`
-  overflow:hidden;
-  height:100vh;
-
-`
-
-const Wrapper = styled.div`
-  position: relative;
-
-`;
-
-
-
-const UserMenu = styled.div`
-  height: calc(100vh - 64px);
-  width: 100%;
-  background-color: blue;
-  position: absolute;
+const UsrMenu = styled.div`
   top: 64px;
-  left:0;
+  right: 0;
+  width: 70%;
+  height: calc(100vh - 64px);
+  background-color: pink;
+  position: absolute;
   transition: transform 0.5s ease-in-out;
   transform: translateX(100%);
-&.sliding {
-  transform: translateX(0%);
+  &.sliding {
+    transform: translateX(0%);
   }
+`;
 
-
-  .search-container {
-    padding: 0 1em;
-  }
-
-
+const Wrapper = styled.div`
+  padding: 0 1em;
 `;
 
 const MainMenu = styled.div`
@@ -89,7 +74,6 @@ const MainMenu = styled.div`
 const Navigation = styled.nav`
   height: 4em;
   display: grid;
-  padding: 0 1em;
   justify-content: center;
   align-items: center;
   grid-template-columns: repeat(2, 1fr);
@@ -175,27 +159,22 @@ const NavbarMobile = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleClick);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClick);
-  //   };
-  // }, []);
-
-  // const handleClick = (e) => {
-  //   if (node.current.contains(e.target)) {
-  //   } else if (usr.current.contains(e.target)) {
-  //   } else {
-  //     setToggleUserMenu(false);
-  //   }
-  // };
-
+  const [valid, setValid] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [toggleVisibleSearch, setToggleVisibleSearch] = useState(false);
   const [toggleUserMenu, setToggleUserMenu] = useState(false);
   const [toggleMenu, setToggleMenu] = useState(false);
+
+  useEffect(() => {
+    if (!email || password.length <= 0) {
+      setValid(false);
+    } else {
+      setValid(true);
+    }
+    return () => {};
+  }, [email, password]);
 
   const toggleSearchInput = () => {
     if (toggleUserMenu) {
@@ -254,59 +233,69 @@ const NavbarMobile = () => {
     }
   };
 
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
   return (
-    	<X>
+    <Wrapper>
+      <UsrMenu className={toggleUserMenu ? `sliding` : ""}>
+        <h3>Sign in</h3>
+        <SignInButton onClick={() => registerAccount("google")}>
+          <img src={googleIcon} alt="" />
+          <p>Google</p>
+        </SignInButton>
+        <SignInButton onClick={() => registerAccount("facebook")}>
+          <img src={facebookIcon} alt="" />
+          <p>Facebook</p>
+        </SignInButton>
+        <div className="email-container">
+          <p>Sign in with email</p>
+          <input onChange={handleEmail} type="email" placeholder="Email" />
+          <input
+            onChange={handlePassword}
+            type="password"
+            placeholder="Password"
+          />
+          <button disabled={!valid} onClick={login}>
+            Sign in
+          </button>
+        </div>
+        <div className="member-container">
+          <h3>Sign up</h3>
+          <button onClick={() => history.push("/register")}>Sign up</button>
+        </div>
+        {errorMessage ? (
+          <div className="error-container">
+            <img className="warning-icon" src={exclamationIcon} alt="" />
+            <p>{errorMessage}</p>
+          </div>
+        ) : (
+          <React.Fragment></React.Fragment>
+        )}
+      </UsrMenu>
 
-  
-  <UserMenu className={toggleUserMenu ? `sliding` : ""}></UserMenu>
-  <Wrapper>
-    
-        <Navigation>
-          <div className="logo">
-            <img onClick={toggleMainMenu} src={menuIcon} alt="" />
-            <p>TradingBazaar</p>
-          </div>
-          <div className="user-container">
-            <img onClick={toggleSearchInput} src={searchIcon} alt="" />
-            <img ref={usr} onClick={toggleAccountMenu} src={userIcon} alt="" />
-          </div>
-        </Navigation>
-        
-      
-  
-        <MainMenu></MainMenu>
-  
-
-      {/* <User ref={node} className={toggleUserMenu ? `sliding` : ""}>
-          <h3>Sign in</h3>
-          <SignInButton onClick={() => registerAccount("google")}>
-            <img src={googleIcon} alt="" />
-            <p>Google</p>
-          </SignInButton>
-          <SignInButton onClick={() => registerAccount("facebook")}>
-            <img src={facebookIcon} alt="" />
-            <p>Facebook</p>
-          </SignInButton>
-          <div className="email-container">
-            <p>Sign in with email</p>
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <button onClick={login}>Sign in</button>
-          </div>
-          <div className="member-container">
-            <h3>Sign up</h3>
-            <button>Sign up</button>
-          </div>
-        </User> */}
-
+      <Navigation>
+        <div className="logo">
+          <img onClick={toggleMainMenu} src={menuIcon} alt="" />
+          <p>TradingBazaar</p>
+        </div>
+        <div className="user-container">
+          <img onClick={toggleSearchInput} src={searchIcon} alt="" />
+          <img ref={usr} onClick={toggleAccountMenu} src={userIcon} alt="" />
+        </div>
+      </Navigation>
+      <MainMenu></MainMenu>
       {toggleVisibleSearch && (
         <div className="search-container">
           <StyledInput placeholder="What are you looking for today?" />
         </div>
       )}
     </Wrapper>
-</X>
-  
   );
 };
 
