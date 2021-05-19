@@ -2,8 +2,18 @@ import styled from 'styled-components'
 import { addProduct } from '../services/collections'
 import { useDispatch, useSelector } from 'react-redux'
 import { adInputEdit, checkImages } from 'features/newAdSlice'
+import { useRef } from 'react'
 
 const AddAd = () => {
+  const addAd1 = useRef(null)
+  const addAd2 = useRef(null)
+
+  const handleNextStep = (e) => {
+    e.preventDefault()
+    addAd1.current.classList.toggle('slide')
+    addAd2.current.classList.toggle('slide')
+  }
+
   const dispatch = useDispatch()
   const {
     title,
@@ -45,7 +55,7 @@ const AddAd = () => {
       </header>
       <main>
         <form onSubmit={handleSubmit}>
-          <section>
+          <section ref={addAd1} id="addAd1">
             <h2>1. Describe your product</h2>
             <div className="input-container">
               <label className="std-label" htmlFor="inputName">
@@ -315,7 +325,7 @@ const AddAd = () => {
               ) : null}
             </div>
           </section>
-          <section>
+          <section ref={addAd2} id="addAd2" className="slide">
             <h2>2. Price and Time</h2>
 
             <div className="input-container">
@@ -376,8 +386,8 @@ const AddAd = () => {
               />
             </div>
           </section>
-
-          <div>
+          <div className="btn-group">
+            <button onClick={handleNextStep}>Previous Step</button>
             <input type="submit" value="Add Product" />
           </div>
         </form>
@@ -404,8 +414,46 @@ const StyledAddProduct = styled.section`
   }
 
   form {
+    /* display: flex;
+    flex-direction: column; */
+    /* display: inline; */
+    /* overflow-x: hidden; */
+    position: relative;
+    width: 100vw;
+    min-height: 70vh;
     display: flex;
-    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* left: 50%; */
+
+    #addAd1 {
+      position: absolute;
+      /* width: 100vw; */
+      left: 50%;
+      transition: transform 0.3s ease;
+
+      > * {
+        position: relative;
+        left: -50%;
+      }
+      &.slide {
+        transform: translateX(-100vw);
+      }
+    }
+    #addAd2 {
+      position: absolute;
+      left: 50%;
+      transition: transform 0.3s ease;
+      transform: translateX(0);
+
+      > * {
+        position: relative;
+        left: -50%;
+      }
+      &.slide {
+        transform: translateX(100vw);
+      }
+    }
 
     .input-container {
       width: 95vw;
@@ -440,7 +488,7 @@ const StyledAddProduct = styled.section`
 
         label {
           flex-grow: 1;
-          border: 0.2em solid ${(props) => props.theme.button.bckDark};
+          border: 0.2rem solid ${(props) => props.theme.button.bckDark};
           min-width: 6em;
           padding: 0.3em 0.5em;
           text-align: center;
@@ -462,26 +510,26 @@ const StyledAddProduct = styled.section`
           }
 
           &:focus + label {
-            border: 0.3em solid ${(props) => props.theme.button.outline};
+            border: 0.3rem solid ${(props) => props.theme.button.outline};
             padding: 0.2em 0.4em;
           }
         }
       }
     }
 
-    input:not([type='checkbox']):not([type='radio']),
+    input:not([type='checkbox']):not([type='radio']):not([type='submit']),
     textarea,
     select {
       padding: 0.2em 0.2em;
       font-size: 0.8em;
-      border: 0.2em solid #424242;
+      border: 0.2rem solid #424242;
       width: 70%;
       flex-grow: 1;
       margin: 0;
 
       &:focus,
       &:active {
-        border: 0.3em solid ${(props) => props.theme.button.outline};
+        border: 0.3rem solid ${(props) => props.theme.button.outline};
         padding: 0.1em 0.1em;
       }
     }
@@ -502,6 +550,19 @@ const StyledAddProduct = styled.section`
 
     .hidden {
       display: none;
+    }
+
+    .btn-group {
+      padding: 1em 0.5em;
+      background: white;
+      position: fixed;
+      bottom: 2em;
+      right: 1em;
+      width: 8em;
+
+      & > * {
+        width: 100%;
+      }
     }
   }
 
