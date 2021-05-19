@@ -1,7 +1,6 @@
 import Navbar from 'components/Navbar'
 import React, { useEffect } from 'react'
 import firebase from 'services/firebase'
-import NavbarProfileMobile from 'components/NavbarProfileMobile'
 import NavbarMobile from 'components/NavbarMobile'
 import NavbarProfile from 'components/NavbarProfile'
 import { useDispatch, useSelector } from 'react-redux'

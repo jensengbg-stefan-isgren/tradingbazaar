@@ -184,7 +184,6 @@ const NavbarMobile = () => {
   };
 
   const usr = useRef();
-  const node = useRef();
 
   const toggleAccountMenu = () => {
     if (toggleVisibleSearch) {

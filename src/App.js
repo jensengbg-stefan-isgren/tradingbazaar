@@ -1,17 +1,11 @@
 import "./App.css";
-import "./styles/fonts.css";
-
-import theme from "./styles/theme";
-
 import React from "react";
+import "./styles/fonts.css";
+import theme from "./styles/theme";
+import {routes} from "./router/routes";
 import GlobalStyle from "styles/globalStyles";
 import { ThemeProvider } from "styled-components";
-
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import MainNav from "pages/MainNav";
-import Navbar from "components/Navbar";
-import routes from './router/routes'
-
 const App = () => {
   return (
     <React.Fragment>
@@ -25,7 +19,11 @@ const App = () => {
                   key={index}
                   path={route.path}
                   exact={route.exact}
-                  children={<><route.navbar /> <route.main/></>}
+                  children={
+                    <>
+                      <route.navbar /> <route.main />
+                    </>
+                  }
                 />
               ))}
             </Switch>
