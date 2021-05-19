@@ -9,7 +9,7 @@ export const adSlice = createSlice({
     startPrice: 0,
     acceptedPrice: 0,
     productConditions: '',
-    adEndDate: 0,
+    adEndDate: '',
     imgLink1: '',
     imgLink2: '',
     imgLink3: '',

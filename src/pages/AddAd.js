@@ -41,14 +41,16 @@ const AddAd = () => {
   return (
     <StyledAddProduct>
       <header>
-        <h2>Create new Ad</h2>
+        <h1>Create new Ad</h1>
       </header>
       <main>
         <form onSubmit={handleSubmit}>
           <section>
-            <h3>1. Describe your product</h3>
+            <h2>1. Describe your product</h2>
             <div className="input-container">
-              <label htmlFor="inputName">Title</label>
+              <label className="std-label" htmlFor="inputName">
+                Title
+              </label>
               <input
                 type="text"
                 id="inputName"
@@ -63,7 +65,9 @@ const AddAd = () => {
               <span className="input-length">{title.length} / 50</span>
             </div>
             <div className="input-container">
-              <label htmlFor="inputDescription">Description</label>
+              <label className="std-label" htmlFor="inputDescription">
+                Description
+              </label>
               <textarea
                 id="inputDescription"
                 maxLength={500}
@@ -79,7 +83,9 @@ const AddAd = () => {
               <span className="input-length">{description.length} / 500</span>
             </div>
             <div className="input-container">
-              <label htmlFor="inputCategory">Category</label>
+              <label className="std-label" htmlFor="inputCategory">
+                Category
+              </label>
               <input
                 type="text"
                 id="inputCategory"
@@ -92,7 +98,71 @@ const AddAd = () => {
               />
             </div>
             <div className="input-container">
-              <label htmlFor="selectCondition">Product Conditions</label>
+              <p className="std-label">Product Conditions</p>
+              <div className="radiogroup-wrap">
+                <div className="input-radio-cont">
+                  <input
+                    type="radio"
+                    name="conditions"
+                    value="New"
+                    id="chk-new"
+                    onChange={(e) =>
+                      dispatch(
+                        adInputEdit({
+                          field: 'productConditions',
+                          value: e.target.value,
+                        })
+                      )
+                    }
+                  />
+                  <label className="btn" htmlFor="chk-new">
+                    New
+                  </label>
+                </div>
+                <div className="input-radio-cont">
+                  <input
+                    type="radio"
+                    name="conditions"
+                    value="As New"
+                    id="chk-asnew"
+                    onChange={(e) =>
+                      dispatch(
+                        adInputEdit({
+                          field: 'productConditions',
+                          value: e.target.value,
+                        })
+                      )
+                    }
+                  />
+                  <label className="btn" htmlFor="chk-asnew">
+                    As New
+                  </label>
+                </div>
+                <div className="input-radio-cont">
+                  <input
+                    type="radio"
+                    name="conditions"
+                    value="Used"
+                    id="chk-used"
+                    onChange={(e) =>
+                      dispatch(
+                        adInputEdit({
+                          field: 'productConditions',
+                          value: e.target.value,
+                        })
+                      )
+                    }
+                  />
+                  <label className="btn" htmlFor="chk-used">
+                    Used
+                  </label>
+                </div>
+              </div>
+            </div>
+            {/* <div className="input-container">
+              <label className="std-label" htmlFor="selectCondition">
+                Product Conditions
+              </label>
               <select
                 id="selectCondition"
                 value={productConditions}
@@ -112,9 +182,11 @@ const AddAd = () => {
                 <option value="As New">As New</option>
                 <option value="Used">Used</option>
               </select>
-            </div>
+            </div> */}
             <div className="input-container">
-              <label htmlFor="imgLink1">Image Url</label>
+              <label className="std-label" htmlFor="imgLink1">
+                Image Url
+              </label>
               <input
                 type="url"
                 id="imgLink1"
@@ -136,10 +208,12 @@ const AddAd = () => {
             </div>
             <div
               className={`input-container ${
-                imgLink1 == null || !imgLink1 ? 'hidden' : ''
+                (imgLink1 == null || !imgLink1) & !imgLink2 ? 'hidden' : ''
               }`}
             >
-              <label htmlFor="imgLink2">Image 2 Url</label>
+              <label className="std-label" htmlFor="imgLink2">
+                Image 2 Url
+              </label>
               <input
                 type="url"
                 id="imgLink2"
@@ -161,10 +235,12 @@ const AddAd = () => {
             </div>
             <div
               className={`input-container ${
-                imgLink2 == null || !imgLink2 ? 'hidden' : ''
+                (imgLink2 == null || !imgLink2) && !imgLink3 ? 'hidden' : ''
               }`}
             >
-              <label htmlFor="imgLink3">Image 3 Url</label>
+              <label className="std-label" htmlFor="imgLink3">
+                Image 3 Url
+              </label>
               <input
                 type="url"
                 id="imgLink3"
@@ -189,7 +265,9 @@ const AddAd = () => {
                 imgLink3 == null || !imgLink3 ? 'hidden' : ''
               }`}
             >
-              <label htmlFor="imgLink4">Image 4 Url</label>
+              <label className="std-label" htmlFor="imgLink4">
+                Image 4 Url
+              </label>
               <input
                 type="url"
                 id="imgLink4"
@@ -211,10 +289,12 @@ const AddAd = () => {
             </div>
             <div
               className={`input-container ${
-                imgLink4 == null || !imgLink4 ? 'hidden' : ''
+                (imgLink4 == null || !imgLink4) && !imgLink5 ? 'hidden' : ''
               }`}
             >
-              <label htmlFor="imgLink5">Image 5 Url</label>
+              <label className="std-label" htmlFor="imgLink5">
+                Image 5 Url
+              </label>
               <input
                 type="url"
                 id="imgLink5"
@@ -236,10 +316,12 @@ const AddAd = () => {
             </div>
           </section>
           <section>
-            <h3>2. Price and Time</h3>
+            <h2>2. Price and Time</h2>
 
             <div className="input-container">
-              <label htmlFor="inputStartPrice">Start Price</label>
+              <label className="std-label" htmlFor="inputStartPrice">
+                Start Price
+              </label>
               <input
                 type="number"
                 id="inputStartPrice"
@@ -255,7 +337,9 @@ const AddAd = () => {
               />
             </div>
             <div className="input-container">
-              <label htmlFor="inputAcceptedPrice">Accepted Price</label>
+              <label className="std-label" htmlFor="inputAcceptedPrice">
+                Accepted Price
+              </label>
               <input
                 type="number"
                 id="inputAcceptedPrice"
@@ -272,19 +356,23 @@ const AddAd = () => {
             </div>
 
             <div className="input-container">
-              <label htmlFor="inputEndDate">End Date</label>
+              <label className="std-label" htmlFor="inputEndDate">
+                End Date
+              </label>
               <input
-                type="number"
+                type="datetime-local"
                 id="inputEndDate"
                 value={adEndDate}
-                onChange={(e) =>
+                onChange={(e) => {
+                  if (!e.target['validity'].valid) return
+                  const dt = e.target['value']
                   dispatch(
                     adInputEdit({
                       field: 'adEndDate',
-                      value: Number(e.target.value),
+                      value: dt,
                     })
                   )
-                }
+                }}
               />
             </div>
           </section>
@@ -299,15 +387,20 @@ const AddAd = () => {
 }
 
 const StyledAddProduct = styled.section`
-  font-size: 1.5em;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
+  h1,
   h2,
   h3 {
     padding: 1em;
+  }
+
+  input,
+  textarea {
+    outline: none;
   }
 
   form {
@@ -315,7 +408,8 @@ const StyledAddProduct = styled.section`
     flex-direction: column;
 
     .input-container {
-      width: 30em;
+      width: 95vw;
+      max-width: 30em;
       padding: 0.2em;
       margin: 0.9em 0.3em;
       position: relative;
@@ -327,25 +421,75 @@ const StyledAddProduct = styled.section`
       .input-length {
         font-size: 0.7em;
         position: absolute;
-        top: -0.8em;
+        top: -0.85em;
         right: 0.3em;
       }
     }
-    input,
+    .radiogroup-wrap {
+      width: 70%;
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.4em;
+      /* justify-content: space-between; */
+
+      .input-radio-cont {
+        flex-grow: 1;
+        position: relative;
+        display: flex;
+        align-items: center;
+
+        label {
+          flex-grow: 1;
+          border: 0.2em solid ${(props) => props.theme.button.bckDark};
+          min-width: 6em;
+          padding: 0.3em 0.5em;
+          text-align: center;
+          cursor: pointer;
+        }
+
+        input[type='checkbox'],
+        input[type='radio'] {
+          /* visibility: hidden; */
+          opacity: 0;
+          position: absolute;
+
+          width: 100%;
+          /* height: 100%; */
+
+          &:checked + label {
+            background: ${(props) => props.theme.button.bckDark};
+            color: ${(props) => props.theme.button.color};
+          }
+
+          &:focus + label {
+            border: 0.3em solid ${(props) => props.theme.button.outline};
+            padding: 0.2em 0.4em;
+          }
+        }
+      }
+    }
+
+    input:not([type='checkbox']):not([type='radio']),
     textarea,
     select {
-      padding: 0 0.2em;
+      padding: 0.2em 0.2em;
       font-size: 0.8em;
-      border: 2px solid #424242;
+      border: 0.2em solid #424242;
       width: 70%;
       flex-grow: 1;
       margin: 0;
+
+      &:focus,
+      &:active {
+        border: 0.3em solid ${(props) => props.theme.button.outline};
+        padding: 0.1em 0.1em;
+      }
     }
     textarea {
       resize: vertical;
     }
 
-    label {
+    .std-label {
       width: 30%;
       padding: 0.5em;
     }

@@ -5,6 +5,9 @@ const theme = {
   },
   button: {
     color: 'white',
+    bckDark: '#424242',
+    outlinez: '#e59700',
+    outline: '#f385b0',
   },
   font: {
     title: '"Passion One", cursive;',
