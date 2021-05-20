@@ -38,7 +38,7 @@ const SignInContainer = styled.div`
   justify-content: end;
   align-items: flex-start;
   position: relative;
-  grid-template-columns: minmax(15rem, 25em);
+  grid-template-columns: minmax(15rem, 18em);
   padding-right: 10%;
   padding-left: 10%;
   padding-bottom: 10em;
@@ -55,8 +55,7 @@ const SignInContainer = styled.div`
     border-radius: 5px;
     height: 2.5em;
     width: 100%;
-    display: block;
-    margin: 0.5em 0em 0.5em auto;
+    margin: 0.5em 0;
     cursor: pointer;
     font-family: ${(props) => props.theme.font.title};
     color: ${(props) => props.theme.color.main};
