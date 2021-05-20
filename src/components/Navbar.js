@@ -40,6 +40,9 @@ const Navigation = styled.nav`
     display: grid;
     place-content: center;
     grid-template-columns: 10em 16em;
+
+    }
+
   }
 
   a {

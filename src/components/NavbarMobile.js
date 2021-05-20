@@ -15,11 +15,17 @@ import { checkIfRegistered } from "features/auth/authSlice";
 const SignInButton = styled.button``;
 
 const UsrMenu = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+
   top: 64px;
+  padding: 1em;
   right: 0;
   width: 70%;
   height: calc(100vh - 64px);
-  background-color: pink;
+  background-color: lightgrey;
   position: absolute;
   transition: transform 0.5s ease-in-out;
   transform: translateX(100%);
@@ -244,14 +250,17 @@ const NavbarMobile = () => {
     <Wrapper>
       <UsrMenu className={toggleUserMenu ? `sliding` : ""}>
         <h3>Sign in</h3>
-        <SignInButton onClick={() => registerAccount("google")}>
-          <img src={googleIcon} alt="" />
-          <p>Google</p>
-        </SignInButton>
-        <SignInButton onClick={() => registerAccount("facebook")}>
-          <img src={facebookIcon} alt="" />
-          <p>Facebook</p>
-        </SignInButton>
+        <div className="provider-container">
+          <SignInButton onClick={() => registerAccount("google")}>
+            <img src={googleIcon} alt="" />
+            <p>Google</p>
+          </SignInButton>
+          <SignInButton onClick={() => registerAccount("facebook")}>
+            <img src={facebookIcon} alt="" />
+            <p>Facebook</p>
+          </SignInButton>
+        </div>
+
         <div className="email-container">
           <p>Sign in with email</p>
           <input onChange={handleEmail} type="email" placeholder="Email" />

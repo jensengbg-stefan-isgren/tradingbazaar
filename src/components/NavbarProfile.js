@@ -1,8 +1,6 @@
-import React from "react";
+import React,{useState} from "react";
 import styled from "styled-components";
-import {useHistory} from 'react-router-dom'
-import firebase,{auth} from 'services/firebase'
-
+import ProfileMenu from 'components/ProfileMenu'
 
 const Navigation = styled.nav`
     .container {
@@ -13,7 +11,22 @@ const Navigation = styled.nav`
       justify-content: space-between;
       align-items: center;
 
-     
+     .nav-links {
+       display:flex;
+       gap:2em;
+       cursor: pointer;
+
+
+        li {
+          padding:.7em;
+        }
+
+        li:hover {
+          background-color:#dfdfdf;
+        }
+
+      }       
+     }
 
       select {
         width: 100px;
@@ -39,7 +52,7 @@ const Navigation = styled.nav`
       margin: 0 1em;
       text-decoration: none;
     }
-  `;
+  `
 
 
   const StyledInput = styled.input`
@@ -60,21 +73,27 @@ const Navigation = styled.nav`
 
 const NavbarProfile = () => {
 
-const history = useHistory();
+const [toggleMenu,setToggleMenu] = useState(false)
 
-const linkFacebookAccount = async() => {
-  await auth.currentUser.linkWithPopup(new firebase.auth.FacebookAuthProvider())
-}
 
-const logOut =  async () => {
-  await firebase.auth().signOut()
-  history.push('/')
+
+
+
+// const linkFacebookAccount = async() => {
+//   await auth.currentUser.linkWithPopup(new firebase.auth.FacebookAuthProvider())
+// }
+
+
+
+const handleMenu = () => {
+  setToggleMenu(!toggleMenu)
 }
 
 
 
   return (
     <Navigation>
+      <ProfileMenu toggleMenu={toggleMenu}/>
       <div className="container">
         <div className="logo">
           <p>TradingBazaar</p>
@@ -86,10 +105,14 @@ const logOut =  async () => {
           <StyledInput placeholder="What are you looking for today?" />
         </div>
         <div className="nav-links">
-          <button>nojjan</button>
+          {/* <button>nojjan</button>
           <button onClick={linkFacebookAccount}>Link your facebook account</button>
-          <button>Link your google1 account</button>
-          <button onClick={logOut}>Log out</button>
+          <button>Link your google1 account</button> */}
+      
+         <li>Watchlist</li>
+         <li>Buy</li>
+         <li>Sell</li>
+          <li onClick={handleMenu}>Menu</li>
         </div>
       </div>
     </Navigation>

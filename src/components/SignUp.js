@@ -1,14 +1,14 @@
+import { db } from "services/firebase";
 import styled from "styled-components";
 import SignUpEmail from "./SignUpEmail";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import firebase from "services/firebase";
-import { useHistory } from "react-router-dom";
-import {usersCollection} from 'services/firebase'
+import { useDispatch } from "react-redux";
 import signup from "assets/images/signup.jpg";
+import { useHistory } from "react-router-dom";
 import googleIcon from "assets/icons/google-icon.svg";
 import facebookIcon from "assets/icons/facebook-icon.svg";
-import { checkIfRegistered } from "features/auth/authSlice";
+import { checkIfRegistered, addUser } from "features/auth/authSlice";
 
 const Wrapper = styled.section`
   position: relative;
@@ -65,7 +65,7 @@ const SignUpContainer = styled.div`
   }
 
   div > p:nth-child(5) {
-    text-align:center;
+    text-align: center;
   }
 
   div {
@@ -104,6 +104,7 @@ const RegisterButton = styled.button`
 `;
 
 const SignUp = () => {
+
   const dispatch = useDispatch();
 
   const history = useHistory();
@@ -128,18 +129,56 @@ const SignUp = () => {
     }
 
     try {
-     let response = await firebase.auth().signInWithPopup(authProvider);
-     console.log(response)
+      let response = await firebase.auth().signInWithPopup(authProvider);
+      const {
+        additionalUserInfo,
+        user: { uid },
+        additionalUserInfo: { profile },
+      } = response;
+      const { providerId, isNewUser } = additionalUserInfo;
 
-    console.log(usersCollection)
+      if (!isNewUser) {
+        db.collection("users")
+          .doc(uid)
+          .get()
+          .then((snapshot) => {
+            const document = snapshot.data();
+            dispatch(addUser(document));
+          });
 
+        history.push("/profile/overview");
+      } else {
+        let profileData = {
+          name: null,
+          firstName: null,
+          lastName: null,
+          email: null,
+          photoUrl: null,
+        };
 
+        switch (providerId) {
+          case "google.com":
+            profileData.name = profile.name;
+            profileData.firstName = profile.given_name;
+            profileData.lastName = profile.family_name;
+            profileData.email = profile.email;
+            profileData.photoUrl = profile.picture;
+            break;
+          case "facebook.com":
+            profileData.name = profile.name;
+            profileData.firstName = profile.first_name;
+            profileData.lastName = profile.last_name;
+            profileData.email = profile.email;
+            profileData.photoUrl = profile.picture.data.url;
+            break;
+          default:
+        }
 
+        await db.collection("users").doc(uid).set(profileData);
 
-
-
-
-      history.push("/profile/overview");
+        dispatch(addUser(profileData));
+        history.push("/profile/overview");
+      }
     } catch ({ code, message }) {
       if (code === "auth/account-exists-with-different-credential") {
         await dispatch(checkIfRegistered({ status: true, message: message }));

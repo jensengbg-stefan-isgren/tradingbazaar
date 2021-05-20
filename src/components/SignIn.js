@@ -110,7 +110,7 @@ const SignInButton = styled.button`
   background-color: ${(props) => props.theme.button.color};
   border-radius: 5px;
   cursor: pointer;
-
+  
   p,
   img {
     justify-self: center;
