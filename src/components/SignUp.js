@@ -43,7 +43,7 @@ const SignUpContainer = styled.div`
   justify-content: end;
   align-items: flex-start;
   position: relative;
-  grid-template-columns: minmax(15rem, 25em);
+  grid-template-columns: minmax(15rem, 18em);
   padding-right: 10%;
   padding-left: 10%;
 
@@ -101,11 +101,15 @@ const RegisterButton = styled.button`
     font-size: 1.2em;
     color: ${(props) => props.theme.color.main};
   }
+
 `;
 
 const SignUp = () => {
 
   const dispatch = useDispatch();
+
+
+
 
   const history = useHistory();
 
@@ -196,7 +200,7 @@ const SignUp = () => {
           <div>
             <h4>Sign Up</h4>
             <p>
-              Register with email and password, Click
+              With email and password, Click
               <span onClick={() => handleSignInMethod()}> here</span>
             </p>
             <RegisterButton onClick={() => registerAccount("google")}>
@@ -208,7 +212,7 @@ const SignUp = () => {
               <p>Register with Facebook account</p>
             </RegisterButton>
             <p>
-              Already have an account, Sign in
+              Have an account, Sign in
               <span onClick={() => history.push("/login")}> here</span>
             </p>
           </div>
