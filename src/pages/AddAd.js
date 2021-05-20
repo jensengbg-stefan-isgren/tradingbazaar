@@ -405,7 +405,7 @@ const StyledAddProduct = styled.section`
   h1,
   h2,
   h3 {
-    padding: 1em;
+    padding: 0.5em;
   }
 
   input,
@@ -462,19 +462,19 @@ const StyledAddProduct = styled.section`
       margin: 0.9em 0.3em;
       position: relative;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       flex-wrap: wrap;
       /* box-shadow: 2px 2px 5px -2px rgba(0, 0, 0, 0.4); */
 
       .input-length {
         font-size: 0.7em;
         position: absolute;
-        top: -0.85em;
+        top: 0.95em;
         right: 0.3em;
       }
     }
     .radiogroup-wrap {
-      width: 70%;
+      width: 100%;
       display: inline-flex;
       flex-wrap: wrap;
       gap: 0.4em;
@@ -521,9 +521,11 @@ const StyledAddProduct = styled.section`
     textarea,
     select {
       padding: 0.2em 0.2em;
-      font-size: 0.8em;
+      /* font-size: 0.8em; */
+      font-size: 1em;
       border: 0.2rem solid #424242;
-      width: 70%;
+      /* width: 70%; */
+      width: 100%;
       flex-grow: 1;
       margin: 0;
 
@@ -538,8 +540,12 @@ const StyledAddProduct = styled.section`
     }
 
     .std-label {
-      width: 30%;
-      padding: 0.5em;
+      /* width: 30%; */
+      /* padding: 0.5em; */
+      /* position: absolute; */
+      /* background: white; */
+      /* left: 0.5em; */
+      /* top: 0.4em; */
     }
 
     .image-container {
