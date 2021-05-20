@@ -1,6 +1,5 @@
 import React from 'react'
 import Profile from 'components/Settings/Profile'
-import Sale from 'components/Settings/Sale'
 import Notifications from 'components/Settings/Notifications'
 import Security from 'components/Settings/Security'
 import Payments from 'components/Settings/Payments'
