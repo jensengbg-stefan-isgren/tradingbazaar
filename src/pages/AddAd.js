@@ -219,6 +219,7 @@ const AddAd = () => {
               </select>
             </div> */}
               <InputContainer>
+                <p className="std-label">Pictures</p>
                 <button
                   onClick={(e) => {
                     e.preventDefault()
@@ -301,114 +302,6 @@ const AddAd = () => {
                     <img src={imgLink1} alt={`${title} - image_1`}></img>
                   </div>
                 ) : null} */}
-              </InputContainer>
-              <InputContainer
-                className={`${
-                  (imgLink1 == null || !imgLink1) & !imgLink2 ? 'hidden' : ''
-                }`}
-              >
-                {/* <label className="std-label" htmlFor="imgLink2">
-                  Image 2 Url
-                </label>
-                <input
-                  type="url"
-                  id="imgLink2"
-                  value={imgLink2}
-                  onChange={(e) =>
-                    dispatch(
-                      adInputEdit({
-                        field: 'imgLink2',
-                        value: e.target.value,
-                      })
-                    )
-                  }
-                />
-                {imgLink2 ? (
-                  <div className="image-container">
-                    <img src={imgLink2} alt={`${title} - image_2`}></img>
-                  </div>
-                ) : null} */}
-              </InputContainer>
-              <InputContainer
-                className={`input-container ${
-                  (imgLink2 == null || !imgLink2) && !imgLink3 ? 'hidden' : ''
-                }`}
-              >
-                <label className="std-label" htmlFor="imgLink3">
-                  Image 3 Url
-                </label>
-                <input
-                  type="url"
-                  id="imgLink3"
-                  value={imgLink3}
-                  onChange={(e) =>
-                    dispatch(
-                      adInputEdit({
-                        field: 'imgLink3',
-                        value: e.target.value,
-                      })
-                    )
-                  }
-                />
-                {imgLink3 ? (
-                  <div className="image-container">
-                    <img src={imgLink3} alt={`${title} - image_3`}></img>
-                  </div>
-                ) : null}
-              </InputContainer>
-              <InputContainer
-                className={`input-container ${
-                  imgLink3 == null || !imgLink3 ? 'hidden' : ''
-                }`}
-              >
-                <label className="std-label" htmlFor="imgLink4">
-                  Image 4 Url
-                </label>
-                <input
-                  type="url"
-                  id="imgLink4"
-                  value={imgLink4}
-                  onChange={(e) =>
-                    dispatch(
-                      adInputEdit({
-                        field: 'imgLink4',
-                        value: e.target.value,
-                      })
-                    )
-                  }
-                />
-                {imgLink4 ? (
-                  <div className="image-container">
-                    <img src={imgLink4} alt={`${title} - image_4`}></img>
-                  </div>
-                ) : null}
-              </InputContainer>
-              <InputContainer
-                className={`input-container ${
-                  (imgLink4 == null || !imgLink4) && !imgLink5 ? 'hidden' : ''
-                }`}
-              >
-                <label className="std-label" htmlFor="imgLink5">
-                  Image 5 Url
-                </label>
-                <input
-                  type="url"
-                  id="imgLink5"
-                  value={imgLink5}
-                  onChange={(e) =>
-                    dispatch(
-                      adInputEdit({
-                        field: 'imgLink5',
-                        value: e.target.value,
-                      })
-                    )
-                  }
-                />
-                {imgLink5 ? (
-                  <div className="image-container">
-                    <img src={imgLink5} alt={`${title} - image_5`}></img>
-                  </div>
-                ) : null}
               </InputContainer>
             </section>
             <section ref={addAd2} id="addAd2" className="slide">

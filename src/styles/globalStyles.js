@@ -12,6 +12,7 @@ const GlobalStyle = createGlobalStyle`
 body {
   font-family: ${(props) => props.theme.font.body};
   font-size: calc(0.95em + min(6px, 0.5vw));
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
