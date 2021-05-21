@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useSelector,useDispatch } from "react-redux";
-import {updateUser} from 'features/auth/authSlice'
+import { useSelector } from "react-redux";
+// import {updateUser} from 'features/auth/authSlice'
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -60,13 +60,15 @@ const SettingsContainer = styled.div`
 `;
 
 const ProfileSettings = () => {
-  const { user, providerData,uid } = useSelector((state) => state.auth);
+  const { user, providerData } = useSelector((state) => state.auth);
 
-  const dispatch = useDispatch();
+  
+
+  // const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
-  const [firstName,setFirstName] = useState(null)
-  const [lastName,setLastName] = useState(null)
-  const [email,setEmail] = useState(null)
+  // const [firstName,setFirstName] = useState(null)
+  // const [lastName,setLastName] = useState(null)
+  // const [email,setEmail] = useState(null)
  
 
   const handleEdit = () => {
@@ -80,17 +82,17 @@ const ProfileSettings = () => {
   }
 
 
-  const handleFirstName = (e) => {
-    setFirstName(e.target.value)
-  }
+  // const handleFirstName = (e) => {
+  //   setFirstName(e.target.value)
+  // }
   
-  const handleLastName = (e) => {
-    setLastName(e.target.value)
-  }
+  // const handleLastName = (e) => {
+  //   setLastName(e.target.value)
+  // }
 
-  const handleEmail = (e) => {
-    setEmail(e.target.value)
-  }
+  // const handleEmail = (e) => {
+  //   setEmail(e.target.value)
+  // }
 
 
   return (
@@ -119,7 +121,7 @@ const ProfileSettings = () => {
                 <div>
                   <label htmlFor="first-name">Firstname</label>
                   <input
-                    onChange={handleFirstName}
+                    // onChange={handleFirstName}
                     className={edit ? `edit` : `not-edit`}
                     readOnly={!edit}
                     type="text"
@@ -129,7 +131,7 @@ const ProfileSettings = () => {
                 <div>
                   <label htmlFor="last-name">Lastname</label>
                   <input
-                  onChange={handleLastName}
+                  // onChange={handleLastName}
                     className={edit ? `edit` : `not-edit`}
                     readOnly={!edit}
                     type="text"
@@ -139,7 +141,7 @@ const ProfileSettings = () => {
                 <div>
                   <label htmlFor="last-name">Email</label>
                   <input
-                    onChange={handleEmail}
+                    // onChange={handleEmail}
                     className={edit ? `edit` : `not-edit`}
                     readOnly={!edit}
                     type="text"
