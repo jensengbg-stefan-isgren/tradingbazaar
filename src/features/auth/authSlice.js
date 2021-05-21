@@ -8,13 +8,15 @@ export const authSlice = createSlice({
       isRegistered: null,
       errorMessage: null,
       user: null,
+      providerData: null
   },
 
 reducers: {
   authenticateUser : (state,action) => {
-    const {status,uid} = action.payload
+    const {status,uid,providerData} = action.payload
     state.isAuthenticated = status
     state.uid = uid
+    state.providerData = providerData
   },
   checkIfRegistered : (state, action) => {
     const {status,message} = action.payload
@@ -23,11 +25,14 @@ reducers: {
   },
   addUser : (state,action) => {
     state.user = action.payload
+  },
+  updateUser : (state,action) =>{
+    state.user = action.payload
   }
 }
 })
 
 
 
-export const {addUser,authenticateUser,checkIfRegistered} = authSlice.actions
+export const {updateUser,addUser,authenticateUser,checkIfRegistered} = authSlice.actions
 export default authSlice.reducer

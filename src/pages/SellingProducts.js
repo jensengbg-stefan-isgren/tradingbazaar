@@ -1,9 +1,10 @@
 import styled from 'styled-components'
 
+
+
 const ProductSection = () => {
   return (
     <StyledProductWrapper>
-      <h2>Products</h2>
     </StyledProductWrapper>
   )
 }

@@ -18,9 +18,10 @@ const App = () => {
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
+        console.log(user)
         const snapshot = await db.collection("users").doc(user.uid).get();
         const data = snapshot.data();
-        dispatch(authenticateUser({ status: true, uid: user.uid }));
+        dispatch(authenticateUser({ status: true, uid: user.uid, providerData: user.providerData }));
         dispatch(addUser(data))
       } else {
         dispatch(authenticateUser({ status: false, uid: null }));
