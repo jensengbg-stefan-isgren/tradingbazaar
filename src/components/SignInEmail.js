@@ -11,7 +11,7 @@ const SignUpContainer = styled.div`
   justify-content: end;
   align-items: flex-start;
   position: relative;
-  grid-template-columns: minmax(15rem, 25em);
+  grid-template-columns: minmax(15rem, 18em);
   padding-right: 10%;
   padding-left: 10%;
   padding-bottom: 10em;
@@ -40,11 +40,11 @@ const SignUpContainer = styled.div`
     height: 2.5em;
     width: 100%;
     display: block;
-    margin: 0.5em 0em 0.5em auto;
     cursor: pointer;
     font-family: ${(props) => props.theme.font.title};
     color: ${(props) => props.theme.color.main};
     font-size: 1em;
+    margin: 0.5em 0em 0.5em;
   }
 
   .error-container {
@@ -161,7 +161,7 @@ const SignInEmail = ({ setToggleSignInMethod,setToggleForgotCredentials }) => {
       <div>
         <h4>Sign In</h4>
         <p>
-          Sign in with Google of Facebook, Click
+          With Google of Facebook, Click
           <span onClick={() => setToggleSignInMethod(false)}> here</span>
           <InputField
             ref={emailInput}
@@ -176,15 +176,18 @@ const SignInEmail = ({ setToggleSignInMethod,setToggleForgotCredentials }) => {
             type="password"
             placeholder="Enter password"
           />
+          <div>
           <button disabled={!valid} onClick={login}>
             Login
           </button>
+          </div>  
+   
         </p>
-        <p>Forgot your credentials, no worries. Click <span onClick={() => setToggleForgotCredentials(true)}>here</span></p>
         <p>
           Already have an account, Sign in{" "}
           <span onClick={() => history.push("/register")}> here</span>
         </p>
+        <p>Forgot password, Click <span onClick={() => setToggleForgotCredentials(true)}>here</span></p>
         {errorMessage ? (
           <div className="error-container">
             <img className="warning-icon" src={exclamationIcon} alt="" />

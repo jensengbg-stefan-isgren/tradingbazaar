@@ -46,7 +46,7 @@ const SignInContainer = styled.div`
   justify-content: end;
   align-items: flex-start;
   position: relative;
-  grid-template-columns: minmax(15rem, 25em);
+  grid-template-columns: minmax(15rem, 18em);
   padding-right: 10%;
   padding-left: 10%;
   padding-bottom: 10em;
@@ -110,7 +110,7 @@ const SignInButton = styled.button`
   background-color: ${(props) => props.theme.button.color};
   border-radius: 5px;
   cursor: pointer;
-
+  
   p,
   img {
     justify-self: center;
@@ -176,7 +176,7 @@ const SignIn = () => {
             <div>
               <h4>Sign In</h4>
               <p>
-                Sign in with email and password, click
+                With email and password, click
                 <span onClick={handleSignInMethod}> here</span>
               </p>
               <SignInButton onClick={() => registerAccount("google")}>
