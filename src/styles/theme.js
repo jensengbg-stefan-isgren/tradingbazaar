@@ -2,6 +2,7 @@ const theme = {
   color: {
     main: '#424242',
     input: 'white',
+    lightBckGround: 'white',
   },
   button: {
     color: 'white',
