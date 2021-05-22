@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-// import {updateUser} from 'features/auth/authSlice'
+import {usersCollection} from 'services/firebase'
+
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -60,40 +61,56 @@ const SettingsContainer = styled.div`
 `;
 
 const ProfileSettings = () => {
-  const { user, providerData } = useSelector((state) => state.auth);
+  const { user, providerData, uid } = useSelector((state) => state.auth);
 
-  
-
-  // const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
-  // const [firstName,setFirstName] = useState(null)
-  // const [lastName,setLastName] = useState(null)
-  // const [email,setEmail] = useState(null)
- 
+
+  const [value, setValue] = useState({firstName:"",lastName:"",email:""});
+  const [ui,setUi] = useState()
+  const [message,setMessage] = useState(null)
 
   const handleEdit = () => {
     setEdit(!edit);
   };
 
+  useEffect(() => {
+    if (user !== null || uid !== null) {
+      setValue(user);
+      setUi(uid)
+    }
+    return () => {};
+  }, [user,uid]);
 
-
-  const updateUserData = () => {
-    
-  }
-
-
-  // const handleFirstName = (e) => {
-  //   setFirstName(e.target.value)
-  // }
+  const updateUserData = async() => {
   
-  // const handleLastName = (e) => {
-  //   setLastName(e.target.value)
-  // }
+    try {
+      await usersCollection.doc(ui).update(value)
+      setMessage('Successfully updated profile information')
+      setTimeout(() => {
+        setMessage(null)
+      },1000);
 
-  // const handleEmail = (e) => {
-  //   setEmail(e.target.value)
-  // }
 
+      setEdit(false)
+    } catch (error) {
+      setMessage(error)
+    }
+
+    
+
+  };
+
+  const handleFirstName = (e) => {
+    setValue({...value, firstName:e.target.value})
+  };
+
+  const handleLastName = (e) => {
+    setValue({...value, lastName:e.target.value})
+  };
+
+  const handleEmail = (e) => {
+    setValue({...value, email:e.target.value})
+  };
 
   return (
     <React.Fragment>
@@ -103,6 +120,7 @@ const ProfileSettings = () => {
             <PersonalInfo>
               <div className="header-container">
                 <h4>Account information</h4>
+                
               </div>
               {providerData.map((provider) => {
                 return <li key={provider.providerId}>{provider.providerId}</li>;
@@ -121,43 +139,48 @@ const ProfileSettings = () => {
                 <div>
                   <label htmlFor="first-name">Firstname</label>
                   <input
-                    // onChange={handleFirstName}
+                    onChange={handleFirstName}
                     className={edit ? `edit` : `not-edit`}
                     readOnly={!edit}
                     type="text"
-                    placeholder={user.firstName}
+                    
+                    value={value.firstName}
                   />
                 </div>
                 <div>
                   <label htmlFor="last-name">Lastname</label>
                   <input
-                  // onChange={handleLastName}
+                    onChange={handleLastName}
                     className={edit ? `edit` : `not-edit`}
                     readOnly={!edit}
                     type="text"
-                    placeholder={user.lastName}
+                    value={value.lastName}
                   />
                 </div>
                 <div>
                   <label htmlFor="last-name">Email</label>
                   <input
-                    // onChange={handleEmail}
+                    onChange={handleEmail}
                     className={edit ? `edit` : `not-edit`}
                     readOnly={!edit}
                     type="text"
-                    placeholder={user.email}
+                    value={value.email}
                   />
                 </div>
               </div>
 
               {edit ? (
                 <div className="button-container">
-                  <button  onClick={updateUserData}>Save</button>
+                  <button onClick={updateUserData}>Save</button>
                   <button onClick={() => setEdit(false)}>Cancel</button>
                 </div>
+         
               ) : (
                 ""
               )}
+              <div className="message-container">
+                <p>{message}</p>
+              </div>
             </PersonalInfo>
           ) : (
             ""

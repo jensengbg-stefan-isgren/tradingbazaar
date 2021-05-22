@@ -1,38 +1,34 @@
-import {createSlice} from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 export const authSlice = createSlice({
-  name:'auth', 
-    initialState: {
-      uid: null,
-      isAuthenticated: null,
-      isRegistered: null,
-      errorMessage: null,
-      user: null,
-      providerData: null
+  name: "auth",
+  initialState: {
+    uid: null,
+    isAuthenticated: null,
+    isRegistered: null,
+    errorMessage: null,
+    user: null,
+    providerData: null,
   },
 
-reducers: {
-  authenticateUser : (state,action) => {
-    const {status,uid,providerData} = action.payload
-    state.isAuthenticated = status
-    state.uid = uid
-    state.providerData = providerData
+  reducers: {
+    authenticateUser: (state, action) => {
+      const { status, uid, providerData } = action.payload;
+      state.isAuthenticated = status;
+      state.uid = uid;
+      state.providerData = providerData;
+    },
+    checkIfRegistered: (state, action) => {
+      const { status, message } = action.payload;
+      state.isRegistered = status;
+      state.errorMessage = message;
+    },
+    addUser: (state, action) => {
+      state.user = action.payload;
+    },
   },
-  checkIfRegistered : (state, action) => {
-    const {status,message} = action.payload
-    state.isRegistered = status
-    state.errorMessage = message
-  },
-  addUser : (state,action) => {
-    state.user = action.payload
-  },
-  updateUser : (state,action) =>{
-    state.user = action.payload
-  }
-}
-})
+});
 
-
-
-export const {updateUser,addUser,authenticateUser,checkIfRegistered} = authSlice.actions
-export default authSlice.reducer
+export const { addUser, authenticateUser, checkIfRegistered } =
+  authSlice.actions;
+export default authSlice.reducer;

@@ -1,15 +1,12 @@
 import styled from "styled-components";
-import React, { useState } from "react";
+import React from "react";
 import SignInEmail from "./SignInEmail";
-import firebase from "services/firebase";
-import { useHistory } from "react-router-dom";
 import signin from "assets/images/signin.jpg";
 import googleIcon from "assets/icons/google-icon.svg";
-import { useDispatch,useSelector } from "react-redux";
 import facebookIcon from "assets/icons/facebook-icon.svg";
 import exclamationIcon from "assets/icons/exclamation.svg";
-import { checkIfRegistered } from "features/auth/authSlice";
 import ForgotCredentials from "components/ForgotCredentials";
+import useSignin from "hooks/useSignin";
 
 const Wrapper = styled.section`
   position: relative;
@@ -110,7 +107,7 @@ const SignInButton = styled.button`
   background-color: ${(props) => props.theme.button.color};
   border-radius: 5px;
   cursor: pointer;
-  
+
   p,
   img {
     justify-self: center;
@@ -125,43 +122,17 @@ const SignInButton = styled.button`
 `;
 
 const SignIn = () => {
-  const dispatch = useDispatch();
-  const [toggleForgotCredentials, setToggleForgotCredentials] = useState(false);
-  const errorMessage = useSelector((state) => state.auth.errorMessage);
 
-  const [toggleSignInMethod, setToggleSignInMethod] = useState(false);
-
-  const handleSignInMethod = () => {
-    setToggleSignInMethod(!toggleSignInMethod);
-  };
-
-  const history = useHistory();
-
-  const registerAccount = async (provider) => {
-    let authProvider;
-
-    switch (provider) {
-      case "google":
-        authProvider = new firebase.auth.GoogleAuthProvider();
-        break;
-      case "facebook":
-        authProvider = new firebase.auth.FacebookAuthProvider();
-        break;
-      default:
-    }
-
-    try {
-      await firebase.auth().signInWithPopup(authProvider);
-
-      history.push("/profile/overview");
-      dispatch(checkIfRegistered({ status: null, message: null }));
-    } catch ({ code, message }) {
-      if (code === "auth/account-exists-with-different-credential") {
-        await dispatch(checkIfRegistered({ status: true, message: message }));
-        history.push("/login");
-      }
-    }
-  };
+  const {
+    registerAccount,
+    setToggleSignInMethod,
+    toggleSignInMethod,
+    handleSignInMethod,
+    history,
+    toggleForgotCredentials,
+    setToggleForgotCredentials,
+    errorMessage,
+  } = useSignin();
 
   const SigninMethod = () => {
     return (
