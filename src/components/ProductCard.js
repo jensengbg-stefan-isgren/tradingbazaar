@@ -2,9 +2,28 @@ import styled from 'styled-components'
 import image from 'assets/images/img-placeholder.svg'
 import FavoriteFill from 'assets/icons/favorite_fill.svg'
 import FavoriteOutline from 'assets/icons/favorite_outline.svg'
+import { useSelector } from 'react-redux'
+import { db } from 'services/firebase'
 
 const ProductCard = ({ ad }) => {
-  console.log(ad)
+  const { uid, isAuthenticated } = useSelector((state) => state.auth)
+  //   console.log(ad)
+
+  async function toggleFavorite() {
+    if (!uid) return alert('Please Login to select your Favorites')
+
+    const favoriteRef = await db
+      .collection('users')
+      .doc(uid)
+      .collection('favorites')
+      .push()
+
+    console.log('favorite key', favoriteRef.key())
+    favoriteRef
+      .set({ productId: ad.id })
+      .then((el) => console.log('result', el))
+  }
+
   return (
     <StyledProduct>
       <div className="wrapper">
@@ -12,12 +31,12 @@ const ProductCard = ({ ad }) => {
           <img src={ad.imgLink1 || image} alt="product" />
         </div>
         <div className="title-cont">
-          <p>title</p>
+          <p>{ad.title}</p>
         </div>
         <div className="bottom-cont">
           <p>{ad.startPrice} Kr</p>
           <p>0 Bids</p>
-          <button>
+          <button onClick={toggleFavorite} disabled={!isAuthenticated}>
             <img src={FavoriteOutline || FavoriteFill} alt="favorite"></img>
           </button>
 
