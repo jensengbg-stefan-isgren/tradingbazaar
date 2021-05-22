@@ -5,7 +5,7 @@ export const addProduct = async () => {
   const state = store.getState()
 
   const newProduct = {
-    user: "It's me",
+    uid: state.auth.uid,
     title: state.newAd.title,
     description: state.newAd.description,
     startPrice: state.newAd.startPrice,
@@ -34,5 +34,3 @@ export const addProduct = async () => {
     console.error('Error adding document: ', error)
   }
 }
-
-

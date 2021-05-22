@@ -2,6 +2,7 @@ const theme = {
   color: {
     main: '#424242',
     input: 'white',
+    lightBckGround: 'white',
   },
   button: {
     color: 'white',
@@ -13,7 +14,10 @@ const theme = {
     title: '"Passion One", cursive;',
     body: '"Open Sans", sans-serif;',
     dark: '#424242',
+    light: 'white',
   },
 }
 
 export default theme
+
+// ${(props) => props.theme.button.outline}
