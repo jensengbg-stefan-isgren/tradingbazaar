@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux'
 // import {  } from 'features/adsSlice'
 import userGetAds from 'services/useGetAds'
 
+
+
 const ProductSection = () => {
   const ads = useSelector((state) => state.ads)
   // const ads = userGetAds()

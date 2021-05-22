@@ -5,7 +5,8 @@ import Login from "../pages/Login";
 import Profile from "../pages/Profile";
 import Register from "../pages/Register";
 import MainNav from '../pages/MainNav'
-import ProfileSettings from 'components/Settings/Settings'
+import Settings from 'components/Settings/Settings'
+import ProfileSettings from 'components/Settings/ProfileSettings'
 
 export const routes = [
   {
@@ -16,6 +17,12 @@ export const routes = [
   },
   {
     path: "/profile/settings",
+    exact: true,
+    main: () => <Settings/>,
+    navbar: () => <MainNav />,
+  },
+  {
+    path: "/profile/settings/account",
     exact: true,
     main: () => <ProfileSettings/>,
     navbar: () => <MainNav />,
