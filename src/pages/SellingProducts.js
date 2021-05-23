@@ -22,9 +22,9 @@ const ProductSection = () => {
   )
 }
 
-{
-  /* <ProductCard imgLink="https://cdn.pixabay.com/photo/2020/08/23/08/54/slippers-5510231_960_720.jpg" /> */
-}
+// {
+//   /* <ProductCard imgLink="https://cdn.pixabay.com/photo/2020/08/23/08/54/slippers-5510231_960_720.jpg" /> */
+// }
 
 const StyledProductWrapper = styled.main`
   background-color: lightgray;

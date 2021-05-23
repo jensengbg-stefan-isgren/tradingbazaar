@@ -92,15 +92,15 @@ const ProfileSettings = () => {
   const [userPassword, setUserPassword] = useState("");
   const [verifyPassword, setVerifyPassword] = useState("");
 
+console.log(verifyPassword)
+
   const [message, setMessage] = useState(null);
   const [toggleCredentials, setToggleCredentials] = useState(false);
   const [facebook, setFacebook] = useState(false);
   const [google, setGoogle] = useState(false);
-  const [activeProviders, setActiveProviders] = useState({
-    google: "",
-    facebook: "",
-    password: "",
-  });
+
+
+
   const handleEdit = () => {
     setEdit(!edit);
   };
@@ -131,7 +131,7 @@ const ProfileSettings = () => {
     return () => {
 
     };
-  }, [user, uid]);
+  }, [user, uid,providerData]);
 
   const updateUserData = async () => {
     try {
