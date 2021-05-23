@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import ProductCard from 'components/ProductCard'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 // import {  } from 'features/adsSlice'
 import userGetAds from 'services/useGetAds'
 

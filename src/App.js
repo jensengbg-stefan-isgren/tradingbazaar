@@ -17,19 +17,18 @@ const App = () => {
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        const snapshot = await db.collection("users").doc(user.uid).get();
-        const data = snapshot.data();
-
         console.log(user)
-        // const providers = []
-        // await user.providerData.forEach((profile) => {
-
-    
-        //   providers.push({providerId: profile.providerId})
-        // })
+        const snapshot = await db.collection("users").doc(user.uid).get();
+        console.log(snapshot)
+        const data =  snapshot.data();
 
 
-        dispatch(authenticateUser({ status: true, uid: user.uid, providerData: user.providerData }));
+        const providers = []
+        await user.providerData.forEach((profile) => {
+          providers.push(profile.providerId)
+        })
+
+        dispatch(authenticateUser({ status: true, uid: user.uid, providerData:providers }));
         dispatch(addUser(data))
       } else {
         dispatch(authenticateUser({ status: false, uid: null }));

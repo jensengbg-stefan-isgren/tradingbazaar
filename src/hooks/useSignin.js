@@ -1,32 +1,35 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import firebase from "firebase";
-import { checkIfRegistered, addUser } from "features/auth/authSlice";
+import { useState } from "react";
 import { db } from "services/firebase";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { checkIfRegistered, addUser } from "features/auth/authSlice";
 
 const useSignin = () => {
   const [toggleForgotCredentials, setToggleForgotCredentials] = useState(false);
   const [toggleSignInMethod, setToggleSignInMethod] = useState(false);
+
   const errorMessage = useSelector((state) => state.auth.errorMessage);
-  
+
   const dispatch = useDispatch();
   const history = useHistory();
-  
+
   const handleSignInMethod = () => {
     setToggleSignInMethod(!toggleSignInMethod);
   };
 
   const registerAccount = async (provider) => {
-    console.log(provider);
+    const googleProvider = new firebase.auth.GoogleAuthProvider();
+    const facebookProvider = new firebase.auth.FacebookAuthProvider();
+
     let authProvider;
 
     switch (provider) {
       case "google":
-        authProvider = new firebase.auth.GoogleAuthProvider();
+        authProvider = googleProvider;
         break;
       case "facebook":
-        authProvider = new firebase.auth.FacebookAuthProvider();
+        authProvider = facebookProvider;
         break;
       default:
     }
@@ -41,16 +44,14 @@ const useSignin = () => {
       const { providerId, isNewUser } = additionalUserInfo;
 
       if (!isNewUser) {
-        db.collection("users")
-          .doc(uid)
-          .get()
-          .then((snapshot) => {
-            const document = snapshot.data();
-            dispatch(addUser(document));
-          });
+
+        const snapShot = await db.collection('users').doc(uid).get()
+        const document = snapShot.data()
+        dispatch(addUser(document))
 
         history.push("/profile/overview");
       } else {
+        
         let profileData = {
           name: null,
           firstName: null,
@@ -59,9 +60,9 @@ const useSignin = () => {
           photoUrl: null,
         };
 
+
         switch (providerId) {
           case "google.com":
-            profileData.name = profile.name;
             profileData.firstName = profile.given_name;
             profileData.lastName = profile.family_name;
             profileData.email = profile.email;
