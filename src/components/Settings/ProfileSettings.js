@@ -92,24 +92,22 @@ const ProfileSettings = () => {
   const [userPassword, setUserPassword] = useState("");
   const [verifyPassword, setVerifyPassword] = useState("");
 
-console.log(verifyPassword)
+  console.log(verifyPassword);
 
   const [message, setMessage] = useState(null);
   const [toggleCredentials, setToggleCredentials] = useState(false);
   const [facebook, setFacebook] = useState(false);
   const [google, setGoogle] = useState(false);
 
-
-
   const handleEdit = () => {
     setEdit(!edit);
   };
 
   useEffect(() => {
-    if(providerData === undefined) {
-      return
+    if (providerData === undefined) {
+      return;
     } else {
-      if (providerData !== null ) {
+      if (providerData !== null) {
         if (providerData.includes("google.com")) {
           setGoogle(true);
         }
@@ -122,16 +120,12 @@ console.log(verifyPassword)
       }
     }
 
-
-
     if (user !== null || uid !== null) {
       setValue(user);
       setUi(uid);
     }
-    return () => {
-
-    };
-  }, [user, uid,providerData]);
+    return () => {};
+  }, [user, uid, providerData]);
 
   const updateUserData = async () => {
     try {
@@ -172,7 +166,6 @@ console.log(verifyPassword)
   };
 
   const connectEmailAndPassword = async () => {
-    console.log("koppla ihop");
     setToggleCredentials(!toggleCredentials);
 
     let credential = await firebase.auth.EmailAuthProvider.credential(
@@ -180,13 +173,19 @@ console.log(verifyPassword)
       userPassword
     );
 
-    let user = firebase.auth().currentUser
+    let user = firebase.auth().currentUser;
 
-    
-    await user.reauthenticateWithPopup(new firebase.auth.GoogleAuthProvider())
+    let provider;
 
+    if (providerData.includes("google.com")) {
+      provider = new firebase.auth.GoogleAuthProvider();
+      await user.reauthenticateWithPopup(provider);
+    } else {
+      provider = new firebase.auth.FacebookAuthProvider();
+      await user.reauthenticateWithPopup(provider);
+    }
     await auth.currentUser.linkWithCredential(credential);
-    setPassword(true)
+    setPassword(true);
   };
 
   const removeGoogle = async () => {
@@ -194,14 +193,14 @@ console.log(verifyPassword)
     setGoogle(false);
   };
 
-  const removeFacebook = async() => {
+  const removeFacebook = async () => {
     await auth.currentUser.unlink("facebook.com");
     setFacebook(false);
   };
 
-  const removeEmail = async() => {
-    auth.currentUser.unlink('password')
-    setPassword(false)
+  const removeEmail = async () => {
+    auth.currentUser.unlink("password");
+    setPassword(false);
   };
 
   const handleUserEmail = (e) => {
