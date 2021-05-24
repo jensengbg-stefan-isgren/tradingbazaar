@@ -4,10 +4,16 @@ import FavoriteFill from 'assets/icons/favorite_fill.svg'
 import FavoriteOutline from 'assets/icons/favorite_outline.svg'
 import { useSelector } from 'react-redux'
 import { db } from 'services/firebase'
+import { useState } from 'react'
 
 const ProductCard = ({ ad }) => {
-  const { uid, isAuthenticated } = useSelector((state) => state.auth)
+  const { uid, isAuthenticated, favorites } = useSelector((state) => state.auth)
   //   console.log(ad)
+
+  const [isFavorite, setIsFavorite] = useState(false)
+
+  //   if (favorites.includes(ad.id)) setIsFavorite(true)
+  console.log(ad.id, favorites.includes(ad.id), favorites)
 
   async function toggleFavorite() {
     if (!uid) return alert('Please Login to select your Favorites')
@@ -16,12 +22,15 @@ const ProductCard = ({ ad }) => {
       .collection('users')
       .doc(uid)
       .collection('favorites')
-      .push()
+      .add({ productId: ad.id })
+    console.log('result fav', favoriteRef)
 
-    console.log('favorite key', favoriteRef.key())
-    favoriteRef
-      .set({ productId: ad.id })
-      .then((el) => console.log('result', el))
+    console.log(await db.collection('users').doc(uid).get())
+
+    // console.log('favorite key', favoriteRef.key())
+    // favoriteRef
+    //   .set({ productId: ad.id })
+    //   .then((el) => console.log('result', el))
   }
 
   return (
@@ -37,7 +46,10 @@ const ProductCard = ({ ad }) => {
           <p>{ad.startPrice} Kr</p>
           <p>0 Bids</p>
           <button onClick={toggleFavorite} disabled={!isAuthenticated}>
-            <img src={FavoriteOutline || FavoriteFill} alt="favorite"></img>
+            <img
+              src={isFavorite ? FavoriteFill : FavoriteOutline}
+              alt="favorite"
+            ></img>
           </button>
 
           <p>Time Left</p>
