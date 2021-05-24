@@ -1,5 +1,4 @@
-// import firebase from 'firebase'
-import firebase from 'firebase'
+import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
 
@@ -13,12 +12,22 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 }
 
-firebase.initializeApp(firebaseConfig)
-// firebase.analytics()
 
-export const auth = firebase.auth()
-export const db = firebase.firestore()
+
+
+
+let app = undefined;
+try {  // Check if the app already exists
+	app = firebase.app("TradingBazaar");
+}
+catch(e) {
+	app = firebase.initializeApp( firebaseConfig , "TradingBazaar");
+}
+
+
+export const auth = app.auth()
+export const db = app.firestore()
 
 export const usersCollection = db.collection('users')
 
-export default firebase
+export default app
