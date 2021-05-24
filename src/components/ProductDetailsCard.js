@@ -16,7 +16,7 @@ const Wrapper = styled.div`
 const ProductDetailsCard = () => {
 
   const {id} = useParams()
-
+  getProduct(id)
   useEffect(() => {
     return () => {
     
