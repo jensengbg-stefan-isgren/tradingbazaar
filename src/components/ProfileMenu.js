@@ -16,6 +16,7 @@ const Menu = styled.div`
   min-height: calc(100vh - 64px);
   background-color: white;
   position: absolute;
+  z-index:999;
   transition: transform 0.2s ease-in-out;
   transform: translateX(100%);
   

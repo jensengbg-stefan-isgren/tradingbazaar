@@ -1,12 +1,12 @@
-import styled from "styled-components";
 import React from "react";
+import styled from "styled-components";
+import useSignin from "hooks/useSignin";
 import SignInEmail from "./SignInEmail";
 import signin from "assets/images/signin.jpg";
 import googleIcon from "assets/icons/google-icon.svg";
 import facebookIcon from "assets/icons/facebook-icon.svg";
 import exclamationIcon from "assets/icons/exclamation.svg";
 import ForgotCredentials from "components/ForgotCredentials";
-import useSignin from "hooks/useSignin";
 
 const Wrapper = styled.section`
   position: relative;
@@ -23,13 +23,11 @@ const Wrapper = styled.section`
     background-image: url(${signin});
     opacity: 0.9;
     background-size: cover;
-    // blir konstigt i mobilvy behöver kolla på detta!
     background-position: center bottom 0%;
   }
 
   @media only screen and (max-width: 600px) {
     ::before {
-      /* opacity: 0.4; */
       min-height: 100vh;
       background-position: 40% bottom;
     }

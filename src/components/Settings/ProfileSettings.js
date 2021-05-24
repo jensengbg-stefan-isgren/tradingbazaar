@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-import {usersCollection} from 'services/firebase'
-
+import { usersCollection } from "services/firebase";
+import firebase, { auth } from "services/firebase";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -19,6 +19,36 @@ const PersonalInfo = styled.div`
   width: 100%;
   padding: 1em;
 
+button {
+    margin: .3em 0;
+    padding: .5em;
+  }
+
+  label {
+    margin-right:1em;
+  }
+
+  p:first-child {
+    margin: .5em 0;
+  }
+
+  .active-providers-container,
+  .inactive-providers-container {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+
+    div {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .user-creds-container {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
   .header-container {
     display: flex;
     flex-direction: row;
@@ -30,6 +60,14 @@ const PersonalInfo = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    div {
+      display:grid;
+      grid-template-columns: repeat(2,1fr);
+      place-content: center;
+      justify-items:flex-start
+    }
+
   }
 
   input {
@@ -61,55 +99,141 @@ const SettingsContainer = styled.div`
 `;
 
 const ProfileSettings = () => {
+  const [ui, setUi] = useState();
   const { user, providerData, uid } = useSelector((state) => state.auth);
-
   const [edit, setEdit] = useState(false);
+  const [password, setPassword] = useState(false);
+  const [value, setValue] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
 
-  const [value, setValue] = useState({firstName:"",lastName:"",email:""});
-  const [ui,setUi] = useState()
-  const [message,setMessage] = useState(null)
+  const [userEmail, setUserEmail] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [verifyPassword, setVerifyPassword] = useState("");
+
+  console.log(verifyPassword);
+
+  const [message, setMessage] = useState(null);
+  const [toggleCredentials, setToggleCredentials] = useState(false);
+  const [facebook, setFacebook] = useState(false);
+  const [google, setGoogle] = useState(false);
 
   const handleEdit = () => {
     setEdit(!edit);
   };
 
   useEffect(() => {
+    if (providerData === undefined) {
+      return;
+    } else {
+      if (providerData !== null) {
+        if (providerData.includes("google.com")) {
+          setGoogle(true);
+        }
+        if (providerData.includes("facebook.com")) {
+          setFacebook(true);
+        }
+        if (providerData.includes("password")) {
+          setPassword(true);
+        }
+      }
+    }
+
     if (user !== null || uid !== null) {
       setValue(user);
-      setUi(uid)
+      setUi(uid);
     }
     return () => {};
-  }, [user,uid]);
+  }, [user, uid, providerData]);
 
-  const updateUserData = async() => {
-  
+  const updateUserData = async () => {
     try {
-      await usersCollection.doc(ui).update(value)
-      setMessage('Successfully updated profile information')
+      await usersCollection.doc(ui).update(value);
+      setMessage("Successfully updated profile information");
       setTimeout(() => {
-        setMessage(null)
-      },1000);
+        setMessage(null);
+      }, 1000);
 
-
-      setEdit(false)
+      setEdit(false);
     } catch (error) {
-      setMessage(error)
+      setMessage(error);
     }
-
-    
-
   };
 
   const handleFirstName = (e) => {
-    setValue({...value, firstName:e.target.value})
+    setValue({ ...value, firstName: e.target.value });
   };
 
   const handleLastName = (e) => {
-    setValue({...value, lastName:e.target.value})
+    setValue({ ...value, lastName: e.target.value });
   };
 
   const handleEmail = (e) => {
-    setValue({...value, email:e.target.value})
+    setValue({ ...value, email: e.target.value });
+  };
+
+  const connectFacebook = async () => {
+    const facebookProvider = new firebase.auth.FacebookAuthProvider();
+    await auth.currentUser.linkWithPopup(facebookProvider);
+    setFacebook(true);
+  };
+
+  const connectGoogle = async () => {
+    const googleProvider = new firebase.auth.GoogleAuthProvider();
+    await auth.currentUser.linkWithPopup(googleProvider);
+    setGoogle(true);
+  };
+
+  const connectEmailAndPassword = async () => {
+    setToggleCredentials(!toggleCredentials);
+
+    let credential = await firebase.auth.EmailAuthProvider.credential(
+      userEmail,
+      userPassword
+    );
+
+    let user = firebase.auth().currentUser;
+
+    let provider;
+
+    if (providerData.includes("google.com")) {
+      provider = new firebase.auth.GoogleAuthProvider();
+      await user.reauthenticateWithPopup(provider);
+    } else {
+      provider = new firebase.auth.FacebookAuthProvider();
+      await user.reauthenticateWithPopup(provider);
+    }
+    await auth.currentUser.linkWithCredential(credential);
+    setPassword(true);
+  };
+
+  const removeGoogle = async () => {
+    await auth.currentUser.unlink("google.com");
+    setGoogle(false);
+  };
+
+  const removeFacebook = async () => {
+    await auth.currentUser.unlink("facebook.com");
+    setFacebook(false);
+  };
+
+  const removeEmail = async () => {
+    auth.currentUser.unlink("password");
+    setPassword(false);
+  };
+
+  const handleUserEmail = (e) => {
+    setUserEmail(e.target.value);
+  };
+
+  const handleUserPassword = (e) => {
+    setUserPassword(e.target.value);
+  };
+
+  const handleUserVerifyPassword = (e) => {
+    setVerifyPassword(e.target.value);
   };
 
   return (
@@ -120,16 +244,93 @@ const ProfileSettings = () => {
             <PersonalInfo>
               <div className="header-container">
                 <h4>Account information</h4>
-                
               </div>
-              {providerData.map((provider) => {
-                return <li key={provider.providerId}>{provider.providerId}</li>;
-              })}
+              <div className="active-providers-container">
+                <p>Active providers</p>
+                {google ? (
+                  <div>
+                  
+                    <button onClick={removeGoogle}>
+                      Remove Google as signin method
+                    </button>
+                  </div>
+                ) : (
+                  ""
+                )}
+                {facebook ? (
+                  <div>
+               
+                    <button onClick={removeFacebook}>
+                      Remove Facebook as signin method
+                    </button>
+                  </div>
+                ) : (
+                  ""
+                )}
+                {password ? (
+                  <div>
+                 
+                    <button onClick={removeEmail}>
+                      Remove Password as signin method
+                    </button>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+              <div className="inactive-providers-container">
+                <p>Inactive providers</p>
+                {!google ? <button onClick={connectGoogle}>Add Google as signin method</button> : ""}
+                {!facebook ? (
+                  <button onClick={connectFacebook}>Add Facebook as signin method</button>
+                ) : (
+                  ""
+                )}
+                {!password ? (
+                  <div>
+                    <button
+                      onClick={() => setToggleCredentials(!toggleCredentials)}
+                    >
+                      Add email and password as signin method
+                    </button>
+                  </div>
+                ) : (
+                  ""
+                )}
+                {toggleCredentials ? (
+                  <div className="user-creds-container">
+                    <p>Enter your your email create a password1</p>
+                    <input
+                      onChange={handleUserEmail}
+                      type="text"
+                      name="email"
+                      placeholder="Email"
+                    />
+                    <input
+                      onChange={handleUserPassword}
+                      type="password"
+                      name="password"
+                      id="password"
+                      placeholder="Password"
+                    />
+                    <input
+                      onChange={handleUserVerifyPassword}
+                      type="password"
+                      name="verifypassword"
+                      id="verifypassword"
+                      placeholder="Verify password"
+                    />
+                    <button onClick={connectEmailAndPassword}>Save</button>
+                  </div>
+                ) : (
+                  <React.Fragment></React.Fragment>
+                )}
+              </div>
             </PersonalInfo>
           ) : (
             ""
           )}
-          {user ? (
+          {value ? (
             <PersonalInfo>
               <div className="header-container">
                 <h4>Personal information</h4>
@@ -143,7 +344,6 @@ const ProfileSettings = () => {
                     className={edit ? `edit` : `not-edit`}
                     readOnly={!edit}
                     type="text"
-                    
                     value={value.firstName}
                   />
                 </div>
@@ -174,7 +374,6 @@ const ProfileSettings = () => {
                   <button onClick={updateUserData}>Save</button>
                   <button onClick={() => setEdit(false)}>Cancel</button>
                 </div>
-         
               ) : (
                 ""
               )}

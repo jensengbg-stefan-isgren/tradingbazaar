@@ -57,7 +57,7 @@ const Settings = () => {
           <h3>Sales settings</h3>
         </ItemContainer>
         <ItemContainer>
-          <h3>email</h3>
+          <h3>Email</h3>
         </ItemContainer>
         <ItemContainer>
           <h3>Notifications</h3>

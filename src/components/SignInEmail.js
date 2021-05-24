@@ -63,9 +63,7 @@ const SignUpContainer = styled.div`
     text-align: center;
   }
 
-
-
-  p:nth-child(4,3) {
+  p:nth-child(4, 3) {
     margin-left: auto;
   }
 
@@ -102,8 +100,8 @@ const InputField = styled.input`
   }
 
   :focus {
-      border: 2px solid rgba(0,0,0,.4)
-    }
+    border: 2px solid rgba(0, 0, 0, 0.4);
+  }
 
   p,
   img {
@@ -114,38 +112,39 @@ const InputField = styled.input`
   }
 `;
 
-const SignInEmail = ({ setToggleSignInMethod,setToggleForgotCredentials }) => {
+const SignInEmail = ({ setToggleSignInMethod, setToggleForgotCredentials }) => {
   const emailInput = useRef();
-  const [email, setEmail] = useState("");
+  const history = useHistory();
+  const [values,setValues] = useState({email:"", password:""})
   const [valid, setValid] = useState(false);
-  const [password, setPassword] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
+    
     if (!isFocused) {
       emailInput.current.focus();
       setIsFocused(true);
     }
 
-    if (!email && password.length <= 0) {
+    if (!values.email && values.password.length <= 0) {
       setValid(false);
     } else {
       setValid(true);
     }
 
     return () => {};
-  }, [email, password,isFocused]);
+  }, [values.email, values.password, isFocused]);
 
-  const handleEmail = (e) => {
-    setEmail(e.target.value);
-  };
 
-  const handlePassword = (e) => {
-    setPassword(e.target.value);
-  };
+
+  const handleInput = (e) => {
+    const {name,value} = e.target
+    setValues({...values, [name]:value})
+  }
 
   const login = async () => {
+    const {email,password} = values
     try {
       await auth.signInWithEmailAndPassword(email, password);
       history.push("/profile/overview");
@@ -153,8 +152,6 @@ const SignInEmail = ({ setToggleSignInMethod,setToggleForgotCredentials }) => {
       setErrorMessage(error.message);
     }
   };
-
-  const history = useHistory();
 
   return (
     <SignUpContainer>
@@ -165,29 +162,33 @@ const SignInEmail = ({ setToggleSignInMethod,setToggleForgotCredentials }) => {
           <span onClick={() => setToggleSignInMethod(false)}> here</span>
           <InputField
             ref={emailInput}
-            value={email}
-            onChange={handleEmail}
+            value={values.email}
+            onChange={handleInput}
             type="text"
             placeholder="Email"
+            name="email"
           />
           <InputField
-            value={password}
-            onChange={handlePassword}
+            value={values.password}
+            onChange={handleInput}
             type="password"
             placeholder="Enter password"
+            name="password"
           />
           <div>
-          <button disabled={!valid} onClick={login}>
-            Login
-          </button>
-          </div>  
-   
+            <button disabled={!valid} onClick={login}>
+              Login
+            </button>
+          </div>
         </p>
         <p>
           Already have an account, Sign in{" "}
           <span onClick={() => history.push("/register")}> here</span>
         </p>
-        <p>Forgot password, Click <span onClick={() => setToggleForgotCredentials(true)}>here</span></p>
+        <p>
+          Forgot password, Click{" "}
+          <span onClick={() => setToggleForgotCredentials(true)}>here</span>
+        </p>
         {errorMessage ? (
           <div className="error-container">
             <img className="warning-icon" src={exclamationIcon} alt="" />
