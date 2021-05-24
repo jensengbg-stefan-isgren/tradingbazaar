@@ -19,6 +19,19 @@ const PersonalInfo = styled.div`
   width: 100%;
   padding: 1em;
 
+button {
+    margin: .3em 0;
+    padding: .5em;
+  }
+
+  label {
+    margin-right:1em;
+  }
+
+  p:first-child {
+    margin: .5em 0;
+  }
+
   .active-providers-container,
   .inactive-providers-container {
     display: flex;
@@ -47,6 +60,14 @@ const PersonalInfo = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    div {
+      display:grid;
+      grid-template-columns: repeat(2,1fr);
+      place-content: center;
+      justify-items:flex-start
+    }
+
   }
 
   input {
@@ -228,7 +249,7 @@ const ProfileSettings = () => {
                 <p>Active providers</p>
                 {google ? (
                   <div>
-                    <p>Google</p>
+                  
                     <button onClick={removeGoogle}>
                       Remove Google as signin method
                     </button>
@@ -238,7 +259,7 @@ const ProfileSettings = () => {
                 )}
                 {facebook ? (
                   <div>
-                    <p>Facebook</p>
+               
                     <button onClick={removeFacebook}>
                       Remove Facebook as signin method
                     </button>
@@ -248,7 +269,7 @@ const ProfileSettings = () => {
                 )}
                 {password ? (
                   <div>
-                    <p>Password</p>
+                 
                     <button onClick={removeEmail}>
                       Remove Password as signin method
                     </button>
@@ -259,9 +280,9 @@ const ProfileSettings = () => {
               </div>
               <div className="inactive-providers-container">
                 <p>Inactive providers</p>
-                {!google ? <button onClick={connectGoogle}>Google</button> : ""}
+                {!google ? <button onClick={connectGoogle}>Add Google as signin method</button> : ""}
                 {!facebook ? (
-                  <button onClick={connectFacebook}>Facebook</button>
+                  <button onClick={connectFacebook}>Add Facebook as signin method</button>
                 ) : (
                   ""
                 )}
@@ -270,7 +291,7 @@ const ProfileSettings = () => {
                     <button
                       onClick={() => setToggleCredentials(!toggleCredentials)}
                     >
-                      Password
+                      Add email and password as signin method
                     </button>
                   </div>
                 ) : (
