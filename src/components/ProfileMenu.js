@@ -49,8 +49,7 @@ const ProfileMenu = ({ toggleMenu }) => {
   return (
     <Menu className={toggleMenu ? `sliding` : ""}>
       {user ? <h3>{user.name}</h3> : ""}
-      <li>Overview</li>
-      <li>My Profile</li>
+      <li><Link to="/profile/overview">Overview</Link></li>
       <li><Link to="/profile/settings">Settings</Link></li>
       <li onClick={logOut}>Log out</li>
     </Menu>

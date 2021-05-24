@@ -1,6 +1,7 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import ProfileMenu from 'components/ProfileMenu'
+import { Link } from "react-router-dom";
+import ProfileMenu from "components/ProfileMenu";
 
 const Navigation = styled.nav`
     .container {
@@ -52,48 +53,33 @@ const Navigation = styled.nav`
       margin: 0 1em;
       text-decoration: none;
     }
-  `
-
-
-  const StyledInput = styled.input`
-    border: 3px solid ${(props) => props.theme.color.main};
-    height: 40px;
-    width: 400px;
-    outline: none;
-    padding-left: 0.5em;
-    font-family: ${(props) => props.theme.font.body};
-    color: ${(props) => props.theme.color.body};
-
-    ::placeholder {
-      font-family: ${(props) => props.theme.font.body};
-      color: ${(props) => props.theme.color.body};
-    }
   `;
 
+const StyledInput = styled.input`
+  border: 3px solid ${(props) => props.theme.color.main};
+  height: 40px;
+  width: 400px;
+  outline: none;
+  padding-left: 0.5em;
+  font-family: ${(props) => props.theme.font.body};
+  color: ${(props) => props.theme.color.body};
+
+  ::placeholder {
+    font-family: ${(props) => props.theme.font.body};
+    color: ${(props) => props.theme.color.body};
+  }
+`;
 
 const NavbarProfile = () => {
+  const [toggleMenu, setToggleMenu] = useState(false);
 
-const [toggleMenu,setToggleMenu] = useState(false)
-
-
-
-
-
-// const linkFacebookAccount = async() => {
-//   await auth.currentUser.linkWithPopup(new firebase.auth.FacebookAuthProvider())
-// }
-
-
-
-const handleMenu = () => {
-  setToggleMenu(!toggleMenu)
-}
-
-
+  const handleMenu = () => {
+    setToggleMenu(!toggleMenu);
+  };
 
   return (
     <Navigation>
-      <ProfileMenu toggleMenu={toggleMenu}/>
+      <ProfileMenu toggleMenu={toggleMenu} />
       <div className="container">
         <div className="logo">
           <p>TradingBazaar</p>
@@ -105,13 +91,15 @@ const handleMenu = () => {
           <StyledInput placeholder="What are you looking for today?" />
         </div>
         <div className="nav-links">
-          {/* <button>nojjan</button>
-          <button onClick={linkFacebookAccount}>Link your facebook account</button>
-          <button>Link your google1 account</button> */}
-      
-         <li>Watchlist</li>
-         <li>Buy</li>
-         <li>Sell</li>
+          <li>
+            <Link to="/profile/wish-list">Wishlist</Link>
+          </li>
+          <li>
+            <Link to="/profile/active-items">Buy</Link>
+          </li>
+          <li>
+            <Link to="/profile/active">Sell</Link>
+          </li>
           <li onClick={handleMenu}>Menu</li>
         </div>
       </div>

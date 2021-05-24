@@ -5,14 +5,36 @@ import Login from "../pages/Login";
 import Profile from "../pages/Profile";
 import Register from "../pages/Register";
 import MainNav from '../pages/MainNav'
+import ActiveItems from 'components/ActiveItems'
 import Settings from 'components/Settings/Settings'
 import ProfileSettings from 'components/Settings/ProfileSettings'
+import ActiveAds from 'components/ActiveAds'
+import WishList from 'components/WishList'
+
 
 export const routes = [
   {
     path: "/",
     exact: true,
     main: () => <SellingProducts />,
+    navbar: () => <MainNav />,
+  },
+  {
+    path: "/profile/active-items",
+    exact: true,
+    main: () => <ActiveItems/>,
+    navbar: () => <MainNav />,
+  },
+  {
+    path: "/profile/wish-list",
+    exact: true,
+    main: () => <WishList/>,
+    navbar: () => <MainNav />,
+  },
+  {
+    path: "/profile/active",
+    exact: true,
+    main: () => <ActiveAds/>,
     navbar: () => <MainNav />,
   },
   {
