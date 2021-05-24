@@ -3,6 +3,7 @@ import exclamationIcon from "assets/icons/exclamation.svg";
 import { auth } from "services/firebase";
 import { useHistory } from "react-router-dom";
 import React, { useState, useEffect, useRef } from "react";
+import {db} from 'services/firebase'
 
 const SignUpContainer = styled.div`
   display: grid;
@@ -62,7 +63,6 @@ const SignUpContainer = styled.div`
     text-align: center;
   }
 
-
   div {
     display: flex;
     flex-direction: column;
@@ -102,13 +102,11 @@ const InputField = styled.input`
   }
 
   :focus {
-      border: 2px solid rgba(0,0,0,.4)
-    }
-
+    border: 2px solid rgba(0, 0, 0, 0.4);
+  }
 `;
 
 const SignUpEmail = ({ setToggleSignInMethod }) => {
-  
   const emailInput = useRef();
   const [email, setEmail] = useState("");
   const [valid, setValid] = useState(false);
@@ -120,7 +118,7 @@ const SignUpEmail = ({ setToggleSignInMethod }) => {
   useEffect(() => {
     if (!isFocused) {
       emailInput.current.focus();
-      setIsFocused(true)
+      setIsFocused(true);
     }
     if (
       !email ||
@@ -134,7 +132,7 @@ const SignUpEmail = ({ setToggleSignInMethod }) => {
     }
 
     return () => {};
-  }, [email, password, verifyPassword,isFocused]);
+  }, [email, password, verifyPassword, isFocused]);
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -150,7 +148,20 @@ const SignUpEmail = ({ setToggleSignInMethod }) => {
 
   const registerEmail = async () => {
     try {
-      await auth.createUserWithEmailAndPassword(email, password);
+      let {
+        user: { uid },
+      } = await auth.createUserWithEmailAndPassword(email, password);
+
+      let profileData = {
+        name: null,
+        firstName: null,
+        lastName: null,
+        email: email,
+        photoUrl: null,
+      };
+
+      await db.collection("users").doc(uid).set(profileData);
+
       history.push("/profile/overview");
     } catch (error) {
       setErrorMessage(error.message);
@@ -185,12 +196,9 @@ const SignUpEmail = ({ setToggleSignInMethod }) => {
             type="password"
             placeholder="Confirm password"
           />
-
           <button disabled={!valid} onClick={registerEmail}>
             Create account
           </button>
-         
-   
         </p>
         <p>
           Have an account, Sign in{" "}

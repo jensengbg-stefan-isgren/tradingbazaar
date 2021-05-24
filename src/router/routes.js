@@ -5,7 +5,12 @@ import Login from "../pages/Login";
 import Profile from "../pages/Profile";
 import Register from "../pages/Register";
 import MainNav from '../pages/MainNav'
-import ProfileSettings from 'components/Settings/Settings'
+import ActiveItems from 'components/ActiveItems'
+import Settings from 'components/Settings/Settings'
+import ProfileSettings from 'components/Settings/ProfileSettings'
+import ActiveAds from 'components/ActiveAds'
+import WishList from 'components/WishList'
+
 
 export const routes = [
   {
@@ -15,7 +20,31 @@ export const routes = [
     navbar: () => <MainNav />,
   },
   {
+    path: "/profile/active-items",
+    exact: true,
+    main: () => <ActiveItems/>,
+    navbar: () => <MainNav />,
+  },
+  {
+    path: "/profile/wish-list",
+    exact: true,
+    main: () => <WishList/>,
+    navbar: () => <MainNav />,
+  },
+  {
+    path: "/profile/active",
+    exact: true,
+    main: () => <ActiveAds/>,
+    navbar: () => <MainNav />,
+  },
+  {
     path: "/profile/settings",
+    exact: true,
+    main: () => <Settings/>,
+    navbar: () => <MainNav />,
+  },
+  {
+    path: "/profile/settings/account",
     exact: true,
     main: () => <ProfileSettings/>,
     navbar: () => <MainNav />,

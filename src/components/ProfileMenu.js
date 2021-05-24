@@ -16,6 +16,7 @@ const Menu = styled.div`
   min-height: calc(100vh - 64px);
   background-color: white;
   position: absolute;
+  z-index:999;
   transition: transform 0.2s ease-in-out;
   transform: translateX(100%);
   
@@ -48,8 +49,7 @@ const ProfileMenu = ({ toggleMenu }) => {
   return (
     <Menu className={toggleMenu ? `sliding` : ""}>
       {user ? <h3>{user.name}</h3> : ""}
-      <li>Overview</li>
-      <li>My Profile</li>
+      <li><Link to="/profile/overview">Overview</Link></li>
       <li><Link to="/profile/settings">Settings</Link></li>
       <li onClick={logOut}>Log out</li>
     </Menu>

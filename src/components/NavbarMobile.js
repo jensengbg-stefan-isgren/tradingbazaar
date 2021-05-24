@@ -46,6 +46,7 @@ const MainMenu = styled.div`
   position: absolute;
   transition: transform 0.2s ease-in-out;
   transform: translateX(-100%);
+  z-index:999;
 
   .input-container {
       display:flex;
@@ -98,11 +99,14 @@ const UsrMenu = styled.div`
   padding: 2em 1em;
   right: 0;
   width: 70%;
+  max-width: 20em;
+  min-width: 18em;
   min-height: calc(100vh - 64px);
   background-color: white;
   position: absolute;
   transition: transform 0.2s ease-in-out;
   transform: translateX(100%);
+  z-index:999;
   
   &.sliding {
     transform: translateX(0%);

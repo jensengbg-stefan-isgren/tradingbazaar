@@ -9,13 +9,15 @@ export const authSlice = createSlice({
     errorMessage: null,
     user: null,
     favorites: [],
+    providerData: null,
   },
 
   reducers: {
-    authenticateUser: (state, action) => {
+    authenticateUser: (state, action, providerData) => {
       const { status, uid } = action.payload
       state.isAuthenticated = status
       state.uid = uid
+      state.providerData = providerData
     },
     checkIfRegistered: (state, action) => {
       const { status, message } = action.payload

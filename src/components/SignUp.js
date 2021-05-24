@@ -1,14 +1,10 @@
-import { db } from "services/firebase";
+import React from "react";
 import styled from "styled-components";
 import SignUpEmail from "./SignUpEmail";
-import React, { useState } from "react";
-import firebase from "services/firebase";
-import { useDispatch } from "react-redux";
+import useSignin from "hooks/useSignin";
 import signup from "assets/images/signup.jpg";
-import { useHistory } from "react-router-dom";
 import googleIcon from "assets/icons/google-icon.svg";
 import facebookIcon from "assets/icons/facebook-icon.svg";
-import { checkIfRegistered, addUser } from "features/auth/authSlice";
 
 const Wrapper = styled.section`
   position: relative;
@@ -101,95 +97,16 @@ const RegisterButton = styled.button`
     font-size: 1.2em;
     color: ${(props) => props.theme.color.main};
   }
-
 `;
 
 const SignUp = () => {
-
-  const dispatch = useDispatch();
-
-
-
-
-  const history = useHistory();
-
-  const [toggleSignInMethod, setToggleSignInMethod] = useState(false);
-
-  const handleSignInMethod = () => {
-    setToggleSignInMethod(!toggleSignInMethod);
-  };
-
-  const registerAccount = async (provider) => {
-    let authProvider;
-
-    switch (provider) {
-      case "google":
-        authProvider = new firebase.auth.GoogleAuthProvider();
-        break;
-      case "facebook":
-        authProvider = new firebase.auth.FacebookAuthProvider();
-        break;
-      default:
-    }
-
-    try {
-      let response = await firebase.auth().signInWithPopup(authProvider);
-      const {
-        additionalUserInfo,
-        user: { uid },
-        additionalUserInfo: { profile },
-      } = response;
-      const { providerId, isNewUser } = additionalUserInfo;
-
-      if (!isNewUser) {
-        db.collection("users")
-          .doc(uid)
-          .get()
-          .then((snapshot) => {
-            const document = snapshot.data();
-            dispatch(addUser(document));
-          });
-
-        history.push("/profile/overview");
-      } else {
-        let profileData = {
-          name: null,
-          firstName: null,
-          lastName: null,
-          email: null,
-          photoUrl: null,
-        };
-
-        switch (providerId) {
-          case "google.com":
-            profileData.name = profile.name;
-            profileData.firstName = profile.given_name;
-            profileData.lastName = profile.family_name;
-            profileData.email = profile.email;
-            profileData.photoUrl = profile.picture;
-            break;
-          case "facebook.com":
-            profileData.name = profile.name;
-            profileData.firstName = profile.first_name;
-            profileData.lastName = profile.last_name;
-            profileData.email = profile.email;
-            profileData.photoUrl = profile.picture.data.url;
-            break;
-          default:
-        }
-
-        await db.collection("users").doc(uid).set(profileData);
-
-        dispatch(addUser(profileData));
-        history.push("/profile/overview");
-      }
-    } catch ({ code, message }) {
-      if (code === "auth/account-exists-with-different-credential") {
-        await dispatch(checkIfRegistered({ status: true, message: message }));
-        history.push("/login");
-      }
-    }
-  };
+  const {
+    registerAccount,
+    setToggleSignInMethod,
+    toggleSignInMethod,
+    handleSignInMethod,
+    history,
+  } = useSignin();
 
   return (
     <Wrapper>
