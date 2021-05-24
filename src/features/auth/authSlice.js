@@ -26,9 +26,12 @@ export const authSlice = createSlice({
     addUser: (state, action) => {
       state.user = action.payload;
     },
+    addFavoritesToUser: (state, action) => {
+      state.favorites = [...action.payload]
+    },
   },
 });
 
-export const { addUser, authenticateUser, checkIfRegistered } =
+export const {addFavoritesToUser, addUser, authenticateUser, checkIfRegistered } =
   authSlice.actions;
 export default authSlice.reducer;
