@@ -1,5 +1,7 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import styled from 'styled-components'
+import {useParams} from 'react-router-dom'
+import {getProduct} from 'services/collections'
 
 const Wrapper = styled.div`
   height:100vh;
@@ -11,8 +13,20 @@ const Wrapper = styled.div`
 
 
 
-
 const ProductDetailsCard = () => {
+
+  const {id} = useParams()
+
+  useEffect(() => {
+    return () => {
+    
+    }
+  }, [])
+  
+  
+
+
+
   return (
     <Wrapper>
       <h1>NOJJAN</h1>
