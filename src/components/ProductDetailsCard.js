@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,74 +17,88 @@ const Container = styled.div`
   height: auto;
   width: auto;
   background-color: pink;
-  display:grid;
-  padding:1em;
-  
+  display: grid;
+  padding: 1em;
 
-  
-  grid-template-areas: 
-  "title title title title"
-  "image image bid bid"
-  "image image bid bid"
-  "con con . ."
-  "desc desc . ."
-  ". . input input"
-  ". . bidbutton bidbutton"
-  ". . savebtn savebtn"
-  ". . buynow buynow";
+  grid-template-areas:
+    "title title title title"
+    "image image bid bid"
+    "image image bid bid"
+    "con con . ."
+    "desc desc . ."
+    ". . input input"
+    ". . bidbutton bidbutton"
+    ". . savebtn savebtn"
+    ". . buynow buynow"
+    "seller seller seller seller";
 
-.description-container {
-  grid-area:desc;
-}
-  
+  .seller-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2em;
+    grid-area: seller;
+    border: 1px solid black;
+
+    .about-container {
+      padding: 0 0.2em;
+      background-color: pink;
+      transform: translateY(-20px);
+    }
+  }
+
+  .description-container {
+    grid-area: desc;
+  }
 
   .title-container {
     grid-area: title;
   }
 
   .image-container {
-    margin:1em 0;
+    margin: 1em 0;
     grid-area: image;
 
     img {
-      width:600px;
-      height:100%;
+      width: 600px;
+      height: 100%;
       object-fit: cover;
     }
   }
 
   .price-section {
     grid-area: bid;
-    padding-left:1em;
-    margin:1em 0;
+    padding-left: 1em;
+    margin: 1em 0;
   }
 
-  .price-container,.time-container,.bid-container {
-    display:flex;
-    gap:1em;
-    justify-content:space-between;
+  .price-container,
+  .time-container,
+  .bid-container {
+    display: flex;
+    gap: 1em;
+    justify-content: space-between;
   }
 
   .button {
-    display:block;
-    
+    padding:.5em;
+    display: block;
+
     .bid {
-      grid-area:bidbutton;
+      grid-area: bidbutton;
     }
 
     .save {
-      grid-area:savebtn;
+      grid-area: savebtn;
     }
 
     .buy.now {
-      grid-area:buynow
+      grid-area: buynow;
     }
   }
-
-
 `;
 
 const ProductDetailsCard = () => {
+  const [seller, setSeller] = useState();
   const { detailedProduct } = useSelector((state) => state.product);
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -92,6 +106,11 @@ const ProductDetailsCard = () => {
   useEffect(async () => {
     const snapshot = await db.collection("sellingProducts").doc(id).get();
     const data = await snapshot.data();
+
+    const snapshott = await db.collection("users").doc(data.uid).get();
+
+    const data2 = await snapshott.data();
+    setSeller(data2);
     dispatch(addDetailedProduct(data));
     return () => {};
   }, []);
@@ -127,10 +146,24 @@ const ProductDetailsCard = () => {
               <p>Bids</p>
               <p>0st</p>
             </div>
-            <input className="input" type="text" placeholder="Enter your price" />
+            <input
+              className="input"
+              type="text"
+              placeholder="Enter your price"
+            />
             <button className="button bid">Add bid</button>
             <button className="button save">Save</button>
-            <button className="button buy-now">Buy now {detailedProduct.acceptedPrice} kr</button>
+            <button className="button buy-now">
+              Buy now {detailedProduct.acceptedPrice} kr
+            </button>
+          {seller ?   <div className="seller-container">
+              <div className="about-container">
+                <p>About the seller</p>
+                <p>Name:{seller.firstName}</p>
+                <button className="button">Send {seller.firstName} an email</button>
+                <button class="button">All sellers products</button>
+              </div>
+            </div> : ""}
           </div>
         </Container>
       ) : (
