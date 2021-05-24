@@ -12,22 +12,11 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 }
 
+firebase.initializeApp(firebaseConfig)
 
-
-
-
-let app = undefined;
-try {  // Check if the app already exists
-	app = firebase.app("TradingBazaar");
-}
-catch(e) {
-	app = firebase.initializeApp( firebaseConfig , "TradingBazaar");
-}
-
-
-export const auth = app.auth()
-export const db = app.firestore()
+export const auth = firebase.auth()
+export const db = firebase.firestore()
 
 export const usersCollection = db.collection('users')
 
-export default app
+export default firebase
