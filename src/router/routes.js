@@ -78,7 +78,7 @@ export const routes = [
   {
     path: "/item/:id",
     main: () => <ProductDetailsCard/>,
-    navbar: () => "",
+    navbar: () => <MainNav/>,
   },
 ];
 
