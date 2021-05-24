@@ -17,7 +17,9 @@ const App = () => {
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        console.log(user)
+        console.log("INLOGGAD")
+
+
         const snapshot = await db.collection("users").doc(user.uid).get();
         console.log(snapshot)
         const data =  snapshot.data();
@@ -31,6 +33,7 @@ const App = () => {
         dispatch(authenticateUser({ status: true, uid: user.uid, providerData:providers }));
         dispatch(addUser(data))
       } else {
+        console.log("EJ INLOGGAD")
         dispatch(authenticateUser({ status: false, uid: null }));
       }
     });
