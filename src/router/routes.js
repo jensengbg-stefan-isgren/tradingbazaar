@@ -10,6 +10,7 @@ import Settings from 'components/Settings/Settings'
 import ProfileSettings from 'components/Settings/ProfileSettings'
 import ActiveAds from 'components/ActiveAds'
 import WishList from 'components/WishList'
+import ProductDetailsCard from 'components/ProductDetailsCard'
 
 
 export const routes = [
@@ -72,6 +73,11 @@ export const routes = [
   {
     path: "/resetcredentials",
     main: () => <ResetCredentials/>,
+    navbar: () => "",
+  },
+  {
+    path: "/item/:id",
+    main: () => <ProductDetailsCard/>,
     navbar: () => "",
   },
 ];

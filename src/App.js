@@ -8,7 +8,7 @@ import firebase from "services/firebase";
 import { useDispatch } from "react-redux";
 import GlobalStyle from "styles/globalStyles";
 import { ThemeProvider } from "styled-components";
-import { authenticateUser,addUser } from "features/auth/authSlice";
+import { authenticateUser, addUser } from "features/auth/authSlice";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 const App = () => {
@@ -17,24 +17,23 @@ const App = () => {
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        console.log("INLOGGAD")
-
-
-        const snapshot = await db.collection("users").doc(user.uid).get();
-        console.log(snapshot)
-        const data =  snapshot.data();
-
-
-        const providers = []
+        const providers = [];
         await user.providerData.forEach((profile) => {
-          providers.push(profile.providerId)
-        })
-
-        dispatch(authenticateUser({ status: true, uid: user.uid, providerData:providers }));
-        dispatch(addUser(data))
+          providers.push(profile.providerId);
+        });
+        dispatch(
+          authenticateUser({
+            status: true,
+            uid: user.uid,
+            providerData: providers,
+          })
+        );
       } else {
-        console.log("EJ INLOGGAD")
-        dispatch(authenticateUser({ status: false, uid: null }));
+        console.log("EJ INLOGGAD");
+        dispatch(
+          authenticateUser({ status: false, uid: null, providerData: null })
+        );
+        dispatch(addUser({}));
       }
     });
     return () => {

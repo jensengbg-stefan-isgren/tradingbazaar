@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Link } from "react-router-dom";
 import image from 'assets/images/img-placeholder.svg'
 import FavoriteFill from 'assets/icons/favorite_fill.svg'
 import FavoriteOutline from 'assets/icons/favorite_outline.svg'
@@ -6,7 +7,8 @@ import FavoriteOutline from 'assets/icons/favorite_outline.svg'
 const ProductCard = ({ ad }) => {
   console.log(ad)
   return (
-    <StyledProduct>
+    <Link to={`/item/${ad.id}`}>
+      <StyledProduct>
       <div className="wrapper">
         <div className="img-cont">
           <img src={ad.imgLink1 || image} alt="product" />
@@ -25,6 +27,8 @@ const ProductCard = ({ ad }) => {
         </div>
       </div>
     </StyledProduct>
+    </Link>
+  
   )
 }
 
