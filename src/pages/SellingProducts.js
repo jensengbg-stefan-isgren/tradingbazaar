@@ -41,12 +41,13 @@ const StyledProductWrapper = styled.main`
     max-width: 95vw;
     margin: auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(19.2em, 1fr));
-    /* grid-template-columns: repeat(auto-fill, 1fr); */
+    /* grid-template-columns: repeat(auto-fit, minmax(19.2em, 1fr)); */
+    grid-template-columns: repeat(auto-fit, 19.2em);
+
     row-gap: 0.8em;
-    column-gap: 0.3em;
+    column-gap: 0.8em;
     justify-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
     /* gap: 0.5em; */
   }
 `
