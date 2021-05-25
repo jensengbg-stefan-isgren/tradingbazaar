@@ -1,34 +1,66 @@
 import styled from 'styled-components'
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
 import image from 'assets/images/img-placeholder.svg'
 import FavoriteFill from 'assets/icons/favorite_fill.svg'
 import FavoriteOutline from 'assets/icons/favorite_outline.svg'
+import { useSelector } from 'react-redux'
+import { db } from 'services/firebase'
+import React, { useState } from 'react'
 
 const ProductCard = ({ ad }) => {
-  console.log(ad)
+  const { uid, isAuthenticated, favorites } = useSelector((state) => state.auth)
+  //   console.log(ad)
+
+  // const [isFavorite, setIsFavorite] = useState(favorites.includes(ad.id))
+
+  // setIsFavorite(true)
+
+  // if (favorites.includes(ad.id)) setIsFavorite(true)
+  // console.log(ad.id, favorites.includes(ad.id), favorites)
+
+  async function toggleFavorite() {
+    if (!uid) return alert('Please Login to select your Favorites')
+
+    const favoriteRef = await db
+      .collection('users')
+      .doc(uid)
+      .collection('favorites')
+      .add({ productId: ad.id })
+    console.log('result fav', favoriteRef)
+
+    // console.log(await db.collection('users').doc(uid).get())
+
+    // console.log('favorite key', favoriteRef.key())
+    // favoriteRef
+    //   .set({ productId: ad.id })
+    //   .then((el) => console.log('result', el))
+  }
+
   return (
     <Link to={`/item/${ad.id}`}>
       <StyledProduct>
-      <div className="wrapper">
-        <div className="img-cont">
-          <img src={ad.imgLink1 || image} alt="product" />
-        </div>
-        <div className="title-cont">
-          <p>title</p>
-        </div>
-        <div className="bottom-cont">
-          <p>{ad.startPrice} Kr</p>
-          <p>0 Bids</p>
-          <button>
-            <img src={FavoriteOutline || FavoriteFill} alt="favorite"></img>
-          </button>
+        <div className="wrapper">
+          <div className="img-cont">
+            <img src={ad.imgLink1 || image} alt="product" />
+          </div>
+          <div className="title-cont">
+            <p>{ad.title}</p>
+          </div>
+          <div className="bottom-cont">
+            <p>{ad.startPrice} Kr</p>
+            <p>0 Bids</p>
+            <button onClick={toggleFavorite} disabled={!isAuthenticated}>
+              <img
+                src={favorites.includes(ad.id) ? FavoriteFill : FavoriteOutline}
+                alt="favorite"
+              ></img>
+            </button>
 
-          <p>Time Left</p>
+            <p>Time Left</p>
+          </div>
         </div>
-      </div>
-    </StyledProduct>
+      </StyledProduct>
     </Link>
-  
   )
 }
 
