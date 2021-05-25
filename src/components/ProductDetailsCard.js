@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,34 +33,30 @@ const Container = styled.div`
     ". . buynow buynow"
     "seller seller seller seller";
 
-  
+  .condition-container {
+    grid-area: con;
+  }
 
-
-    .condition-container {
-      grid-area:con;
-    }
-
-    .seller-title-container {
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      flex-direction:column;
-      width:100%;
-    }
+  .seller-title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+  }
 
   .seller-container {
-    width:100%;
-    padding:2em;
-    background-color: #F7F7F2;
-    display:flex;
-    justify-content:center;
+    width: 100%;
+    padding: 2em;
+    background-color: #f7f7f2;
+    display: flex;
+    justify-content: center;
     flex-direction: column;
-    gap:1em;
+    gap: 1em;
 
     button {
-      padding:.5em;
+      padding: 0.5em;
     }
-
   }
 
   input {
@@ -77,7 +73,7 @@ const Container = styled.div`
     flex-direction: column;
     gap: 0.5em;
     padding: 1em;
-    background-color: #F7F7F2;
+    background-color: #f7f7f2;
     margin-bottom: 1em;
   }
 
@@ -86,12 +82,12 @@ const Container = styled.div`
     display: flex;
     flex-direction: row;
     gap: 0.5em;
-    margin-bottom:1em;
-    width:100%;
-    justify-content:flex-start;
+    margin-bottom: 1em;
+    width: 100%;
+    justify-content: flex-start;
 
     img {
-      width:80px;
+      width: 80px;
     }
   }
 
@@ -149,30 +145,26 @@ const Container = styled.div`
     }
   }
 
-
   @media only screen and (max-width: 768px) {
-    grid-template-columns: repeat(1,100%);
-    grid-template-areas: 
-    "title"
-    "image"
-    "thumbs"
-    "bid"
-    "con"
-    "desc"
-    "input"
-    "bidbutton"
-    "savebtn"
-    "buynow"
-    "seller";
+    grid-template-columns: repeat(1, 100%);
+    grid-template-areas:
+      "title"
+      "image"
+      "thumbs"
+      "bid"
+      "con"
+      "desc"
+      "input"
+      "bidbutton"
+      "savebtn"
+      "buynow"
+      "seller";
 
     .price-box {
-      padding-left:0;
+      padding-left: 0;
     }
   }
-
 `;
-
-
 
 const ProductDetailsCard = () => {
   const [mainImage, setMainImage] = useState(null);
@@ -181,17 +173,20 @@ const ProductDetailsCard = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  useEffect(async () => {
+  const getProduct = useCallback(async () => {
     const snapshot = await db.collection("sellingProducts").doc(id).get();
     const data = await snapshot.data();
-
     const snapshott = await db.collection("users").doc(data.uid).get();
-
     const data2 = await snapshott.data();
     setSeller(data2);
     dispatch(addDetailedProduct(data));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    getProduct();
+
     return () => {};
-  }, []);
+  }, [getProduct]);
 
   const handleImage = (e) => {
     setMainImage(e.target.src);
@@ -284,13 +279,13 @@ const ProductDetailsCard = () => {
             </button>
             <button className="button save">Save</button>
             {seller ? (
-                <div className="seller-title-container">
-                  <h4>About the seller</h4>
-                  <div className="seller-container">
-                 <button>Contact the seller</button>
-                 <button>See all products</button>
+              <div className="seller-title-container">
+                <h4>About the seller</h4>
+                <div className="seller-container">
+                  <button>Contact the seller</button>
+                  <button>See all products</button>
                 </div>
-                </div>
+              </div>
             ) : (
               ""
             )}
