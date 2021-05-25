@@ -1,8 +1,10 @@
 import { db } from '../services/firebase'
 import store from 'store/store'
-
+// import data from 'data/categories'
 export const addProduct = async () => {
   const state = store.getState()
+
+
 
   const newProduct = {
     uid: state.auth.uid,
@@ -42,3 +44,15 @@ export const getProduct = async(id) => {
   let data = await snapshot.data()
   return data
 }
+
+
+
+
+// export const addCategories = async() => {
+// data.forEach(async(item) => {
+//   await db.collection("categories").add({name: item})
+// })
+
+// }
+
+// addCategories()

@@ -109,7 +109,7 @@ const StyledProduct = styled.div`
     background-color: ${(props) => props.theme.button.bckDark};
     width: 100%;
     p {
-      padding: 0.2em;
+      padding: .3em;
       text-align: center;
       color: ${(props) => props.theme.button.color};
     }

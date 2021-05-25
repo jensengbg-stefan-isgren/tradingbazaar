@@ -1,14 +1,58 @@
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
+import styled,{keyframes} from 'styled-components'
+import {useEffect} from 'react'
+import {useSelector} from 'react-redux'
+
+
+const fadeIn = keyframes`
+  from {
+    opacity: .4;
+  }
+
+  to {
+    opacity:1;
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    background-color: white;
+  }
+
+  to {
+    background-color: transparent;
+  }
+`;
+
 
 const Navigation = styled.nav`
+
+
+  .no-nav {
+    animation: ${fadeOut} 300ms;
+  }
+
+
+  .show-nav {
+    animation: ${fadeIn} 300ms ;
+    background-color:#F7F7F2;
+  }
+
   .container {
+
+    
+
     height: 4em;
-    display: grid;
+    display: flex;
     padding: 0 1em;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    grid-template-columns: repeat(3, 1fr);
+    position: fixed;
+    z-index:1000;
+    top:0;
+    width:100%;
+    font-size: 16px;
+    background-color: "";
 
     .logo {
       display: grid;
@@ -32,6 +76,8 @@ const Navigation = styled.nav`
       color: ${(props) => props.theme.color.main};
       font-size: 2em;
     }
+ 
+
   }
 
   .search-container {
@@ -59,10 +105,17 @@ const StyledLink = styled(Link)`
   font-family: ${(props) => props.theme.font.title};
   color: ${(props) => props.theme.color.main};
   font-size: 1.4em;
+  padding:.5em;
 
   :nth-child(2) {
     margin-left: 1em;
   }
+
+&:hover {
+  border-radius: 4px;
+  background:#fbb7ca;
+}
+
 `
 
 const StyledInput = styled.input`
@@ -80,18 +133,29 @@ const StyledInput = styled.input`
 `
 
 const Navbar = () => {
+
+const isVisible = useSelector(state => state.nav.isVisible)
+
+
+useEffect(() => {
+  return () => {
+    
+  }
+}, [])
+
+
   return (
-    <Navigation>
-      <div className="container">
+    <Navigation >
+      <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
         <div className="logo">
           <p>TradingBazaar</p>
         </div>
-        <div className="search-container">
+      {!isVisible ?  <div className="search-container"  >
           <select name="category" id="category">
             <option value="">Categories</option>
           </select>
           <StyledInput placeholder="What are you looking for today?" />
-        </div>
+        </div> : ""}
         <div className="nav-links">
           <StyledLink to="/login">Login</StyledLink>
           <StyledLink to="/register">Register</StyledLink>
