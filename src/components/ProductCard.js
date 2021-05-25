@@ -5,7 +5,7 @@ import FavoriteFill from 'assets/icons/favorite_fill.svg'
 import FavoriteOutline from 'assets/icons/favorite_outline.svg'
 import { useSelector } from 'react-redux'
 import { db } from 'services/firebase'
-import React, { useState } from 'react'
+import React from 'react'
 
 const ProductCard = ({ ad }) => {
   const { uid, isAuthenticated, favorites } = useSelector((state) => state.auth)
