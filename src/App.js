@@ -8,9 +8,12 @@ import firebase from "services/firebase";
 import { useDispatch } from "react-redux";
 import GlobalStyle from "styles/globalStyles";
 import { ThemeProvider } from "styled-components";
-import { authenticateUser, addUser,addFavoritesToUser } from "features/auth/authSlice";
+import {
+  authenticateUser,
+  addUser,
+  addFavoritesToUser,
+} from "features/auth/authSlice";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
 
 const App = () => {
   const dispatch = useDispatch();
@@ -30,23 +33,17 @@ const App = () => {
           })
         );
 
-
-
-        let favorites = []
-        await db.collection('favorites')
+        let favorites = [];
+        await db
+          .collection("favorites")
           .get()
           .then((favorite) =>
             favorite.forEach(
               (el) => (favorites = [...favorites, el.data().productId])
             )
-          )
-        console.log('dispatching favorites')
-        dispatch(addFavoritesToUser(favorites))
-
-
-
-
-
+          );
+        console.log("dispatching favorites");
+        dispatch(addFavoritesToUser(favorites));
       } else {
         dispatch(
           authenticateUser({ status: false, uid: null, providerData: null })
@@ -57,7 +54,7 @@ const App = () => {
     return () => {
       unsubscribe();
     };
-  }, [addFavoritesToUser,authenticateUser]);
+  }, [addFavoritesToUser, authenticateUser]);
 
   return (
     <React.Fragment>
