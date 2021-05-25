@@ -18,20 +18,21 @@ const Container = styled.div`
   width: auto;
   background-color: white;
   display: grid;
+  grid-template-columns: 30em 12em;
   padding: 1em;
 
   grid-template-areas:
-    "title title title title"
-    "image image image bid"
-    "image image image bid"
-    "thumbs thumbs thumbs ."
-    "con con . ."
-    "desc desc . ."
-    ". . input input"
-    ". . bidbutton bidbutton"
-    ". . savebtn savebtn"
-    ". . buynow buynow"
-    "seller seller seller seller";
+    "title title"
+    "image bid"
+    "image bid"
+    "thumbs thumbs"
+    "con ."
+    "desc ."
+    ". input"
+    ". bidbutton"
+    ". savebtn"
+    ". buynow"
+    "seller seller";
 
   .condition-container {
     grid-area: con;
