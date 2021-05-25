@@ -1,95 +1,110 @@
-import firebase from "firebase";
-import { useState } from "react";
-import { db } from "services/firebase";
-import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { checkIfRegistered, addUser } from "features/auth/authSlice";
+import firebase from 'firebase'
+import { useState } from 'react'
+import { db } from 'services/firebase'
+import { useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  checkIfRegistered,
+  addUser,
+  addFavoritesToUser,
+} from 'features/auth/authSlice'
 
 const useSignin = () => {
-  const [toggleForgotCredentials, setToggleForgotCredentials] = useState(false);
-  const [toggleSignInMethod, setToggleSignInMethod] = useState(false);
+  const [toggleForgotCredentials, setToggleForgotCredentials] = useState(false)
+  const [toggleSignInMethod, setToggleSignInMethod] = useState(false)
 
-  const errorMessage = useSelector((state) => state.auth.errorMessage);
+  const errorMessage = useSelector((state) => state.auth.errorMessage)
 
-  const dispatch = useDispatch();
-  const history = useHistory();
+  const dispatch = useDispatch()
+  const history = useHistory()
 
   const handleSignInMethod = () => {
-    setToggleSignInMethod(!toggleSignInMethod);
-  };
+    setToggleSignInMethod(!toggleSignInMethod)
+  }
 
   const registerAccount = async (provider) => {
-    const googleProvider = new firebase.auth.GoogleAuthProvider();
-    const facebookProvider = new firebase.auth.FacebookAuthProvider();
+    const googleProvider = new firebase.auth.GoogleAuthProvider()
+    const facebookProvider = new firebase.auth.FacebookAuthProvider()
 
-    let authProvider;
+    let authProvider
 
     switch (provider) {
-      case "google":
-        authProvider = googleProvider;
-        break;
-      case "facebook":
-        authProvider = facebookProvider;
-        break;
+      case 'google':
+        authProvider = googleProvider
+        break
+      case 'facebook':
+        authProvider = facebookProvider
+        break
       default:
     }
 
     try {
-      let response = await firebase.auth().signInWithPopup(authProvider);
+      let response = await firebase.auth().signInWithPopup(authProvider)
       const {
         additionalUserInfo,
         user: { uid },
         additionalUserInfo: { profile },
-      } = response;
-      const { providerId, isNewUser } = additionalUserInfo;
+      } = response
+      const { providerId, isNewUser } = additionalUserInfo
+
+      console.log('isNewUser', isNewUser)
 
       if (!isNewUser) {
-
         const snapShot = await db.collection('users').doc(uid).get()
         const document = snapShot.data()
         dispatch(addUser(document))
 
-        history.push("/profile/overview");
+        let favorites = []
+        await snapShot.ref
+          .collection('favorites')
+          .get()
+          .then((favorite) =>
+            favorite.forEach(
+              (el) => (favorites = [...favorites, el.data().productId])
+            )
+          )
+        console.log('dispatching favorites')
+        dispatch(addFavoritesToUser(favorites))
+
+        history.push('/profile/overview')
       } else {
-        
         let profileData = {
           name: null,
           firstName: null,
           lastName: null,
           email: null,
           photoUrl: null,
-        };
-
+        }
 
         switch (providerId) {
-          case "google.com":
-            profileData.firstName = profile.given_name;
-            profileData.lastName = profile.family_name;
-            profileData.email = profile.email;
-            profileData.photoUrl = profile.picture;
-            break;
-          case "facebook.com":
-            profileData.name = profile.name;
-            profileData.firstName = profile.first_name;
-            profileData.lastName = profile.last_name;
-            profileData.email = profile.email;
-            profileData.photoUrl = profile.picture.data.url;
-            break;
+          case 'google.com':
+            profileData.firstName = profile.given_name
+            profileData.lastName = profile.family_name
+            profileData.email = profile.email
+            profileData.photoUrl = profile.picture
+            break
+          case 'facebook.com':
+            profileData.name = profile.name
+            profileData.firstName = profile.first_name
+            profileData.lastName = profile.last_name
+            profileData.email = profile.email
+            profileData.photoUrl = profile.picture.data.url
+            break
           default:
         }
 
-        await db.collection("users").doc(uid).set(profileData);
+        await db.collection('users').doc(uid).set(profileData)
 
-        dispatch(addUser(profileData));
-        history.push("/profile/overview");
+        dispatch(addUser(profileData))
+        history.push('/profile/overview')
       }
     } catch ({ code, message }) {
-      if (code === "auth/account-exists-with-different-credential") {
-        await dispatch(checkIfRegistered({ status: true, message: message }));
-        history.push("/login");
+      if (code === 'auth/account-exists-with-different-credential') {
+        await dispatch(checkIfRegistered({ status: true, message: message }))
+        history.push('/login')
       }
     }
-  };
+  }
 
   return {
     registerAccount,
@@ -100,7 +115,7 @@ const useSignin = () => {
     errorMessage,
     toggleForgotCredentials,
     setToggleForgotCredentials,
-  };
-};
+  }
+}
 
-export default useSignin;
+export default useSignin

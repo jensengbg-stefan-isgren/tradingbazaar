@@ -1,4 +1,48 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { db } from 'services/firebase'
+import firebase from 'services/firebase'
+
+export const authUser = createAsyncThunk('auth/authUserStatus  ', async () => {
+  return await new Promise((resolve) => {
+    firebase.auth().onAuthStateChanged(async (user) => {
+      if (user) {
+        const snapShot = await db.collection('users').doc(user.uid).get()
+
+        const doc = snapShot.data()
+
+        let favorites = []
+        await snapShot.ref
+          .collection('favorites')
+          .get()
+          .then((favorite) =>
+            favorite.forEach(
+              (el) => (favorites = [...favorites, el.data().productId])
+            )
+          )
+
+        const providers = []
+        await user.providerData.forEach((profile) => {
+          providers.push(profile.providerId)
+        })
+
+        const response = {
+          user: doc,
+          favorites,
+          auth: { status: true, uid: user.uid, providerData: providers },
+        }
+
+        resolve(response)
+      } else {
+        const response = {
+          user: {},
+          favorites: [],
+          auth: { status: false, uid: null, providerData: null },
+        }
+        resolve(response)
+      }
+    })
+  })
+})
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -13,8 +57,8 @@ export const authSlice = createSlice({
   },
 
   reducers: {
-    authenticateUser: (state, action, providerData) => {
-      const { status, uid } = action.payload
+    authenticateUser: (state, action) => {
+      const { status, uid, providerData } = action.payload
       state.isAuthenticated = status
       state.uid = uid
       state.providerData = providerData
@@ -31,12 +75,24 @@ export const authSlice = createSlice({
       state.favorites = [...action.payload]
     },
   },
+  extraReducers: {
+    [authUser.fulfilled]: (state, action) => {
+      const { status, uid, providerData } = action.payload.auth
+      state.isAuthenticated = status
+      state.uid = uid
+      state.providerData = providerData
+
+      state.user = action.payload.user
+
+      state.favorites = [...action.payload.favorites]
+    },
+  },
 })
 
 export const {
+  addFavoritesToUser,
   addUser,
   authenticateUser,
   checkIfRegistered,
-  addFavoritesToUser,
 } = authSlice.actions
 export default authSlice.reducer

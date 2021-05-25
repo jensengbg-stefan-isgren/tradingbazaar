@@ -1,15 +1,13 @@
 import styled from 'styled-components'
 import ProductCard from 'components/ProductCard'
 import { useSelector } from 'react-redux'
-// import {  } from 'features/adsSlice'
-import userGetAds from 'services/useGetAds'
-
-
+import UserGetAds from 'services/useGetAds'
+import React from 'react'
 
 const ProductSection = () => {
   const ads = useSelector((state) => state.ads)
-  // const ads = userGetAds()
-  userGetAds()
+  UserGetAds()
+
   return (
     <StyledProductWrapper>
       <h2>Products</h2>
@@ -54,4 +52,4 @@ const StyledProductWrapper = styled.main`
   }
 `
 
-export default ProductSection
+export default React.memo(ProductSection)

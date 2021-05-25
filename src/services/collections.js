@@ -34,3 +34,11 @@ export const addProduct = async () => {
     console.error('Error adding document: ', error)
   }
 }
+
+
+
+export const getProduct = async(id) => {
+  let snapshot = await db.collection('sellingProducts').doc(id).get()
+  let data = await snapshot.data()
+  return data
+}
