@@ -18,7 +18,7 @@ const Container = styled.div`
   width: auto;
   background-color: white;
   display: grid;
-  grid-template-columns: 20em 10em;
+  grid-template-columns: 30em 12em;
   padding: 1em;
 
   grid-template-areas:
