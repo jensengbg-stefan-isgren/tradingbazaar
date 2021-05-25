@@ -1,37 +1,280 @@
-import React,{useEffect} from 'react'
-import styled from 'styled-components'
-import {useParams} from 'react-router-dom'
-import {getProduct} from 'services/collections'
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addDetailedProduct } from "features/productSlice";
+import { db } from "services/firebase";
 
 const Wrapper = styled.div`
-  height:100vh;
-  width:100%;
-  background-color:pink;
+  height: auto;
+  width: auto;
+  display: grid;
+  justify-content: center;
+`;
 
-`
+const Container = styled.div`
+  margin-top: 1em;
+  height: auto;
+  width: auto;
+  background-color: white;
+  display: grid;
+  padding: 1em;
+
+  grid-template-areas:
+    "title title title title"
+    "image image image bid"
+    "image image image bid"
+    "thumbs thumbs thumbs ."
+    "con con . ."
+    "desc desc . ."
+    ". . input input"
+    ". . bidbutton bidbutton"
+    ". . savebtn savebtn"
+    ". . buynow buynow"
+    "seller seller seller seller";
 
 
+    .condition-container {
+      grid-area:con;
+    }
 
+    .seller-title-container {
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      width:100%;
+    }
+
+  .seller-container {
+    width:100%;
+    padding:2em;
+    background-color: #F7F7F2;
+    display:flex;
+    justify-content:center;
+    flex-direction: column;
+    gap:1em;
+
+    button {
+      padding:.5em;
+    }
+
+  }
+
+  input {
+    width: 100%;
+    height: 2.5em;
+
+    ::placeholder {
+      padding-left: 0.5em;
+    }
+  }
+
+  .price-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    padding: 1em;
+    background-color: #F7F7F2;
+    margin-bottom: 1em;
+  }
+
+  .thumbnail-container {
+    grid-area: thumbs;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    margin-bottom:1em;
+    width:100%;
+    justify-content:flex-start;
+
+    img {
+      width:80px;
+    }
+  }
+
+  .description-container {
+    grid-area: desc;
+  }
+
+  .title-container {
+    margin-bottom: 1em;
+    grid-area: title;
+  }
+
+  .image-container {
+    margin-bottom: 1em;
+    grid-area: image;
+
+    img {
+      width: 500px;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .price-box {
+    grid-area: bid;
+    padding-left: 1em;
+    margin: 0em 0;
+    font-size: 14px;
+  }
+
+  .price-container,
+  .time-container,
+  .bid-container {
+    display: flex;
+    gap: 1em;
+    justify-content: space-between;
+  }
+
+  .button {
+    margin: 1em 0;
+    width: 100%;
+    padding: 0.5em;
+    display: block;
+
+    .bid {
+      grid-area: bidbutton;
+    }
+
+    .save {
+      grid-area: savebtn;
+    }
+
+    .buy.now {
+      grid-area: buynow;
+    }
+  }
+`;
 
 const ProductDetailsCard = () => {
+  const [mainImage, setMainImage] = useState(null);
+  const [seller, setSeller] = useState();
+  const { detailedProduct } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+  const { id } = useParams();
 
-  const {id} = useParams()
+  useEffect(async () => {
+    const snapshot = await db.collection("sellingProducts").doc(id).get();
+    const data = await snapshot.data();
 
-  useEffect(() => {
-    return () => {
-    
-    }
-  }, [])
-  
-  
+    const snapshott = await db.collection("users").doc(data.uid).get();
 
+    const data2 = await snapshott.data();
+    setSeller(data2);
+    dispatch(addDetailedProduct(data));
+    return () => {};
+  }, []);
 
+  const handleImage = (e) => {
+    setMainImage(e.target.src);
+  };
 
   return (
     <Wrapper>
-      <h1>NOJJAN</h1>
+      {detailedProduct ? (
+        <Container>
+          <div className="title-container">
+            <h4>{detailedProduct.title}</h4>
+          </div>
+          <div className="image-container">
+            {mainImage ? (
+              <img src={mainImage} alt="" />
+            ) : (
+              <img src={detailedProduct.imgLink1} alt="" />
+            )}
+          </div>
+          <div className="thumbnail-container">
+            <img onClick={handleImage} src={detailedProduct.imgLink1} alt="" />
+            {detailedProduct.imgLink2 ? (
+              <img
+                onClick={handleImage}
+                src={detailedProduct.imgLink2}
+                alt=""
+              />
+            ) : (
+              ""
+            )}
+            {detailedProduct.imgLink3 ? (
+              <img
+                onClick={handleImage}
+                src={detailedProduct.imgLink3}
+                alt=""
+              />
+            ) : (
+              ""
+            )}
+            {detailedProduct.imgLink4 ? (
+              <img
+                onClick={handleImage}
+                src={detailedProduct.imgLink4}
+                alt=""
+              />
+            ) : (
+              ""
+            )}
+            {detailedProduct.imgLink5 ? (
+              <img
+                onClick={handleImage}
+                src={detailedProduct.imgLink5}
+                alt=""
+              />
+            ) : (
+              ""
+            )}
+          </div>
+          <div className="condition-container">
+            <h4>Condition</h4>
+            <p>{detailedProduct.productConditions}</p>
+          </div>
+          <div className="description-container">
+            <h4>Description</h4>
+            <p>{detailedProduct.description}</p>
+          </div>
+          <div className="price-box">
+            <div className="price-section">
+              <div className="price-container">
+                <p>Utropspris</p>
+                <p>{detailedProduct.startPrice}kr</p>
+              </div>
+              <div className="time-container">
+                <p>Slutar den 123</p>
+                <p>{detailedProduct.adEndDate}</p>
+              </div>
+              <div className="bid-container">
+                <p>Bids</p>
+                <p>0st</p>
+              </div>
+            </div>
+            <input
+              className="input"
+              type="text"
+              placeholder="Enter your price"
+            />
+            <button className="button bid">Add bid</button>
+            <button className="button buy-now">
+              Buy now {detailedProduct.acceptedPrice} kr
+            </button>
+            <button className="button save">Save</button>
+            {seller ? (
+                <div className="seller-title-container">
+                  <h4>About the seller</h4>
+                  <div className="seller-container">
+                 <button>Contact the seller</button>
+                 <button>See all products</button>
+                </div>
+                </div>
+            ) : (
+              ""
+            )}
+          </div>
+        </Container>
+      ) : (
+        ""
+      )}
     </Wrapper>
-  )
-}
+  );
+};
 
-export default ProductDetailsCard
+export default ProductDetailsCard;

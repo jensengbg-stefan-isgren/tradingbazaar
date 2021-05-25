@@ -25,7 +25,6 @@ const ProductSection = () => {
 // }
 
 const StyledProductWrapper = styled.main`
-  background-color: lightgray;
   /* height: 200em; */
   /* margin: auto;
   max-width: 95vw; */
