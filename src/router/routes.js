@@ -12,7 +12,6 @@ import ActiveAds from 'components/ActiveAds'
 import WishList from 'components/WishList'
 import ProductDetailsCard from 'components/ProductDetailsCard'
 
-
 export const routes = [
   {
     path: "/",
@@ -62,6 +61,7 @@ export const routes = [
   },
   {
     path: "/addad",
+
     main: () => <AddAd />,
     navbar: () => <MainNav />,
   },

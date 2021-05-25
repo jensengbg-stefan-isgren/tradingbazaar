@@ -13,17 +13,18 @@ const Wrapper = styled.div`
 `;
 
 const Container = styled.div`
-  margin-top: 4em;
+  margin-top: 1em;
   height: auto;
   width: auto;
-  background-color: pink;
+  background-color: white;
   display: grid;
   padding: 1em;
 
   grid-template-areas:
     "title title title title"
-    "image image bid bid"
-    "image image bid bid"
+    "image image image bid"
+    "image image image bid"
+    "thumbs thumbs thumbs ."
     "con con . ."
     "desc desc . ."
     ". . input input"
@@ -32,17 +33,63 @@ const Container = styled.div`
     ". . buynow buynow"
     "seller seller seller seller";
 
-  .seller-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 2em;
-    grid-area: seller;
-    border: 1px solid black;
 
-    .about-container {
-      padding: 0 0.2em;
-      background-color: pink;
-      transform: translateY(-20px);
+    .condition-container {
+      grid-area:con;
+    }
+
+    .seller-title-container {
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      width:100%;
+    }
+
+  .seller-container {
+    width:100%;
+    padding:2em;
+    background-color: #F7F7F2;
+    display:flex;
+    justify-content:center;
+    flex-direction: column;
+    gap:1em;
+
+    button {
+      padding:.5em;
+    }
+
+  }
+
+  input {
+    width: 100%;
+    height: 2.5em;
+
+    ::placeholder {
+      padding-left: 0.5em;
+    }
+  }
+
+  .price-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    padding: 1em;
+    background-color: #F7F7F2;
+    margin-bottom: 1em;
+  }
+
+  .thumbnail-container {
+    grid-area: thumbs;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    margin-bottom:1em;
+    width:100%;
+    justify-content:flex-start;
+
+    img {
+      width:80px;
     }
   }
 
@@ -51,24 +98,26 @@ const Container = styled.div`
   }
 
   .title-container {
+    margin-bottom: 1em;
     grid-area: title;
   }
 
   .image-container {
-    margin: 1em 0;
+    margin-bottom: 1em;
     grid-area: image;
 
     img {
-      width: 600px;
+      width: 500px;
       height: 100%;
       object-fit: cover;
     }
   }
 
-  .price-section {
+  .price-box {
     grid-area: bid;
     padding-left: 1em;
-    margin: 1em 0;
+    margin: 0em 0;
+    font-size: 14px;
   }
 
   .price-container,
@@ -80,7 +129,9 @@ const Container = styled.div`
   }
 
   .button {
-    padding:.5em;
+    margin: 1em 0;
+    width: 100%;
+    padding: 0.5em;
     display: block;
 
     .bid {
@@ -98,6 +149,7 @@ const Container = styled.div`
 `;
 
 const ProductDetailsCard = () => {
+  const [mainImage, setMainImage] = useState(null);
   const [seller, setSeller] = useState();
   const { detailedProduct } = useSelector((state) => state.product);
   const dispatch = useDispatch();
@@ -115,6 +167,10 @@ const ProductDetailsCard = () => {
     return () => {};
   }, []);
 
+  const handleImage = (e) => {
+    setMainImage(e.target.src);
+  };
+
   return (
     <Wrapper>
       {detailedProduct ? (
@@ -123,7 +179,50 @@ const ProductDetailsCard = () => {
             <h4>{detailedProduct.title}</h4>
           </div>
           <div className="image-container">
-            <img src={detailedProduct.imgLink1} alt="" />
+            {mainImage ? (
+              <img src={mainImage} alt="" />
+            ) : (
+              <img src={detailedProduct.imgLink1} alt="" />
+            )}
+          </div>
+          <div className="thumbnail-container">
+            <img onClick={handleImage} src={detailedProduct.imgLink1} alt="" />
+            {detailedProduct.imgLink2 ? (
+              <img
+                onClick={handleImage}
+                src={detailedProduct.imgLink2}
+                alt=""
+              />
+            ) : (
+              ""
+            )}
+            {detailedProduct.imgLink3 ? (
+              <img
+                onClick={handleImage}
+                src={detailedProduct.imgLink3}
+                alt=""
+              />
+            ) : (
+              ""
+            )}
+            {detailedProduct.imgLink4 ? (
+              <img
+                onClick={handleImage}
+                src={detailedProduct.imgLink4}
+                alt=""
+              />
+            ) : (
+              ""
+            )}
+            {detailedProduct.imgLink5 ? (
+              <img
+                onClick={handleImage}
+                src={detailedProduct.imgLink5}
+                alt=""
+              />
+            ) : (
+              ""
+            )}
           </div>
           <div className="condition-container">
             <h4>Condition</h4>
@@ -133,18 +232,20 @@ const ProductDetailsCard = () => {
             <h4>Description</h4>
             <p>{detailedProduct.description}</p>
           </div>
-          <div className="price-section">
-            <div className="price-container">
-              <p>Utropspris</p>
-              <p>{detailedProduct.startPrice}kr</p>
-            </div>
-            <div className="time-container">
-              <p>Slutar den 123</p>
-              <p>{detailedProduct.adEndDate}</p>
-            </div>
-            <div className="bid-container">
-              <p>Bids</p>
-              <p>0st</p>
+          <div className="price-box">
+            <div className="price-section">
+              <div className="price-container">
+                <p>Utropspris</p>
+                <p>{detailedProduct.startPrice}kr</p>
+              </div>
+              <div className="time-container">
+                <p>Slutar den 123</p>
+                <p>{detailedProduct.adEndDate}</p>
+              </div>
+              <div className="bid-container">
+                <p>Bids</p>
+                <p>0st</p>
+              </div>
             </div>
             <input
               className="input"
@@ -152,18 +253,21 @@ const ProductDetailsCard = () => {
               placeholder="Enter your price"
             />
             <button className="button bid">Add bid</button>
-            <button className="button save">Save</button>
             <button className="button buy-now">
               Buy now {detailedProduct.acceptedPrice} kr
             </button>
-          {seller ?   <div className="seller-container">
-              <div className="about-container">
-                <p>About the seller</p>
-                <p>Name:{seller.firstName}</p>
-                <button className="button">Send {seller.firstName} an email</button>
-                <button class="button">All sellers products</button>
-              </div>
-            </div> : ""}
+            <button className="button save">Save</button>
+            {seller ? (
+                <div className="seller-title-container">
+                  <h4>About the seller</h4>
+                  <div className="seller-container">
+                 <button>Contact the seller</button>
+                 <button>See all products</button>
+                </div>
+                </div>
+            ) : (
+              ""
+            )}
           </div>
         </Container>
       ) : (

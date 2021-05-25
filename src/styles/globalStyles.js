@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
 }
 
 body {
+  background-color: #F7F7F2;
   font-family: ${(props) => props.theme.font.body};
   font-size: calc(0.95em + min(6px, 0.5vw));
   overflow-x: hidden;
