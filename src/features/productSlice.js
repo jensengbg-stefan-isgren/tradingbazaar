@@ -8,7 +8,6 @@ export const productSlice = createSlice({
 
   reducers: {
     addDetailedProduct: (state, action) => {
-      console.log(action.payload)
       state.detailedProduct = action.payload
     }
   },

@@ -33,6 +33,8 @@ const Container = styled.div`
     ". . buynow buynow"
     "seller seller seller seller";
 
+  
+
 
     .condition-container {
       grid-area:con;
@@ -107,7 +109,7 @@ const Container = styled.div`
     grid-area: image;
 
     img {
-      width: 500px;
+      width: 100%;
       height: 100%;
       object-fit: cover;
     }
@@ -146,7 +148,31 @@ const Container = styled.div`
       grid-area: buynow;
     }
   }
+
+
+  @media only screen and (max-width: 768px) {
+    grid-template-columns: repeat(1,100%);
+    grid-template-areas: 
+    "title"
+    "image"
+    "thumbs"
+    "bid"
+    "con"
+    "desc"
+    "input"
+    "bidbutton"
+    "savebtn"
+    "buynow"
+    "seller";
+
+    .price-box {
+      padding-left:0;
+    }
+  }
+
 `;
+
+
 
 const ProductDetailsCard = () => {
   const [mainImage, setMainImage] = useState(null);
