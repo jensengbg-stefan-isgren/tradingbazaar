@@ -8,6 +8,7 @@ import GlobalStyle from 'styles/globalStyles'
 import { ThemeProvider } from 'styled-components'
 import { authUser } from 'features/auth/authSlice'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+
 const App = () => {
   const dispatch = useDispatch()
 
