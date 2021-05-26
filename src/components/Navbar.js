@@ -113,7 +113,7 @@ const StyledLink = styled(Link)`
 
 &:hover {
   border-radius: 4px;
-  background:#fbb7ca;
+  background:#f7f7f2
 }
 
 `
@@ -134,6 +134,7 @@ const StyledInput = styled.input`
 
 const Navbar = () => {
 
+const {categories } = useSelector((state) => state.categories)
 const isVisible = useSelector(state => state.nav.isVisible)
 
 
@@ -152,7 +153,10 @@ useEffect(() => {
         </div>
       {!isVisible ?  <div className="search-container"  >
           <select name="category" id="category">
-            <option value="">Categories</option>
+            <option>All Categories</option>
+           {categories.map((category) => {
+             return <option key={category.name} value={category.name}>{category.name}</option>
+           })}
           </select>
           <StyledInput placeholder="What are you looking for today?" />
         </div> : ""}

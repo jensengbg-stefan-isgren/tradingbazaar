@@ -1,5 +1,4 @@
  const data = [
-  "All Categories",
   "Accessories",
   "Antiques & Design",
   "Art",

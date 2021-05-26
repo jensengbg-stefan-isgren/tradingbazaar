@@ -1,6 +1,6 @@
 import { db } from '../services/firebase'
 import store from 'store/store'
-// import data from 'data/categories'
+//  import data from 'data/categories'
 export const addProduct = async () => {
   const state = store.getState()
 

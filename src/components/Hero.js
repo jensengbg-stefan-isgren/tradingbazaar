@@ -78,13 +78,20 @@ const Hero = () => {
   const handleScroll = useCallback(
     async() => {
       const element = document.getElementById('search')
-      const rect = element.getBoundingClientRect();
-      console.log(rect.top)
-      const isInViewport = rect.top >= -50 &&
-      rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth);
-      dispatch((setIsVisible(isInViewport)))
+
+      if(!element) {
+        return
+      } else {
+        const rect = element.getBoundingClientRect();
+        const isInViewport = rect.top >= -50 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth);
+        dispatch((setIsVisible(isInViewport)))
+      }
+
+
+
     },
     [dispatch],
   )
@@ -103,9 +110,10 @@ useEffect(() => {
       <Container>
         <h1>We make trading products easy for everyone</h1>
         <SearchContainer id="search">
-        {categories ?   <select placeholder="All Categories" name="categories" id="categories">
+        {categories ?   <select defaultValue={{label:"All Categories", value:0}} name="categories" id="categories">
+          <option>All Categories</option>
             {categories.map((category) => {
-              return <option key={category.name} defaultValue="All Categories" value={category.name}>{category.name}</option>
+              return <option key={category.name} value={category.name}>{category.name}</option>
             })}
           </select> : ""}
           <input placeholder="What are you looking for today?" type="text" />
