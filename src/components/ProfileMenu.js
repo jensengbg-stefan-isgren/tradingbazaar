@@ -2,7 +2,8 @@ import styled from "styled-components";
 import React from "react";
 import { useHistory,Link } from "react-router-dom";
 import firebase from "firebase";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import { authUser } from 'features/auth/authSlice'
 
 const Menu = styled.div`
   display: flex;
@@ -38,11 +39,13 @@ li:hover {
 `;
 
 const ProfileMenu = ({ toggleMenu }) => {
+  const dispatch = useDispatch()
   const user = useSelector((state) => state.auth.user);
   const history = useHistory();
 
   const logOut = async () => {
     await firebase.auth().signOut();
+    dispatch(authUser())
     history.push("/");
   };
 
