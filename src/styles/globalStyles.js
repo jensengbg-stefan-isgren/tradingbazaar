@@ -14,6 +14,21 @@ body {
   font-family: ${(props) => props.theme.font.body};
   font-size: calc(0.9em + min(4px, 0.3vw));
   overflow-x: hidden;
+
+
+::-webkit-scrollbar {
+  width: .5em;
+}
+ 
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+ 
+::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
 }
 
 h1, h2, h3, h4, h5, h6 {

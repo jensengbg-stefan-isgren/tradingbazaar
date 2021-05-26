@@ -3,12 +3,16 @@ import authReducer from 'features/auth/authSlice'
 import newAdReducer from 'features/newAdSlice'
 import adsSlice from 'features/adsSlice'
 import productReducer from 'features/productSlice'
+import navReducer from 'features/navSlice'
+import categoriesReducer from 'features/categoriesSlice'
 
 export default configureStore({
   reducer: {
     auth: authReducer,
     newAd: newAdReducer,
     ads: adsSlice,
-    product: productReducer
+    product: productReducer,
+    nav:navReducer,
+    categories:categoriesReducer
   },
 })

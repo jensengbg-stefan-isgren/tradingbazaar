@@ -3,6 +3,7 @@ import ProductCard from 'components/ProductCard'
 import { useSelector } from 'react-redux'
 import UserGetAds from 'services/useGetAds'
 import React from 'react'
+import Hero from 'components/Hero'
 
 const ProductSection = () => {
   const ads = useSelector((state) => state.ads)
@@ -10,6 +11,7 @@ const ProductSection = () => {
 
   return (
     <StyledProductWrapper>
+      <Hero/>
       <h2>Products</h2>
       <section className="card-cont">
         {Array.isArray(ads)
