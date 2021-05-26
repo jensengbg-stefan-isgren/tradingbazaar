@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { db } from 'services/firebase'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { checkIfRegistered, addUser } from 'features/auth/authSlice'
+import { checkIfRegistered, addUser,authUser } from 'features/auth/authSlice'
 
 const useSignin = () => {
   const [toggleForgotCredentials, setToggleForgotCredentials] = useState(false)
@@ -44,21 +44,13 @@ const useSignin = () => {
       const { providerId, isNewUser } = additionalUserInfo
 
       if (!isNewUser) {
-        const snapShot = await db.collection('users').doc(uid).get()
-        const document = snapShot.data()
-        dispatch(addUser(document))
+        dispatch(authUser())
+        // const snapShot = await db.collection('users').doc(uid).get()
+        // const document = snapShot.data()
+        // dispatch(addUser(document))
+        
 
-        // let favorites = []
-        // await snapShot.ref
-        //   .collection('favorites')
-        //   .get()
-        //   .then((favorite) =>
-        //     favorite.forEach(
-        //       (el) => (favorites = [...favorites, el.data().productId])
-        //     )
-        //   )
-        // console.log('dispatching favorites')
-        // dispatch(addFavoritesToUser(favorites))
+        
 
         history.push('/profile/overview')
       } else {

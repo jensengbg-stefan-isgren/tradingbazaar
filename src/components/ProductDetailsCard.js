@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addDetailedProduct } from "features/productSlice";
+import { addDetailedProduct,clearProduct } from "features/productSlice";
 import { db } from "services/firebase";
 
 const Wrapper = styled.div`
@@ -186,7 +186,9 @@ const ProductDetailsCard = () => {
   useEffect(() => {
     getProduct();
 
-    return () => {};
+    return () => {
+      dispatch((clearProduct(null)))
+    };
   }, [getProduct]);
 
   const handleImage = (e) => {
