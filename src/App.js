@@ -11,7 +11,6 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import {db} from 'services/firebase'
 import {addCategories} from 'features/categoriesSlice'
 
-
 const App = () => {
   const dispatch = useDispatch()
 

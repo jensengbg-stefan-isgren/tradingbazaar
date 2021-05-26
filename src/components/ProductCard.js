@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom'
 import image from 'assets/images/img-placeholder.svg'
 import FavoriteFill from 'assets/icons/favorite_fill.svg'
 import FavoriteOutline from 'assets/icons/favorite_outline.svg'
-import { useSelector } from 'react-redux'
-import { db } from 'services/firebase'
+import { useSelector, useDispatch } from 'react-redux'
+import { authToggleFavorite } from 'features/auth/authSlice'
+
 import React from 'react'
 
 const ProductCard = ({ ad }) => {
-  const { uid, isAuthenticated, favorites } = useSelector((state) => state.auth)
+  const { uid, isAuthenticated, user } = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
   //   console.log(ad)
 
   // const [isFavorite, setIsFavorite] = useState(favorites.includes(ad.id))
@@ -18,15 +20,21 @@ const ProductCard = ({ ad }) => {
   // if (favorites.includes(ad.id)) setIsFavorite(true)
   // console.log(ad.id, favorites.includes(ad.id), favorites)
 
-  async function toggleFavorite() {
+  async function toggleFavorite(event) {
     if (!uid) return alert('Please Login to select your Favorites')
 
-    const favoriteRef = await db
-      .collection('users')
-      .doc(uid)
-      .collection('favorites')
-      .add({ productId: ad.id })
-    console.log('result fav', favoriteRef)
+    dispatch(authToggleFavorite(ad.id))
+
+    // const favoriteRef = await db.collection('users').doc(uid)
+
+    // console.log(event)
+    // favoriteRef.update({
+    //   favs: firebase.firestore.FieldValue.arrayUnion(ad.id),
+    // })
+    // console.log('result fav', favoriteRef)
+
+    // .collection('favorites')
+    // .add({ productId: ad.id })
 
     // console.log(await db.collection('users').doc(uid).get())
 
@@ -37,30 +45,35 @@ const ProductCard = ({ ad }) => {
   }
 
   return (
-    <Link to={`/item/${ad.id}`}>
-      <StyledProduct>
-        <div className="wrapper">
+    <StyledProduct>
+      <div className="wrapper">
+        <Link to={`/item/${ad.id}`}>
           <div className="img-cont">
             <img src={ad.imgLink1 || image} alt="product" />
           </div>
           <div className="title-cont">
             <p>{ad.title}</p>
           </div>
-          <div className="bottom-cont">
-            <p>{ad.startPrice} Kr</p>
-            <p>0 Bids</p>
-            <button onClick={toggleFavorite} disabled={!isAuthenticated}>
-              <img
-                src={favorites.includes(ad.id) ? FavoriteFill : FavoriteOutline}
-                alt="favorite"
-              ></img>
-            </button>
+        </Link>
 
-            <p>Time Left</p>
-          </div>
+        <div className="bottom-cont">
+          <p>{ad.startPrice} Kr</p>
+          <p>0 Bids</p>
+          <button onClick={toggleFavorite} disabled={!isAuthenticated}>
+            <img
+              src={
+                user?.favorites?.includes(ad.id)
+                  ? FavoriteFill
+                  : FavoriteOutline
+              }
+              alt="favorite"
+            ></img>
+          </button>
+
+          <p>Time Left</p>
         </div>
-      </StyledProduct>
-    </Link>
+      </div>
+    </StyledProduct>
   )
 }
 
