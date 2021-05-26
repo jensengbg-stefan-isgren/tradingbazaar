@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import authUserThunk from './authUserThunk'
 import authToggleFavoriteThunk from './authToggleFavoriteThunk'
+// import test from '../prodAddBidThunk'
+import { bid } from '../productSlice'
 
 export const authUser = authUserThunk
 export const authToggleFavorite = authToggleFavoriteThunk
@@ -14,6 +16,7 @@ export const authSlice = createSlice({
     errorMessage: null,
     user: null,
     providerData: null,
+    test2: '',
   },
 
   reducers: {
@@ -51,6 +54,11 @@ export const authSlice = createSlice({
     },
     [authToggleFavorite.rejected]: (state, action) => {
       console.log('rej', action)
+    },
+    [bid.fulfilled]: (state, action) => {
+      // Add update to user bids
+      console.log('to be finished')
+      // state.test2 = action.payload
     },
   },
 })

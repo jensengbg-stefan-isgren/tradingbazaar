@@ -58,7 +58,7 @@ const ProductCard = ({ ad }) => {
 
         <div className="bottom-cont">
           <p>{ad.startPrice} Kr</p>
-          <p>0 Bids</p>
+          <p>{!ad.bids ? 0 : ad.bids} Bids</p>
           <button onClick={toggleFavorite} disabled={!isAuthenticated}>
             <img
               src={
@@ -122,7 +122,7 @@ const StyledProduct = styled.div`
     background-color: ${(props) => props.theme.button.bckDark};
     width: 100%;
     p {
-      padding: .3em;
+      padding: 0.3em;
       text-align: center;
       color: ${(props) => props.theme.button.color};
     }
