@@ -189,7 +189,7 @@ const ProductDetailsCard = () => {
     return () => {
       dispatch((clearProduct(null)))
     };
-  }, [getProduct]);
+  }, [getProduct,dispatch]);
 
   const handleImage = (e) => {
     setMainImage(e.target.src);
