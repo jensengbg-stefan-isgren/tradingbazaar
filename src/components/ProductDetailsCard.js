@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,21 +22,36 @@ const ProductDetailsCard = () => {
     setMyBid('')
   }
 
-  const getProduct = useCallback(async () => {
-    const snapshot = await db.collection('sellingProducts').doc(id).get()
-    const data = await snapshot.data()
+  const getProduct = useMemo(() => {
+    // const snapshot = await db.collection('sellingProducts').doc(id).get()
+    // const data = await snapshot.data()
+    const unSubscribe = db
+      .collection('sellingProducts')
+      .doc(id)
+      .onSnapshot((doc) => {
+        dispatch(
+          addDetailedProduct({ productDetail: doc.data(), productId: id })
+        )
+        db.collection('users')
+          .doc(doc.uid)
+          .get()
+          .then((data) => setSeller(data))
+      })
+
     // vi får kolla upp vad om en annan användare man kan läsa ifall man sätter regler.
-    const snapshott = await db.collection('users').doc(data.uid).get()
-    const data2 = await snapshott.data()
-    setSeller(data2)
-    dispatch(addDetailedProduct({ productDetail: data, productId: id }))
+    // const snapshott = await db.collection('users').doc(data.uid).get()
+    // const data2 = await snapshott.data()
+    // setSeller(data2)
+    // dispatch(addDetailedProduct({ productDetail: data, productId: id }))
+    return unSubscribe
   }, [dispatch, id])
 
   useEffect(() => {
-    getProduct()
+    const unSubscribe = getProduct
 
     return () => {
       dispatch(clearProduct(null))
+      unSubscribe()
     }
   }, [getProduct, dispatch])
 
