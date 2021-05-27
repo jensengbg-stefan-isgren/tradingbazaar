@@ -1,6 +1,6 @@
 import { db } from '../services/firebase'
 import store from 'store/store'
-//  import data from 'data/categories'
+// import data from 'data/categories'
 export const addProduct = async () => {
   const state = store.getState()
 
@@ -50,7 +50,7 @@ export const getProduct = async(id) => {
 
 // export const addCategories = async() => {
 // data.forEach(async(item) => {
-//   await db.collection("categories").add({name: item})
+//   await db.collection("categories").add({name: item.toLowerCase()})
 // })
 
 // }
