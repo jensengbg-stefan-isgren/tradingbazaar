@@ -15,6 +15,7 @@ const WishList = () => {
         let favProdArr = []
 
         do {
+          let innerLoopfavs = []
           const loopWishArr = locWishArr.slice(0, 10)
           locWishArr = locWishArr.slice(10)
 
@@ -24,9 +25,13 @@ const WishList = () => {
             .get()
             .then((snapshot) =>
               snapshot.forEach((doc) => {
-                favProdArr = [...favProdArr, { ...doc.data(), id: doc.id }]
+                innerLoopfavs = [
+                  ...innerLoopfavs,
+                  { ...doc.data(), id: doc.id },
+                ]
               })
             )
+          favProdArr = [...favProdArr, ...innerLoopfavs]
         } while (locWishArr.length > 0)
         setAds([...favProdArr])
       }
@@ -59,17 +64,17 @@ const Wrapper = styled.div`
   align-items: center;
 `
 
-const Container = styled.div`
-  margin-top: 4em;
-  min-height: 60vh;
-  width: 60vw;
-  place-content: center;
-  text-align: center;
-  border: 1px solid lightgrey;
+// const Container = styled.div`
+//   margin-top: 4em;
+//   min-height: 60vh;
+//   width: 60vw;
+//   place-content: center;
+//   text-align: center;
+//   border: 1px solid lightgrey;
 
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(1, 1fr);
-    grid-auto-rows: minmax(5vh, 1fr);
-  }
-`
+//   @media (max-width: 768px) {
+//     grid-template-columns: repeat(1, 1fr);
+//     grid-auto-rows: minmax(5vh, 1fr);
+//   }
+// `
 export default WishList
