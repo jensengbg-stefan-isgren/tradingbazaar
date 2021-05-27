@@ -1,18 +1,57 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { addDetailedProduct, clearProduct } from 'features/productSlice'
 import { db } from 'services/firebase'
 import { bid } from 'features/productSlice'
+import timeLeftFunc from 'functions/timeLeftInterval'
 
 const ProductDetailsCard = () => {
   const [mainImage, setMainImage] = useState(null)
   const [seller, setSeller] = useState()
   const [myBid, setMyBid] = useState('')
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  })
+
   const { detailedProduct } = useSelector((state) => state.product)
+  const { uid } = useSelector((state) => state.auth)
+
   const dispatch = useDispatch()
   const { id } = useParams()
+
+  const timerCallback = (timeObj) => {
+    setTimeLeft({ ...timeObj })
+  }
+
+  const renderTimeLeft = () => {
+    if (timeLeft.days > 0)
+      return (
+        <p>
+          {timeLeft.days}d {timeLeft.hours}h
+        </p>
+      )
+    else if (timeLeft.days > -1 && timeLeft.hours > 0)
+      return (
+        <p>
+          {timeLeft.hours}h {timeLeft.minutes}m
+        </p>
+      )
+    else if (
+      timeLeft.days > -1 &&
+      (timeLeft.minutes > 0 || timeLeft.seconds > 0)
+    )
+      return (
+        <p>
+          {timeLeft.minutes}m {timeLeft.seconds}s
+        </p>
+      )
+    else return <p>Time expired</p>
+  }
 
   const addBid = () => {
     setMyBid(Number(myBid))
@@ -48,12 +87,22 @@ const ProductDetailsCard = () => {
 
   useEffect(() => {
     const unSubscribe = getProduct
-
     return () => {
       dispatch(clearProduct(null))
       unSubscribe()
     }
   }, [getProduct, dispatch])
+
+  // const [stopIntervall, setStopInterval] = useState(0)
+  useEffect(() => {
+    let stopInterval = 0
+    // const date = new Date(new Date().getTime() + 1 * 6000)
+    const date = detailedProduct?.adEndDate || 0
+
+    if (stopInterval) clearInterval(stopInterval)
+    stopInterval = timeLeftFunc(date || 0, timerCallback)
+    return () => clearInterval(stopInterval)
+  }, [detailedProduct])
 
   const handleImage = (e) => {
     setMainImage(e.target.src)
@@ -136,38 +185,73 @@ const ProductDetailsCard = () => {
                 )}
               </div>
               <div className="time-container">
-                <p>Slutar den 123</p>
-                <p>{detailedProduct.adEndDate}</p>
+                <p>Ending at</p>
+                {renderTimeLeft()}
               </div>
               <div className="bid-container">
                 <p>Bids</p>
                 <p>{!detailedProduct.bids ? 0 : detailedProduct.bids}st</p>
               </div>
             </div>
-            <input
-              className="input"
-              type="number"
-              placeholder="Enter your price"
-              value={myBid}
-              onChange={(e) => setMyBid(e.target.value)}
-            />
-            <button onClick={addBid} className="button bid">
-              Add bid
-            </button>
-            <button className="button buy-now">
-              Buy now {detailedProduct.acceptedPrice} kr
-            </button>
-            <button className="button save">Save</button>
-            {seller ? (
-              <div className="seller-title-container">
-                <h4>About the seller</h4>
-                <div className="seller-container">
-                  <button>Contact the seller</button>
-                  <button>See all products</button>
-                </div>
+            <div>Enddate{detailedProduct.adEndDate}</div>
+            <div className="pippilångstrump">
+              {detailedProduct.bids ? (
+                <p style={{ textAlign: 'center' }}>
+                  Last bid -{' '}
+                  <strong>
+                    {detailedProduct.leadingBidder
+                      ? detailedProduct.leadingBidder
+                      : 'Anonymous'}
+                  </strong>
+                </p>
+              ) : (
+                <p></p>
+              )}
+            </div>
+            {uid !== detailedProduct.uid ? (
+              <div className="buyer-section">
+                <input
+                  className="input"
+                  type="number"
+                  placeholder="Enter your price"
+                  value={myBid}
+                  onChange={(e) => setMyBid(e.target.value)}
+                />
+                <button
+                  onClick={addBid}
+                  disabled={uid === detailedProduct.uid}
+                  className="button bid"
+                >
+                  Add bid
+                </button>
+                <button
+                  className="button buy-now"
+                  disabled={uid === detailedProduct.uid}
+                >
+                  Buy now {detailedProduct.acceptedPrice} kr
+                </button>
+                <button
+                  className="button save"
+                  disabled={uid === detailedProduct.uid}
+                >
+                  Save
+                </button>
+                {seller ? (
+                  <div className="seller-title-container">
+                    <h4>About the seller</h4>
+                    <div className="seller-container">
+                      <button>Contact the seller</button>
+                      <button>See all products</button>
+                    </div>
+                  </div>
+                ) : (
+                  ''
+                )}
               </div>
             ) : (
-              ''
+              <div className="seller-section">
+                <button className="button remove">Remove Product</button>
+              </div>
             )}
           </div>
         </Container>
@@ -193,8 +277,7 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: 30em 12em;
   padding: 1em;
-
-  grid-template-areas:
+  /* grid-template-areas:
     'title title'
     'image bid'
     'image bid'
@@ -205,7 +288,14 @@ const Container = styled.div`
     '. bidbutton'
     '. savebtn'
     '. buynow'
-    'seller seller';
+    'seller seller'; */
+  grid-template-areas:
+    'title title'
+    'image bid'
+    'image bid'
+    'thumbs thumbs'
+    'con .'
+    'desc .';
 
   .condition-container {
     grid-area: con;
@@ -321,7 +411,7 @@ const Container = styled.div`
 
   @media only screen and (max-width: 768px) {
     grid-template-columns: repeat(1, 100%);
-    grid-template-areas:
+    /* grid-template-areas:
       'title'
       'image'
       'thumbs'
@@ -332,7 +422,14 @@ const Container = styled.div`
       'bidbutton'
       'savebtn'
       'buynow'
-      'seller';
+      'seller'; */
+    grid-template-areas:
+      'title'
+      'image'
+      'thumbs'
+      'bid'
+      'con'
+      'desc';
 
     .price-box {
       padding-left: 0;
