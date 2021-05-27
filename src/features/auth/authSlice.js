@@ -56,6 +56,9 @@ export const authSlice = createSlice({
       console.log('rej', action)
     },
     [bid.fulfilled]: (state, action) => {
+      const payload = {}
+      payload.payload = action.payload.user
+      authSlice.caseReducers.addUser(state, payload)
       // Add update to user bids
       console.log('to be finished')
       // state.test2 = action.payload
