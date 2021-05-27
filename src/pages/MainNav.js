@@ -14,7 +14,7 @@ function MainNav() {
       if (showMobileNav) {
         return <NavbarMobileProfile />;
       } else {
-        return <NavbarProfile />;
+        return <NavbarProfile /> ;
       }
     } else {
       if (showMobileNav) {
