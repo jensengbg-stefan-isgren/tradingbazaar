@@ -1,85 +1,83 @@
-import SellingProducts from "../pages/SellingProducts";
-import ResetCredentials from "../components/ResetCredentials";
-import AddAd from "../pages/AddAd";
-import Login from "../pages/Login";
-import Profile from "../pages/Profile";
-import Register from "../pages/Register";
+import SellingProducts from '../pages/SellingProducts'
+import ResetCredentials from '../components/ResetCredentials'
+import AddAd from '../pages/AddAd'
+import Login from '../pages/Login'
+import Profile from '../pages/Profile'
+import Register from '../pages/Register'
 import MainNav from '../pages/MainNav'
 import ActiveItems from 'components/ActiveItems'
 import Settings from 'components/Settings/Settings'
 import ProfileSettings from 'components/Settings/ProfileSettings'
 import ActiveAds from 'components/ActiveAds'
-import WishList from 'components/WishList'
+import WishList from 'pages/WishList'
 import ProductDetailsCard from 'components/ProductDetailsCard'
 
 export const routes = [
   {
-    path: "/",
+    path: '/',
     exact: true,
     main: () => <SellingProducts />,
     navbar: () => <MainNav />,
   },
   {
-    path: "/profile/active-items",
+    path: '/profile/active-items',
     exact: true,
-    main: () => <ActiveItems/>,
+    main: () => <ActiveItems />,
     navbar: () => <MainNav />,
   },
   {
-    path: "/profile/wish-list",
+    path: '/profile/wish-list',
     exact: true,
-    main: () => <WishList/>,
+    main: () => <WishList />,
     navbar: () => <MainNav />,
   },
   {
-    path: "/profile/active",
+    path: '/profile/active',
     exact: true,
-    main: () => <ActiveAds/>,
+    main: () => <ActiveAds />,
     navbar: () => <MainNav />,
   },
   {
-    path: "/profile/settings",
+    path: '/profile/settings',
     exact: true,
-    main: () => <Settings/>,
+    main: () => <Settings />,
     navbar: () => <MainNav />,
   },
   {
-    path: "/profile/settings/account",
+    path: '/profile/settings/account',
     exact: true,
-    main: () => <ProfileSettings/>,
+    main: () => <ProfileSettings />,
     navbar: () => <MainNav />,
   },
   {
-    path: "/login",
+    path: '/login',
     main: () => <Login />,
-    navbar: () => "",
+    navbar: () => '',
   },
   {
-    path: "/register",
+    path: '/register',
     main: () => <Register />,
-    navbar: () => "",
+    navbar: () => '',
   },
   {
-    path: "/addad",
+    path: '/addad',
 
     main: () => <AddAd />,
     navbar: () => <MainNav />,
   },
   {
-    path: "/profile/overview",
+    path: '/profile/overview',
     main: () => <Profile />,
     navbar: () => <MainNav />,
   },
   {
-    path: "/resetcredentials",
-    main: () => <ResetCredentials/>,
-    navbar: () => "",
+    path: '/resetcredentials',
+    main: () => <ResetCredentials />,
+    navbar: () => '',
   },
   {
-    path: "/item/:id",
-    main: () => <ProductDetailsCard/>,
-    navbar: () => <MainNav/>,
+    path: '/item/:id',
+    main: () => <ProductDetailsCard />,
+    navbar: () => <MainNav />,
   },
-];
-
-
+]
