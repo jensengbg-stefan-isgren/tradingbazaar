@@ -1,8 +1,9 @@
-import React,{useEffect,useCallback} from "react";
+import React,{useEffect,useCallback,useState} from "react";
 import styled from "styled-components";
 import heroImg from "assets/images/hero-bg.png";
 import {useDispatch,useSelector} from 'react-redux'
 import {setIsVisible} from 'features/navSlice'
+// import {db} from 'services/firebase'
 
 const Wrapper = styled.section`
   position: relative;
@@ -72,9 +73,12 @@ const Container = styled.div`
 
 const Hero = () => {
 
+
+  const [category,setCategory] = useState("All Categories")
+  const [searchValue,setSearchValue] = useState('')
   const {categories } = useSelector((state) => state.categories)
   const dispatch = useDispatch();
-
+  console.log(category,searchValue)
   const handleScroll = useCallback(
     async() => {
       const element = document.getElementById('search')
@@ -104,19 +108,39 @@ useEffect(() => {
   }
 }, [dispatch,handleScroll])
 
+const handleInput = (e) => {
+  console.log(e.target.value)
+  setSearchValue(e.target.value)
+}
+
+const searchProducts = async() => {
+
+// if(category == "All Categories") {
+//   const snapshot = await db.collection('sellingProducts').where('title', '===', `${searchValue}`).get()
+//   snapshot.forEach(doc => {
+//     console.log(doc.data())
+//   });
+// }
+  
+
+
+
+}
+
 
   return (
     <Wrapper>
       <Container>
         <h1>We make trading products easy for everyone</h1>
         <SearchContainer id="search">
-        {categories ?   <select defaultValue={{label:"All Categories", value:0}} name="categories" id="categories">
+        {categories ?   <select onChange={(e) => setCategory(e.target.value)} name="categories" id="categories">
           <option>All Categories</option>
             {categories.map((category) => {
               return <option key={category.name} value={category.name}>{category.name}</option>
             })}
           </select> : ""}
-          <input placeholder="What are you looking for today?" type="text" />
+          <input onChange={handleInput} placeholder="What are you looking for today?" type="text" />
+          <button onClick={searchProducts}>Search!</button>
         </SearchContainer>
       </Container>
     </Wrapper>
