@@ -1,23 +1,26 @@
 import styled from 'styled-components'
-import ProductCard from 'components/ProductCard'
+// import ProductCard from 'components/ProductCard'
+import CardContainer from 'components/CardContainer'
 import { useSelector } from 'react-redux'
-import UserGetAds from 'services/useGetAds'
+import UseGetAds from 'services/useGetAds'
 import React from 'react'
 import Hero from 'components/Hero'
 
 const ProductSection = () => {
   const ads = useSelector((state) => state.ads)
-  UserGetAds()
+  UseGetAds()
 
   return (
     <StyledProductWrapper>
-      <Hero/>
+      <Hero />
       <h2>Products</h2>
-      <section className="card-cont">
+      {/* <section className="card-cont">
         {Array.isArray(ads)
           ? ads.map((ad) => <ProductCard key={ad.id} ad={ad} />)
           : null}
-      </section>
+      </section> */}
+
+      <CardContainer ads={ads} />
     </StyledProductWrapper>
   )
 }
