@@ -34,6 +34,7 @@ const AddAd = () => {
     imgLink5,
   } = useSelector((state) => state.newAd)
 
+  const {categories} = useSelector((state) => state.categories)
   const getImgRef = (field) => {
     switch (field) {
       case 'imgLink1':
@@ -121,16 +122,13 @@ const AddAd = () => {
                 <label className="std-label" htmlFor="inputCategory">
                   Category
                 </label>
-                <input
-                  type="text"
-                  id="inputCategory"
-                  value={category}
-                  onChange={(e) =>
-                    dispatch(
+                    {categories ?  <select onChange={(e) => dispatch(
                       adInputEdit({ field: 'category', value: e.target.value })
-                    )
-                  }
-                />
+                    ) } name="category" id="category">
+                  {categories.map((category) => {
+                    return <option key={category.name} value={category.name}>{category.name}</option>
+                  })}
+                </select> : ""}
               </InputContainer>
               <InputContainer>
                 <p className="std-label">Product Conditions</p>
