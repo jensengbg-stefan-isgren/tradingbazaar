@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { usersCollection } from "services/firebase";
 import firebase, { auth } from "services/firebase";
+import {addUser} from 'features/auth/authSlice'
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -99,6 +100,7 @@ const SettingsContainer = styled.div`
 `;
 
 const ProfileSettings = () => {
+  const dispatch = useDispatch();
   const [ui, setUi] = useState();
   const { user, providerData, uid } = useSelector((state) => state.auth);
   const [edit, setEdit] = useState(false);
@@ -107,14 +109,13 @@ const ProfileSettings = () => {
     firstName: "",
     lastName: "",
     email: "",
+    alias: "",
   });
 
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [verifyPassword, setVerifyPassword] = useState("");
-
-  console.log(verifyPassword);
-
+console.log(verifyPassword)
   const [message, setMessage] = useState(null);
   const [toggleCredentials, setToggleCredentials] = useState(false);
   const [facebook, setFacebook] = useState(false);
@@ -125,6 +126,7 @@ const ProfileSettings = () => {
   };
 
   useEffect(() => {
+
     if (providerData === undefined) {
       return;
     } else {
@@ -151,6 +153,7 @@ const ProfileSettings = () => {
   const updateUserData = async () => {
     try {
       await usersCollection.doc(ui).update(value);
+      dispatch(addUser(value))
       setMessage("Successfully updated profile information");
       setTimeout(() => {
         setMessage(null);
@@ -172,6 +175,10 @@ const ProfileSettings = () => {
 
   const handleEmail = (e) => {
     setValue({ ...value, email: e.target.value });
+  };
+
+  const handleAlias = (e) => {
+    setValue({ ...value, alias: e.target.value });
   };
 
   const connectFacebook = async () => {
@@ -337,6 +344,16 @@ const ProfileSettings = () => {
                 {!edit ? <button onClick={handleEdit}>Edit</button> : ""}
               </div>
               <div className="form-container">
+              <div>
+                  <label htmlFor="alias">Alias</label>
+                  <input
+                    onChange={handleAlias}
+                    className={edit ? `edit` : `not-edit`}
+                    readOnly={!edit}
+                    type="text"
+                    value={value.alias}
+                  />
+                </div>
                 <div>
                   <label htmlFor="first-name">Firstname</label>
                   <input

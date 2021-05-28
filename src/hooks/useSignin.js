@@ -45,12 +45,7 @@ const useSignin = () => {
 
       if (!isNewUser) {
         dispatch(authUser())
-        // const snapShot = await db.collection('users').doc(uid).get()
-        // const document = snapShot.data()
-        // dispatch(addUser(document))
-        
-
-        
+ 
 
         history.push('/profile/overview')
       } else {
@@ -60,6 +55,7 @@ const useSignin = () => {
           lastName: null,
           email: null,
           photoUrl: null,
+          alias: null
         }
 
         switch (providerId) {
@@ -68,6 +64,7 @@ const useSignin = () => {
             profileData.lastName = profile.family_name
             profileData.email = profile.email
             profileData.photoUrl = profile.picture
+            profileData.alias = `${profile.given_name} ${profile.family_name}` 
             break
           case 'facebook.com':
             profileData.name = profile.name
@@ -75,6 +72,7 @@ const useSignin = () => {
             profileData.lastName = profile.last_name
             profileData.email = profile.email
             profileData.photoUrl = profile.picture.data.url
+            profileData.alias = `${profile.first_name} ${profile.last_name}` 
             break
           default:
         }

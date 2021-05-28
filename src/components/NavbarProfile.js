@@ -1,16 +1,78 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Link } from "react-router-dom";
 import ProfileMenu from "components/ProfileMenu";
+import { useSelector } from "react-redux";
+import {useHistory} from 'react-router-dom';
+
+const fadeIn = keyframes`
+  from {
+    opacity: .4;
+  }
+
+  to {
+    opacity:1;
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    background-color: white;
+  }
+
+  to {
+    background-color: none;
+  }
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  font-family: ${(props) => props.theme.font.title};
+  color: ${(props) => props.theme.color.main};
+  font-size: 1.4em;
+  padding: 0.5em;
+`;
 
 const Navigation = styled.nav`
+
+li {
+  padding: 0.5em;
+  margin: 0 .5em;
+  text-decoration: none;
+  font-family: ${(props) => props.theme.font.title};
+  color: ${(props) => props.theme.color.main};
+  font-size: 1.4em;
+}
+
+p:first-child {
+  cursor: pointer;
+}
+
+.no-nav {
+    animation: ${fadeOut} 300ms;
+    background-color: none;
+  }
+
+
+  .show-nav {
+    animation: ${fadeIn} 300ms ;
+    background-color:#F7F7F2;
+  }
+
+
+  background-color: "";
+
     .container {
-      height: 4em;
-      padding: 0 2em;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
+    height: 4em;
+    display: flex;
+    padding: 0 1em;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    z-index:1000;
+    top:0;
+    width:100%;
+    font-size: 16px;
 
      .nav-links {
        display:flex;
@@ -18,19 +80,24 @@ const Navigation = styled.nav`
        cursor: pointer;
 
 
-        li {
-          padding:.7em;
+        .active {
+          background-color: white;
         }
 
-        li:hover {
-          background-color:#dfdfdf;
-        }
+        .menu-container {
+          display:flex;
+          justify-content: center;
+          align-items:center;
+          position: relative;
 
+          img {
+            height:1em;
+          }
+        }
       }       
      }
 
       select {
-        width: 100px;
         height: 40px;
         background-color: ${(props) => props.theme.color.main};
         color: white;
@@ -50,7 +117,7 @@ const Navigation = styled.nav`
     }
 
     a {
-      margin: 0 1em;
+      margin: 0 .5em;
       text-decoration: none;
     }
   `;
@@ -71,7 +138,13 @@ const StyledInput = styled.input`
 `;
 
 const NavbarProfile = () => {
+  const history = useHistory();
+  const { categories } = useSelector((state) => state.categories);
+
+  
   const [toggleMenu, setToggleMenu] = useState(false);
+
+  const isVisible = useSelector((state) => state.nav.isVisible);
 
   const handleMenu = () => {
     setToggleMenu(!toggleMenu);
@@ -79,28 +152,35 @@ const NavbarProfile = () => {
 
   return (
     <Navigation>
-      <ProfileMenu toggleMenu={toggleMenu} />
-      <div className="container">
+      <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
         <div className="logo">
-          <p>TradingBazaar</p>
+          <p onClick={() => history.push('/')}>TradingBazaar</p>
         </div>
-        <div className="search-container">
-          <select name="category" id="category">
-            <option value="">nojjan</option>
-          </select>
-          <StyledInput placeholder="What are you looking for today?" />
-        </div>
+        {!isVisible ? (
+          <div className="search-container">
+            <select name="category" id="category">
+              <option>All Categories</option>
+              {categories.map((category) => {
+                return (
+                  <option key={category.name} value={category.name}>
+                    {category.name}
+                  </option>
+                );
+              })}
+            </select>
+            <StyledInput placeholder="What are you looking for today?" />
+          </div>
+        ) : (
+          ""
+        )}
         <div className="nav-links">
-          <li>
-            <Link to="/profile/wish-list">Wishlist</Link>
-          </li>
-          <li>
-            <Link to="/profile/active-items">Buy</Link>
-          </li>
-          <li>
-            <Link to="/profile/active">Sell</Link>
-          </li>
-          <li onClick={handleMenu}>Menu</li>
+          <StyledLink to="/profile/wish-list">Wishlist</StyledLink>
+          <StyledLink to="/profile/active-items">Buy</StyledLink>
+          <StyledLink to="/profile/active">Sell</StyledLink>
+          <div className="menu-container">
+          <li className={toggleMenu ? 'active' : ""} onClick={handleMenu}>Menu</li>
+          </div>
+          <ProfileMenu toggleMenu={toggleMenu} />
         </div>
       </div>
     </Navigation>
