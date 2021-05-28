@@ -19,9 +19,22 @@ const StyledLink = styled(Link)`
   &:hover {
     background-color: lightpink;
   }
+  
 `;
 
 const Menu = styled.div`
+
+
+
+.alias {
+  font-family: ${(props) => props.theme.font.body};
+  color: ${(props) => props.theme.color.main};
+  font-size: 1.5em;
+}
+
+padding-top:1em;
+
+
   .image-container {
     padding: 1em 0;
     width: 100%;
@@ -31,6 +44,8 @@ const Menu = styled.div`
     img {
       border-radius: 50%;
     }
+
+
   }
 
   .link {
@@ -56,8 +71,8 @@ const Menu = styled.div`
   flex-direction: column;
   top: 64px;
   right: 1.7em;
-  width: 12em;
-  background-color: white;
+  width: 15em;
+  background-color: #f7f7f2;
   position: absolute;
   z-index: 999;
   transition: transform 0.2s ease-in-out;
@@ -80,11 +95,12 @@ const ProfileMenu = ({ toggleMenu }) => {
 
   return (
     <Menu className={toggleMenu ? `show` : "not-show"}>
+      <p className="alias">{user.alias}</p>
       <div className="image-container">
         {user.photoUrl ? (
-          <img src={user.photoUrl} alt="" />
+          <img src={user.photoUrl} alt="profile-pic" />
         ) : (
-          <img src={userIcon}></img>
+          <img alt="user-icon" src={userIcon}></img>
         )}
       </div>
       <StyledLink to="/profile/overview">Overview</StyledLink>

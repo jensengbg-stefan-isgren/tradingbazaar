@@ -75,10 +75,10 @@ const Hero = () => {
 
 
   const [category,setCategory] = useState("All Categories")
+  
   const [searchValue,setSearchValue] = useState('')
   const {categories } = useSelector((state) => state.categories)
   const dispatch = useDispatch();
-  console.log(category,searchValue)
   const handleScroll = useCallback(
     async() => {
       const element = document.getElementById('search')
@@ -99,6 +99,8 @@ const Hero = () => {
     },
     [dispatch],
   )
+
+  console.log(category, searchValue)
 
 useEffect(() => {
   dispatch((setIsVisible(true)))

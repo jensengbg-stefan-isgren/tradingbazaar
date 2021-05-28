@@ -140,11 +140,11 @@ const StyledInput = styled.input`
 const NavbarProfile = () => {
   const history = useHistory();
   const { categories } = useSelector((state) => state.categories);
-  console.log(categories);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  console.log(isAuthenticated);
-  const isVisible = useSelector((state) => state.nav.isVisible);
+
+  
   const [toggleMenu, setToggleMenu] = useState(false);
+
+  const isVisible = useSelector((state) => state.nav.isVisible);
 
   const handleMenu = () => {
     setToggleMenu(!toggleMenu);
