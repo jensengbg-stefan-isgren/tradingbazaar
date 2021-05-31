@@ -5,12 +5,15 @@ import FavoriteFill from 'assets/icons/favorite_fill.svg'
 import FavoriteOutline from 'assets/icons/favorite_outline.svg'
 import { useSelector, useDispatch } from 'react-redux'
 import { authToggleFavorite } from 'features/auth/authSlice'
+import TimeLeftFunc from 'functions/timeLeft'
+import TimeLeftParagraph from 'components/TimeLeftParagraph'
 
 import React from 'react'
 
 const ProductCard = ({ ad }) => {
   const { uid, isAuthenticated, user } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
+
   //   console.log(ad)
 
   // const [isFavorite, setIsFavorite] = useState(favorites.includes(ad.id))
@@ -59,18 +62,19 @@ const ProductCard = ({ ad }) => {
         <div className="bottom-cont">
           <p>{ad.startPrice} Kr</p>
           <p>{!ad.bids ? 0 : ad.bids} Bids</p>
-          <button onClick={toggleFavorite} disabled={!isAuthenticated}>
-            <img
-              src={
-                user?.favorites?.includes(ad.id)
-                  ? FavoriteFill
-                  : FavoriteOutline
-              }
-              alt="favorite"
-            ></img>
-          </button>
+          <BtnFavorite
+            onClick={toggleFavorite}
+            disabled={!isAuthenticated}
+            bck={
+              user?.favorites?.includes(ad.id) ? FavoriteFill : FavoriteOutline
+            }
+          ></BtnFavorite>
 
-          <p>Time Left</p>
+          <TimeLeftParagraph
+            timeLeft={TimeLeftFunc(ad.adEndDate)}
+            detailed={true}
+            ad={ad}
+          />
         </div>
       </div>
     </StyledProduct>
@@ -134,5 +138,21 @@ const StyledProduct = styled.div`
     align-items: center;
   }
 `
+
+const BtnFavorite = styled.button(
+  ({ bck = '' }) => `
+  
+  width: 1.8em;
+  height: 1.7em;
+  color: none;
+  background-image: url(${bck});
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+
+`
+)
 
 export default ProductCard

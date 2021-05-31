@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
+import ChangeHighlight from 'react-change-highlight'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -6,10 +7,17 @@ import { addDetailedProduct, clearProduct } from 'features/productSlice'
 import { db } from 'services/firebase'
 import { bid } from 'features/productSlice'
 import timeLeftFunc from 'functions/timeLeftInterval'
+import TimeLeftParagraph from './TimeLeftParagraph'
 
 const ProductDetailsCard = () => {
   const [mainImage, setMainImage] = useState(null)
   const [seller, setSeller] = useState()
+  const [adStatus, setAdStatus] = useState(0)
+  // adStatus
+  // = 0 -> bid open
+  // = 1 -> sold
+  // = 2 -> sold directly
+  // = 3 -> expired
   const [myBid, setMyBid] = useState('')
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -18,7 +26,19 @@ const ProductDetailsCard = () => {
     seconds: 0,
   })
 
+  const highestBidRef = useRef(null)
+  const bidsRef = useRef(null)
+  const leadingBidderRef = useRef(null)
+
+  const [endDate, setEndDate] = useState({ date: '', time: '' })
+
   const { detailedProduct } = useSelector((state) => state.product)
+  const [highlighted, setHighlighted] = useState({
+    highestBid: 0,
+    bids: 0,
+    leadingBidder: 0,
+  })
+
   const { uid } = useSelector((state) => state.auth)
 
   const dispatch = useDispatch()
@@ -28,29 +48,12 @@ const ProductDetailsCard = () => {
     setTimeLeft({ ...timeObj })
   }
 
-  const renderTimeLeft = () => {
-    if (timeLeft.days > 0)
-      return (
-        <p>
-          {timeLeft.days}d {timeLeft.hours}h
-        </p>
-      )
-    else if (timeLeft.days > -1 && timeLeft.hours > 0)
-      return (
-        <p>
-          {timeLeft.hours}h {timeLeft.minutes}m
-        </p>
-      )
-    else if (
-      timeLeft.days > -1 &&
-      (timeLeft.minutes > 0 || timeLeft.seconds > 0)
-    )
-      return (
-        <p>
-          {timeLeft.minutes}m {timeLeft.seconds}s
-        </p>
-      )
-    else return <p>Time expired</p>
+  const bidderText = () => {
+    if (adStatus === 0 && highlighted.bids) return 'Last bid by - '
+    else if (adStatus === 0 && !highlighted.bids) return 'No bids yet'
+    else if (adStatus === 1) return 'Auction won by - '
+    else if (adStatus === 2) return 'Bought directly by - '
+    else if (adStatus === 3) return 'No bids - Time expired'
   }
 
   const addBid = () => {
@@ -61,7 +64,7 @@ const ProductDetailsCard = () => {
     setMyBid('')
   }
 
-  const getProduct = useMemo(() => {
+  const getProduct = useCallback(() => {
     // const snapshot = await db.collection('sellingProducts').doc(id).get()
     // const data = await snapshot.data()
     const unSubscribe = db
@@ -71,13 +74,36 @@ const ProductDetailsCard = () => {
         dispatch(
           addDetailedProduct({ productDetail: doc.data(), productId: id })
         )
+        let { highestBid, bids, leadingBidder } = doc.data()
+        highestBid = highestBid ? highestBid : doc.data().startPrice
+        bids = bids ? bids : 0
+        // leadingBidder = leadingBidder ? leadingBidder : 'Anonymous'
+
+        setHighlighted({ highestBid, bids, leadingBidder })
+        const date = new Date(doc.data().adEndDate || '')
+        const now = new Date()
+
+        if (date.getFullYear() === 1900) setAdStatus(2)
+        else if (now > date) {
+          if (doc.data().highestBid > 0) setAdStatus(1)
+          else setAdStatus(3)
+        }
+
+        setEndDate({
+          date: `${date.getDate()}/${
+            date.getMonth() + 1
+          }/${date.getFullYear()}`,
+          time: `${date.getHours()}:${('0' + String(date.getMinutes())).slice(
+            -2
+          )}`,
+        })
         db.collection('users')
           .doc(doc.uid)
           .get()
           .then((data) => setSeller(data))
       })
 
-    // vi får kolla upp vad om en annan användare man kan läsa ifall man sätter regler.
+    // vi får kolla upp om en annan användare kan läsa från user ifall man sätter regler.
     // const snapshott = await db.collection('users').doc(data.uid).get()
     // const data2 = await snapshott.data()
     // setSeller(data2)
@@ -86,7 +112,7 @@ const ProductDetailsCard = () => {
   }, [dispatch, id])
 
   useEffect(() => {
-    const unSubscribe = getProduct
+    const unSubscribe = getProduct()
     return () => {
       dispatch(clearProduct(null))
       unSubscribe()
@@ -173,85 +199,113 @@ const ProductDetailsCard = () => {
             <div className="price-section">
               <div className="price-container">
                 {detailedProduct.highestBid ? (
-                  <>
-                    <p>Highest bid</p>
-                    <p>{detailedProduct.highestBid}kr</p>
-                  </>
+                  <p>Highest bid</p>
                 ) : (
-                  <>
-                    <p>Utropspris</p>
-                    <p>{detailedProduct.startPrice}kr</p>
-                  </>
+                  <p>Utropspris</p>
                 )}
+                <ChangeHighlight
+                  containerClassName="highlightCont"
+                  highlightClassName="highlightClass"
+                  hideAfter="800"
+                >
+                  <p ref={highestBidRef}>{highlighted.highestBid}kr</p>
+                </ChangeHighlight>
+                {/* <>
+                    <p>{detailedProduct.startPrice}kr</p>
+                  </> */}
               </div>
               <div className="time-container">
-                <p>Ending at</p>
-                {renderTimeLeft()}
+                <p>End date</p>
+                <p>{`${endDate.date}-${endDate.time}`}</p>
+              </div>
+
+              <div className="time-container">
+                <p>Time left</p>
+                <TimeLeftParagraph timeLeft={timeLeft} />
+                {/* {renderTimeLeft()} */}
               </div>
               <div className="bid-container">
                 <p>Bids</p>
-                <p>{!detailedProduct.bids ? 0 : detailedProduct.bids}st</p>
+                <ChangeHighlight
+                  containerClassName="highlightCont"
+                  highlightClassName="highlightClass"
+                  hideAfter="800"
+                >
+                  <p ref={bidsRef}>
+                    {!highlighted.bids ? 0 : highlighted.bids}st
+                  </p>
+                </ChangeHighlight>
               </div>
             </div>
-            <div>Enddate{detailedProduct.adEndDate}</div>
-            <div className="pippilångstrump">
-              {detailedProduct.bids ? (
+
+            <div className="bidder-container">
+              <ChangeHighlight
+                containerClassName="highlightCont"
+                highlightClassName="highlightClass"
+                hideAfter="800"
+              >
                 <p style={{ textAlign: 'center' }}>
-                  Last bid -{' '}
-                  <strong>
-                    {detailedProduct.leadingBidder
-                      ? detailedProduct.leadingBidder
-                      : 'Anonymous'}
+                  {bidderText()}
+                  {/* adStatus === 0 ?  highlighted.leadingBidder ? `Last bid by - ` : `No bids yet`  */}
+                  <strong ref={leadingBidderRef}>
+                    {highlighted.leadingBidder}
                   </strong>
                 </p>
-              ) : (
-                <p></p>
-              )}
+              </ChangeHighlight>
             </div>
+            {/* {highlighted.bids ? ( */}
+            {/* ) : null} */}
+
+            {/* <p></p> */}
             {uid !== detailedProduct.uid ? (
-              <div className="buyer-section">
-                <input
-                  className="input"
-                  type="number"
-                  placeholder="Enter your price"
-                  value={myBid}
-                  onChange={(e) => setMyBid(e.target.value)}
-                />
-                <button
-                  onClick={addBid}
-                  disabled={uid === detailedProduct.uid}
-                  className="button bid"
-                >
-                  Add bid
-                </button>
-                <button
-                  className="button buy-now"
-                  disabled={uid === detailedProduct.uid}
-                >
-                  Buy now {detailedProduct.acceptedPrice} kr
-                </button>
-                <button
-                  className="button save"
-                  disabled={uid === detailedProduct.uid}
-                >
-                  Save
-                </button>
-                {seller ? (
-                  <div className="seller-title-container">
-                    <h4>About the seller</h4>
-                    <div className="seller-container">
-                      <button>Contact the seller</button>
-                      <button>See all products</button>
-                    </div>
-                  </div>
-                ) : (
-                  ''
-                )}
-              </div>
+              !adStatus ? (
+                <div className="buyer-section">
+                  <input
+                    className="input"
+                    type="number"
+                    placeholder="Enter your price"
+                    value={myBid}
+                    onChange={(e) => setMyBid(e.target.value)}
+                  />
+                  <button
+                    onClick={addBid}
+                    disabled={uid === detailedProduct.uid}
+                    className="button bid"
+                  >
+                    Add bid
+                  </button>
+                  <button
+                    className="button buy-now"
+                    disabled={
+                      detailedProduct.acceptedPrice <=
+                      detailedProduct.highestBid
+                    }
+                  >
+                    Buy now {detailedProduct.acceptedPrice} kr
+                  </button>
+                  <button
+                    className="button save"
+                    disabled={uid === detailedProduct.uid}
+                  >
+                    Save
+                  </button>
+                </div>
+              ) : null
             ) : (
               <div className="seller-section">
                 <button className="button remove">Remove Product</button>
               </div>
+            )}
+            {seller && uid !== detailedProduct.uid ? (
+              <div className="seller-title-container">
+                <h4>About the seller</h4>
+                <div className="seller-container">
+                  <button>Contact the seller</button>
+                  <button>See all products</button>
+                </div>
+              </div>
+            ) : (
+              ''
             )}
           </div>
         </Container>
@@ -338,7 +392,7 @@ const Container = styled.div`
     gap: 0.5em;
     padding: 1em;
     background-color: #f7f7f2;
-    margin-bottom: 1em;
+    /* margin-bottom: 1em; */
   }
 
   .thumbnail-container {
@@ -382,6 +436,10 @@ const Container = styled.div`
     font-size: 14px;
   }
 
+  .bidder-container {
+    padding: 0.8em 0;
+  }
+
   .price-container,
   .time-container,
   .bid-container {
@@ -406,6 +464,19 @@ const Container = styled.div`
 
     .buy.now {
       grid-area: buynow;
+    }
+  }
+
+  .highlightCont {
+    p,
+    strong {
+      transition: all 0.2s ease;
+    }
+    .highlightClass {
+      color: ${(props) => props.theme.color.input};
+
+      background-color: ${(props) => props.theme.button.outline};
+      font-weight: bold;
     }
   }
 
