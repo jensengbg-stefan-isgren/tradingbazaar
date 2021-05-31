@@ -7,7 +7,7 @@ import { addDetailedProduct, clearProduct } from 'features/productSlice'
 import { db } from 'services/firebase'
 import { bid } from 'features/productSlice'
 import timeLeftFunc from 'functions/timeLeftInterval'
-// import { ads } from 'features/adsSlice'
+import TimeLeftParagraph from './TimeLeftParagraph'
 
 const ProductDetailsCard = () => {
   const [mainImage, setMainImage] = useState(null)
@@ -48,31 +48,6 @@ const ProductDetailsCard = () => {
     setTimeLeft({ ...timeObj })
   }
 
-  const renderTimeLeft = () => {
-    if (timeLeft.days > 0)
-      return (
-        <p>
-          {timeLeft.days}d {timeLeft.hours}h
-        </p>
-      )
-    else if (timeLeft.days > -1 && timeLeft.hours > 0)
-      return (
-        <p>
-          {timeLeft.hours}h {timeLeft.minutes}m
-        </p>
-      )
-    else if (
-      timeLeft.days > -1 &&
-      (timeLeft.minutes > 0 || timeLeft.seconds > 0)
-    )
-      return (
-        <p>
-          {timeLeft.minutes}m {timeLeft.seconds}s
-        </p>
-      )
-    else return <p>Time expired</p>
-  }
-
   const bidderText = () => {
     if (adStatus === 0 && highlighted.bids) return 'Last bid by - '
     else if (adStatus === 0 && !highlighted.bids) return 'No bids yet'
@@ -110,7 +85,7 @@ const ProductDetailsCard = () => {
 
         if (date.getFullYear() === 1900) setAdStatus(2)
         else if (now > date) {
-          if (highestBid > 0) setAdStatus(1)
+          if (doc.data().highestBid > 0) setAdStatus(1)
           else setAdStatus(3)
         }
 
@@ -128,7 +103,7 @@ const ProductDetailsCard = () => {
           .then((data) => setSeller(data))
       })
 
-    // vi får kolla upp vad om en annan användare man kan läsa ifall man sätter regler.
+    // vi får kolla upp om en annan användare kan läsa från user ifall man sätter regler.
     // const snapshott = await db.collection('users').doc(data.uid).get()
     // const data2 = await snapshott.data()
     // setSeller(data2)
@@ -246,7 +221,8 @@ const ProductDetailsCard = () => {
 
               <div className="time-container">
                 <p>Time left</p>
-                {renderTimeLeft()}
+                <TimeLeftParagraph timeLeft={timeLeft} />
+                {/* {renderTimeLeft()} */}
               </div>
               <div className="bid-container">
                 <p>Bids</p>
