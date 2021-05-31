@@ -25,7 +25,9 @@ const StyledLink = styled(Link)`
 
 const Menu = styled.div`
 
-
+ul {
+  width:100%;
+}
 
 .alias {
   font-family: ${(props) => props.theme.font.body};
