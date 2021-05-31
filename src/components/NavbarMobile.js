@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 import googleIcon from "assets/icons/google-icon.svg";
 import facebookIcon from "assets/icons/facebook-icon.svg";
 import exclamationIcon from "assets/icons/exclamation.svg";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { checkIfRegistered } from "features/auth/authSlice";
 import { useSelector } from "react-redux";
 import {useDispatch} from 'react-redux'
@@ -155,67 +155,6 @@ const UsrMenu = styled.div`
 
 
 
-const Navigation = styled.nav`
- display: grid;
-  align-items: center;
-  grid-template-areas: "logo search nav";
-  height: 64px;
-  padding: 0 1em;
-
-  h1 {
-    cursor: pointer;
-  }
-
-  .search-container {
-    width: 100%;
-    grid-area: search;
-
-    select {
-      height: 3em;
-      width: 9em;
-    }
-
-    .logo {
-      grid-area: logo;
-    }
-  }
-
-  .menu {
-    justify-self: flex-end;
-    grid-area: nav;
-
-    img {
-      height: 20px;
-    }
-  }
-
-  @media (max-width: 678px) {
-
-    height:auto;
-    background-color:"";
-    padding:1em;
-
-    grid-template-areas:
-      "logo logo nav"
-      "search search search";
-
-    .search-container {
-      width: 100%;
-      display: grid;
-      padding:.5em 0;
-
-      select {
-        width: auto;
-        padding-left: .5em;
-        border:none;
-        margin-bottom:.5em;
-      }
-    }
-  }
-
-`;
-
-
 
 const fadeIn = keyframes`
   from {
@@ -253,7 +192,6 @@ const StyledInput = styled.input`
     font-family: ${(props) => props.theme.font.body};
     color: ${(props) => props.theme.color.body};
 
-
   }
 
 
@@ -263,66 +201,6 @@ const StyledInput = styled.input`
     
 `;
 
-// const Nav = styled.nav`
-//   display: grid;
-//   align-items: center;
-//   grid-template-areas: "logo search nav";
-//   height: 64px;
-//   padding: 0 1em;
-
-//   h1 {
-//     cursor: pointer;
-//   }
-
-//   .search-container {
-//     width: 100%;
-//     grid-area: search;
-
-//     select {
-//       height: 3em;
-//       width: 9em;
-//     }
-
-//     .logo {
-//       grid-area: logo;
-//     }
-//   }
-
-//   .menu {
-//     justify-self: flex-end;
-//     grid-area: nav;
-
-//     img {
-//       height: 20px;
-//     }
-//   }
-
-//   @media (max-width: 678px) {
-
-//     height:auto;
-//     background-color:"";
-//     padding:1em;
-
-//     grid-template-areas:
-//       "logo logo nav"
-//       "search search search";
-
-//     .search-container {
-//       width: 100%;
-//       display: grid;
-//       padding:.5em 0;
-
-//       select {
-//         width: auto;
-//         padding-left: .5em;
-//         border:none;
-//         margin-bottom:.5em;
-//       }
-//     }
-//   }
-
-
-// `;
 
 const Wrapper = styled.div`
 
@@ -345,11 +223,81 @@ const Wrapper = styled.div`
   z-index: 999;
 `;
 
+const Nav = styled.nav`
+  display: grid;
+  align-items: center;
+  grid-template-areas: "logo search nav";
+  height: 64px;
+  padding: 0 1em;
+
+  .menu-icon {
+    margin-right:1em;
+    height: 20px;
+  }
+
+  .logo {
+    display:flex;
+    align-items:center;
+  }
+
+  h1 {
+    cursor: pointer;
+  }
+
+  .search-container {
+    width: 100%;
+    grid-area: search;
+
+    select {
+      height: 3em;
+      width: 9em;
+    }
+
+    .logo {
+      grid-area: logo;
+    }
+  }
+
+  .menu {
+    justify-self: flex-end;
+    grid-area: nav;
+
+    img {
+      height: 30px;
+  }
+  }
+
+  @media (max-width: 700px) {
+
+height:auto;
+background-color:"";
+padding:1em;
+
+grid-template-areas:
+  "logo logo nav"
+  "search search search";
+
+.search-container {
+  width: 100%;
+  display: grid;
+  padding:.5em 0;
+
+  select {
+    width: auto;
+    padding-left: .5em;
+    border:none;
+    margin-bottom:.5em;
+  }
+}
+}
+`;
+
+
 
 const NavbarMobile = () => {
 
   const {categories} = useSelector(state => state.categories);
-  const isVisible = useSelector(state => state.isVisible);
+  const isVisible = useSelector(state => state.nav.isVisible);
   const dispatch = useDispatch()
   const history = useHistory()
   const [valid, setValid] = useState(false);
@@ -369,15 +317,8 @@ const NavbarMobile = () => {
     return () => {};
   }, [email, password]);
 
-  // const toggleSearchInput = () => {
-  //   if (toggleUserMenu) {
-  //     setToggleUserMenu(!toggleUserMenu);
-  //   }
-  //   setToggleVisibleSearch(!toggleVisibleSearch);
-  // };
 
-  const usr = useRef();
-
+ 
   const toggleAccountMenu = () => {
     if (toggleVisibleSearch) {
       setToggleVisibleSearch(!toggleVisibleSearch);
@@ -473,6 +414,7 @@ const NavbarMobile = () => {
         </div>
         <div className="member-container">
           <p>Sign up</p>
+
           <button onClick={() => history.push("/register")}>Sign up</button>
         </div>
         {errorMessage ? (
@@ -485,32 +427,34 @@ const NavbarMobile = () => {
         )}
       </UsrMenu>
 
-      <Navigation>
+      <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`} >
+      <Nav >
         <div className="logo">
-          <img onClick={toggleMainMenu} src={menuIcon} alt="" />
-          <p className="logo" onClick={() => history.push("/")}>TradingBazaar</p>
+          <img onClick={toggleMainMenu} className="menu-icon" src={menuIcon} alt="" />
+          <h1 onClick={() => history.push('/')}>TradingBazaar</h1>
         </div>
-        <div className="user-container">
-          {!isVisible ? (
-            <div className="search-container">
-              <select name="category" id="category">
-                <option>All Categories</option>
-                {categories.map((category) => {
-                  return (
-                    <option key={category.name} value={category.name}>
-                      {category.name}
-                    </option>
-                  );
-                })}
-              </select>
-              <StyledInput placeholder="What are you looking for today?" />
-            </div>
-          ) : (
-            ""
-          )}
-          <img ref={usr} onClick={toggleAccountMenu} src={userIcon} alt="" />
+        {!isVisible ? (
+          <div className="search-container">
+            <select name="category" id="category">
+              <option>All Categories</option>
+              {categories.map((category) => {
+                return (
+                  <option key={category.name} value={category.name}>
+                    {category.name}
+                  </option>
+                );
+              })}
+            </select>
+            <StyledInput placeholder="What are you looking for today?" />
+          </div>
+        ) : (
+          ""
+        )}
+        <div className="menu">
+          <img onClick={toggleAccountMenu} className="nav" src={userIcon} alt="" />
         </div>
-      </Navigation>
+      </Nav>
+      </div>
     </Wrapper>
   );
 };
