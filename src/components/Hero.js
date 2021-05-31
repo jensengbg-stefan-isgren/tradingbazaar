@@ -82,15 +82,13 @@ const Hero = () => {
   const handleScroll = useCallback(
     async() => {
       const element = document.getElementById('search')
-
       if(!element) {
         return
       } else {
         const rect = element.getBoundingClientRect();
-        const isInViewport = rect.top >= -50 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth);
+        console.log(rect)
+        const isInViewport = rect.top >= 0 
+        console.log(isInViewport)
         dispatch((setIsVisible(isInViewport)))
       }
 
@@ -115,7 +113,7 @@ const handleInput = (e) => {
   setSearchValue(e.target.value)
 }
 
-const searchProducts = async() => {
+// const searchProducts = async() => {
 
 // if(category == "All Categories") {
 //   const snapshot = await db.collection('sellingProducts').where('title', '===', `${searchValue}`).get()
@@ -127,7 +125,7 @@ const searchProducts = async() => {
 
 
 
-}
+// }
 
 
   return (
@@ -142,7 +140,7 @@ const searchProducts = async() => {
             })}
           </select> : ""}
           <input onChange={handleInput} placeholder="What are you looking for today?" type="text" />
-          <button onClick={searchProducts}>Search!</button>
+     
         </SearchContainer>
       </Container>
     </Wrapper>

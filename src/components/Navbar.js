@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom'
-import styled,{keyframes} from 'styled-components'
-import {useEffect} from 'react'
-import {useSelector} from 'react-redux'
-
+import { Link } from "react-router-dom";
+import styled, { keyframes } from "styled-components";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const fadeIn = keyframes`
   from {
@@ -24,7 +24,6 @@ const fadeOut = keyframes`
   }
 `;
 
-
 const Navigation = styled.nav`
 
 
@@ -42,7 +41,7 @@ const Navigation = styled.nav`
 
     
 
-    height: 4em;
+    height: 64px;
     display: flex;
     padding: 0 1em;
     justify-content: space-between;
@@ -59,35 +58,31 @@ const Navigation = styled.nav`
       place-content: flex-start;
     }
 
+
     select {
-      height: 40px;
-      background-color: ${(props) => props.theme.color.main};
-      color: white;
-      outline: none;
-      border: none;
-      font-family: ${(props) => props.theme.font.body};
-      font-weight: 600;
-      font-size: 0.8em;
-      padding-left: 0.5em;
-    }
+        height: 40px;
+        background-color: ${(props) => props.theme.color.main};
+        color: white;
+        outline: none;
+        width:10em;
+        border: none;
+        font-family: ${(props) => props.theme.font.body};
+        font-weight: 600;
+        font-size: 0.8em;
+        padding-left: .5em;
+      }
 
     p {
       font-family: ${(props) => props.theme.font.title};
       color: ${(props) => props.theme.color.main};
       font-size: 2em;
+      cursor: pointer;
     }
  
 
   }
 
-  .search-container {
-    width: 100%;
-    grid-gap: 5em;
-    display: grid;
-    place-content: center;
-    grid-template-columns: 10em 16em;
 
-    }
 
   }
 
@@ -98,29 +93,29 @@ const Navigation = styled.nav`
     display: flex;
     place-content: flex-end;
   }
-`
+`;
 
 const StyledLink = styled(Link)`
   text-decoration: none;
   font-family: ${(props) => props.theme.font.title};
   color: ${(props) => props.theme.color.main};
   font-size: 1.4em;
-  padding:.5em;
+  padding: 0.5em;
 
   :nth-child(2) {
     margin-left: 1em;
   }
 
-&:hover {
-  border-radius: 4px;
-  background:#f7f7f2
-}
-
-`
+  &:hover {
+    border-radius: 4px;
+    background: #f7f7f2;
+  }
+`;
 
 const StyledInput = styled.input`
   border: 3px solid ${(props) => props.theme.color.main};
   height: 40px;
+  width: 20em;
   outline: none;
   padding-left: 0.5em;
   font-family: ${(props) => props.theme.font.body};
@@ -130,43 +125,47 @@ const StyledInput = styled.input`
     font-family: ${(props) => props.theme.font.body};
     color: ${(props) => props.theme.color.body};
   }
-`
+`;
 
 const Navbar = () => {
+  const history = useHistory();
+  const { categories } = useSelector((state) => state.categories);
+  const isVisible = useSelector((state) => state.nav.isVisible);
 
-const {categories } = useSelector((state) => state.categories)
-const isVisible = useSelector(state => state.nav.isVisible)
-
-
-useEffect(() => {
-  return () => {
-    
-  }
-}, [])
-
+  useEffect(() => {
+    return () => {};
+  }, []);
 
   return (
-    <Navigation >
+    <Navigation>
       <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
         <div className="logo">
-          <p>TradingBazaar</p>
+          <p onClick={() => history.push("/")}>TradingBazaar</p>
         </div>
-      {!isVisible ?  <div className="search-container"  >
-          <select name="category" id="category">
-            <option>All Categories</option>
-           {categories.map((category) => {
-             return <option key={category.name} value={category.name}>{category.name}</option>
-           })}
-          </select>
-          <StyledInput placeholder="What are you looking for today?" />
-        </div> : ""}
+        {!isVisible ? (
+          <div className="search-container">
+            <select name="category" id="category">
+              <option>All Categories</option>
+              {categories.map((category) => {
+                return (
+                  <option key={category.name} value={category.name}>
+                    {category.name}
+                  </option>
+                );
+              })}
+            </select>
+            <StyledInput placeholder="What are you looking for today?" />
+          </div>
+        ) : (
+          ""
+        )}
         <div className="nav-links">
           <StyledLink to="/login">Login</StyledLink>
           <StyledLink to="/register">Register</StyledLink>
         </div>
       </div>
     </Navigation>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
