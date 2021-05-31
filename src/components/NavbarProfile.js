@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import ProfileMenu from "components/ProfileMenu";
 import { useSelector } from "react-redux";
 import {useHistory} from 'react-router-dom';
+import menuIcon from 'assets/icons/menu.svg'
+import CategoryMenu from 'components/CategoryMenu'
 
 const fadeIn = keyframes`
   from {
@@ -35,7 +37,15 @@ const StyledLink = styled(Link)`
 
 const Navigation = styled.nav`
 
+.logo {
+  display: flex;
+  align-items: center;
 
+  img {
+    margin-right:1em;
+    height:20px;
+  }
+}
 
 
 li {
@@ -145,7 +155,7 @@ const NavbarProfile = () => {
   const history = useHistory();
   const { categories } = useSelector((state) => state.categories);
 
-  
+  const [toggleCatMenu,setToggleCatMenu] = useState(false)
   const [toggleMenu, setToggleMenu] = useState(false);
 
   const isVisible = useSelector((state) => state.nav.isVisible);
@@ -154,10 +164,16 @@ const NavbarProfile = () => {
     setToggleMenu(!toggleMenu);
   };
 
+  const handleCatMenu = () => {
+    setToggleCatMenu(!toggleCatMenu)
+  }
+  
+
   return (
     <Navigation>
       <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
         <div className="logo">
+          <img onClick={handleCatMenu} src={menuIcon} alt="" />
           <p onClick={() => history.push('/')}>TradingBazaar</p>
         </div>
         {!isVisible ? (
@@ -187,6 +203,7 @@ const NavbarProfile = () => {
           <ProfileMenu toggleMenu={toggleMenu} />
         </div>
       </div>
+      <CategoryMenu toggleCatMenu={toggleCatMenu}/>
     </Navigation>
   );
 };

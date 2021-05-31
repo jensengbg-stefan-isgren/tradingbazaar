@@ -11,6 +11,8 @@ import React, { useState, useEffect } from "react";
 import { checkIfRegistered } from "features/auth/authSlice";
 import { useSelector } from "react-redux";
 import {useDispatch} from 'react-redux'
+import toggleCatMenu from 'components/CategoryMenu'
+import CategoryMenu from "components/CategoryMenu";
 
 const SignInButton = styled.button`
   display: flex;
@@ -30,56 +32,7 @@ const SignInButton = styled.button`
   }
 `;
 
-const MainMenu = styled.div`
-  display: flex;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-  top: 64px;
-  padding: 2em 1em;
-  left: 0;
-  width: 70%;
-  min-height: calc(100vh - 64px);
-  background-color: white;
-  position: absolute;
-  transition: transform 0.2s ease-in-out;
-  transform: translateX(-100%);
-  z-index: 999;
 
-  .input-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    input {
-      outline: none;
-      border: 1px solid lightgrey;
-      padding: 1em;
-      width: 100%;
-      height: 3em;
-      font-family: ${(props) => props.theme.font.body};
-    }
-    :focus {
-      border: 1px solid darkgray;
-    }
-  }
-
-  .menu-search-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    p {
-      margin-bottom: 0.5em;
-    }
-  }
-
-  &.sliding-left {
-    transform: translateX(0%);
-  }
-`;
 
 const UsrMenu = styled.div`
   display: flex;
@@ -307,6 +260,7 @@ const NavbarMobile = () => {
   const [toggleVisibleSearch, setToggleVisibleSearch] = useState(false);
   const [toggleUserMenu, setToggleUserMenu] = useState(false);
   const [toggleMenu, setToggleMenu] = useState(false);
+  const [toggleCatMenu, setToggleCatMenu] = useState(false)
 
   useEffect(() => {
     if (!email || password.length <= 0) {
@@ -327,8 +281,8 @@ const NavbarMobile = () => {
     setToggleUserMenu(!toggleUserMenu);
   };
 
-  const toggleMainMenu = () => {
-    setToggleMenu(!toggleMenu);
+  const handleCatMenu = () => {
+    setToggleCatMenu(!toggleCatMenu);
   };
 
   const login = async () => {
@@ -376,14 +330,6 @@ const NavbarMobile = () => {
 
   return (
     <Wrapper>
-      <MainMenu className={toggleMenu ? `sliding-left` : ""}>
-        <div className="menu-search-container">
-          <p>All Categories</p>
-          <div className="input-container">
-            <input type="text" placeholder="Search all categories" />
-          </div>
-        </div>
-      </MainMenu>
       <UsrMenu className={toggleUserMenu ? `sliding` : ""}>
         <p>Welcome</p>
         <div className="provider-container">
@@ -430,7 +376,7 @@ const NavbarMobile = () => {
       <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`} >
       <Nav >
         <div className="logo">
-          <img onClick={toggleMainMenu} className="menu-icon" src={menuIcon} alt="" />
+          <img onClick={handleCatMenu} className="menu-icon" src={menuIcon} alt="" />
           <h1 onClick={() => history.push('/')}>TradingBazaar</h1>
         </div>
         {!isVisible ? (
@@ -455,6 +401,7 @@ const NavbarMobile = () => {
         </div>
       </Nav>
       </div>
+      <CategoryMenu toggleCatMenu={toggleCatMenu}/>
     </Wrapper>
   );
 };

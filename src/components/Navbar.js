@@ -3,6 +3,9 @@ import styled, { keyframes } from "styled-components";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import menuIcon from 'assets/icons/menu.svg'
+import CategoryMenu from 'components/CategoryMenu'
+import {useState} from 'react'
 
 const fadeIn = keyframes`
   from {
@@ -54,8 +57,14 @@ const Navigation = styled.nav`
     background-color: "";
 
     .logo {
-      display: grid;
-      place-content: flex-start;
+      display: flex;
+      align-items:center;
+
+
+      img {
+        margin-right:1em;
+        height:20px;
+      }
     }
 
 
@@ -129,6 +138,7 @@ const StyledInput = styled.input`
 
 const Navbar = () => {
   const history = useHistory();
+  const [toggleCatMenu, setToggleCatMenu] = useState(false)
   const { categories } = useSelector((state) => state.categories);
   const isVisible = useSelector((state) => state.nav.isVisible);
 
@@ -136,10 +146,17 @@ const Navbar = () => {
     return () => {};
   }, []);
 
+
+  const handleCatMenu = () => {
+    setToggleCatMenu(!toggleCatMenu)
+  }
+  
+
   return (
     <Navigation>
       <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
         <div className="logo">
+          <img onClick={handleCatMenu} src={menuIcon} alt="" />
           <p onClick={() => history.push("/")}>TradingBazaar</p>
         </div>
         {!isVisible ? (
@@ -164,6 +181,7 @@ const Navbar = () => {
           <StyledLink to="/register">Register</StyledLink>
         </div>
       </div>
+      <CategoryMenu className={toggleCatMenu ? `sliding` : ""} toggleCatMenu={toggleCatMenu}/>
     </Navigation>
   );
 };

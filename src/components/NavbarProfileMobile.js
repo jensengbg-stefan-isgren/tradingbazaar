@@ -4,6 +4,8 @@ import styled, {keyframes} from "styled-components";
 import menuIcon from "assets/icons/menu.svg";
 import { useSelector } from "react-redux";
 import ProfileMenu from 'components/ProfileMenu'
+import userIcon from 'assets/icons/user.svg'
+import CategoryMenu from 'components/CategoryMenu'
 // import { useMediaQuery } from "functions/UseMediaQuery";
 
 const fadeIn = keyframes`
@@ -59,6 +61,15 @@ const Nav = styled.nav`
   height: 64px;
   padding: 0 1em;
 
+  .logo {
+    display:flex;
+    align-items:center;
+    img {
+        height:20px;
+        margin-right:1em;
+      }
+  }
+
   h1 {
     cursor: pointer;
   }
@@ -82,7 +93,7 @@ const Nav = styled.nav`
     grid-area: nav;
 
     img {
-      height: 20px;
+      height: 30px;
     }
   }
 
@@ -134,6 +145,7 @@ const Wrapper = styled.div`
 `;
 
 const NavbarMobileProfile = () => {
+  const [toggleCatMenu,setToggleCatMenu] = useState(false)
   // const showMobileNav = useMediaQuery("(max-width:1000px)");
   const [toggleMenu, setToggleMenu] = useState();
   const { categories } = useSelector((state) => state.categories);
@@ -150,11 +162,17 @@ const NavbarMobileProfile = () => {
     setToggleMenu(!toggleMenu);
   };
 
+  const handleCatMenu = () => {
+    setToggleCatMenu(!toggleCatMenu)
+  }
+  
+
   return (
     <Wrapper>
       <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`} >
       <Nav >
         <div className="logo">
+          <img onClick={handleCatMenu} src={menuIcon} alt="" />
           <h1 onClick={() => history.push('/')}>TradingBazaar</h1>
         </div>
         {!isVisible ? (
@@ -175,11 +193,12 @@ const NavbarMobileProfile = () => {
           ""
         )}
         <div className="menu">
-          <img onClick={handleMenu} className="nav" src={menuIcon} alt="" />
+          <img onClick={handleMenu} className="nav" src={userIcon} alt="" />
         </div>
       </Nav>
       </div>
      <ProfileMenu toggleMenu={toggleMenu}/>
+     <CategoryMenu toggleCatMenu={toggleCatMenu}/>
     </Wrapper>
   );
 };

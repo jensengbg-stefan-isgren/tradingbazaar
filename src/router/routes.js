@@ -11,6 +11,7 @@ import ProfileSettings from 'components/Settings/ProfileSettings'
 import ActiveAds from 'components/ActiveAds'
 import WishList from 'pages/WishList'
 import ProductDetailsCard from 'components/ProductDetailsCard'
+import FilteredProducts from 'components/FilteredProducts'
 
 export const routes = [
   {
@@ -78,6 +79,11 @@ export const routes = [
   {
     path: '/item/:id',
     main: () => <ProductDetailsCard />,
+    navbar: () => <MainNav />,
+  },
+  {
+    path: '/filteredproducts/:category',
+    main: () => <FilteredProducts />,
     navbar: () => <MainNav />,
   },
 ]
