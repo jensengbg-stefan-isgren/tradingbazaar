@@ -5,6 +5,7 @@ import firebase from "firebase";
 import { useSelector, useDispatch } from "react-redux";
 import { authUser } from "features/auth/authSlice";
 import userIcon from "assets/icons/user.svg";
+import { useMediaQuery } from "functions/UseMediaQuery";
 
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -70,19 +71,23 @@ padding-top:1em;
   align-items: center;
   flex-direction: column;
   top: 64px;
-  right: 1.7em;
+  left:100%;
   width: 15em;
   background-color: #f7f7f2;
   position: absolute;
   z-index: 999;
   transition: transform 0.2s ease-in-out;
 
-  &.not-show {
-    opacity: 0;
+
+  &.show {
+    transform: translateX(-100%);
   }
+
+
 `;
 
 const ProfileMenu = ({ toggleMenu }) => {
+  const showMobileNav = useMediaQuery("(max-width:1000px)");
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const history = useHistory();
@@ -94,7 +99,7 @@ const ProfileMenu = ({ toggleMenu }) => {
   };
 
   return (
-    <Menu className={toggleMenu ? `show` : "not-show"}>
+    <Menu className={toggleMenu ? `show` : ""}>
       <p className="alias">{user.alias}</p>
       <div className="image-container">
         {user.photoUrl ? (
@@ -103,6 +108,11 @@ const ProfileMenu = ({ toggleMenu }) => {
           <img alt="user-icon" src={userIcon}></img>
         )}
       </div>
+      {showMobileNav ? <ul>
+        <StyledLink to="/profile/overview">Buy</StyledLink>
+        <StyledLink to="/profile/overview">Sell</StyledLink>
+        <StyledLink to="/profile/overview">Wishlist</StyledLink>
+      </ul> : ""}
       <StyledLink to="/profile/overview">Overview</StyledLink>
       <StyledLink to="/profile/settings">Settings</StyledLink>
       <li className="link" onClick={logOut}>

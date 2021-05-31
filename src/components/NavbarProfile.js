@@ -182,7 +182,7 @@ const NavbarProfile = () => {
           <StyledLink to="/profile/active-items">Buy</StyledLink>
           <StyledLink to="/profile/active">Sell</StyledLink>
           <div className="menu-container">
-          <li className={toggleMenu ? 'active' : ""} onClick={handleMenu}>Menu</li>
+          <li onClick={handleMenu}>Menu</li>
           </div>
           <ProfileMenu toggleMenu={toggleMenu} />
         </div>

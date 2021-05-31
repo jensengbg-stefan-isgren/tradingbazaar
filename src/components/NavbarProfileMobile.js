@@ -1,8 +1,10 @@
-import React from "react";
+import React,{useState} from "react";
 import { useHistory } from "react-router-dom";
 import styled, {keyframes} from "styled-components";
 import menuIcon from "assets/icons/menu.svg";
 import { useSelector } from "react-redux";
+import ProfileMenu from 'components/ProfileMenu'
+// import { useMediaQuery } from "functions/UseMediaQuery";
 
 const fadeIn = keyframes`
   from {
@@ -84,7 +86,7 @@ const Nav = styled.nav`
     }
   }
 
-  @media (max-width: 678px) {
+  @media (max-width: 700px) {
 
     height:auto;
     background-color:"";
@@ -132,6 +134,8 @@ const Wrapper = styled.div`
 `;
 
 const NavbarMobileProfile = () => {
+  // const showMobileNav = useMediaQuery("(max-width:1000px)");
+  const [toggleMenu, setToggleMenu] = useState();
   const { categories } = useSelector((state) => state.categories);
   const isVisible = useSelector((state) => state.nav.isVisible);
   console.log(isVisible)
@@ -141,6 +145,10 @@ const NavbarMobileProfile = () => {
   //   auth.signOut();
   //   history.push("/");
   // };
+
+  const handleMenu = () => {
+    setToggleMenu(!toggleMenu);
+  };
 
   return (
     <Wrapper>
@@ -167,11 +175,11 @@ const NavbarMobileProfile = () => {
           ""
         )}
         <div className="menu">
-          <img className="nav" src={menuIcon} alt="" />
+          <img onClick={handleMenu} className="nav" src={menuIcon} alt="" />
         </div>
       </Nav>
       </div>
-     
+     <ProfileMenu toggleMenu={toggleMenu}/>
     </Wrapper>
   );
 };
