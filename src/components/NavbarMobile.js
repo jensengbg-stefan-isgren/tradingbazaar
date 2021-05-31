@@ -1,16 +1,16 @@
 import firebase from "firebase";
-import styled from "styled-components";
+import styled,{keyframes} from "styled-components";
 import { auth } from "services/firebase";
-import { useDispatch } from "react-redux";
 import menuIcon from "assets/icons/menu.svg";
 import userIcon from "assets/icons/user.svg";
 import { useHistory } from "react-router-dom";
-import searchIcon from "assets/icons/search.svg";
 import googleIcon from "assets/icons/google-icon.svg";
 import facebookIcon from "assets/icons/facebook-icon.svg";
 import exclamationIcon from "assets/icons/exclamation.svg";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { checkIfRegistered } from "features/auth/authSlice";
+import { useSelector } from "react-redux";
+import {useDispatch} from 'react-redux'
 
 const SignInButton = styled.button`
   display: flex;
@@ -20,9 +20,8 @@ const SignInButton = styled.button`
   padding: 0.5em 1em;
   outline: none;
   border: 1px solid lightgrey;
-  background-color:white;
-  font-family: ${(props) => props.theme.font.body}
-  p {
+  background-color: white;
+  font-family: ${(props) => props.theme.font.body} p {
     margin-left: 1em;
   }
 
@@ -33,7 +32,8 @@ const SignInButton = styled.button`
 
 const MainMenu = styled.div`
   display: flex;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
@@ -46,52 +46,45 @@ const MainMenu = styled.div`
   position: absolute;
   transition: transform 0.2s ease-in-out;
   transform: translateX(-100%);
-  z-index:999;
+  z-index: 999;
 
   .input-container {
-      display:flex;
-      justify-content:center;
-      align-items:center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-      input {
+    input {
       outline: none;
-      border:1px solid lightgrey;
+      border: 1px solid lightgrey;
       padding: 1em;
       width: 100%;
       height: 3em;
-      font-family: ${(props) => props.theme.font.body}
-
+      font-family: ${(props) => props.theme.font.body};
     }
-      :focus {
-        
-        border:1px solid darkgray;
-      }
-
-    }
-
-  .menu-search-container {
-    display:flex;
-    flex-direction: column;
-    align-items:center;
-
-    p {
-      margin-bottom:.5em;
+    :focus {
+      border: 1px solid darkgray;
     }
   }
 
+  .menu-search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    p {
+      margin-bottom: 0.5em;
+    }
+  }
 
   &.sliding-left {
     transform: translateX(0%);
-
-
-
-
   }
 `;
 
 const UsrMenu = styled.div`
   display: flex;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
@@ -106,19 +99,18 @@ const UsrMenu = styled.div`
   position: absolute;
   transition: transform 0.2s ease-in-out;
   transform: translateX(100%);
-  z-index:999;
-  
+  z-index: 999;
+
   &.sliding {
     transform: translateX(0%);
-
   }
 
   .error-container {
-    margin-top:1em;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
+    margin-top: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   .provider-container {
@@ -149,102 +141,49 @@ const UsrMenu = styled.div`
 
     input {
       outline: none;
-      border:1px solid lightgrey;
+      border: 1px solid lightgrey;
       padding: 1em;
       width: 100%;
       height: 3em;
-      font-family: ${(props) => props.theme.font.body}
-
+      font-family: ${(props) => props.theme.font.body};
     }
-      :focus {
-        
-        border:1px solid darkgray;
-      }
+    :focus {
+      border: 1px solid darkgray;
     }
-`;
-
-const Wrapper = styled.div`
-  padding: 0 1em;
-
-  p {
-    font-family:  ${(props) => props.theme.font.body}
   }
 `;
 
-const Navigation = styled.nav`
-  height: 4em;
-  display: grid;
-  justify-content: center;
-  align-items: center;
-  grid-template-columns: repeat(2, 1fr);
-  position: relative;
 
-  .logo {
-    display: flex;
-    gap: 1em;
-    justify-content: flex-start;
-    align-items: center;
 
-    img {
-      height: 20px;
-    }
 
-    p {
-      font-family: ${(props) => props.theme.font.title};
-      color: ${(props) => props.theme.color.main};
-      font-size: 2em;
-    }
+const fadeIn = keyframes`
+  from {
+    opacity: .4;
   }
 
-  img {
-    height: 30px;
-  }
-
-  select {
-    height: 40px;
-    background-color: ${(props) => props.theme.color.main};
-    color: white;
-    outline: none;
-    border: none;
-    font-family: ${(props) => props.theme.font.body};
-    font-weight: 600;
-    font-size: 0.8em;
-    padding-left: 0.5em;
-  }
-
-  .search-container {
-    width: 100%;
-    display: flex;
-    padding: 0 1em;
-  }
-
-  select {
-    height: 40px;
-    background-color: ${(props) => props.theme.color.main};
-    color: white;
-    outline: none;
-    border: none;
-    font-family: ${(props) => props.theme.font.body};
-    font-weight: 600;
-    font-size: 0.8em;
-    padding-left: 0.5em;
-  }
-
-  a {
-    text-decoration: none;
-  }
-  .user-container {
-    display: flex;
-    gap: 1em;
-    place-content: flex-end;
+  to {
+    opacity:1;
   }
 `;
+
+const fadeOut = keyframes`
+  from {
+    background-color: white;
+  }
+
+  to {
+    background-color: none;
+  }
+`;
+
+
+
 
 const StyledInput = styled.input`
   border: 3px solid ${(props) => props.theme.color.main};
-  height: 40px;
-  width: 100%;
+  min-width: 20em;
   outline: none;
+  height: 3em;
   padding-left: 0.5em;
   font-family: ${(props) => props.theme.font.body};
   color: ${(props) => props.theme.color.body};
@@ -252,13 +191,115 @@ const StyledInput = styled.input`
   ::placeholder {
     font-family: ${(props) => props.theme.font.body};
     color: ${(props) => props.theme.color.body};
+
   }
+
+
+  @media (max-width: 500px) {
+    border:none;
+  }
+    
 `;
 
-const NavbarMobile = () => {
-  const dispatch = useDispatch();
-  const history = useHistory();
 
+const Wrapper = styled.div`
+
+.no-nav {
+    animation: ${fadeOut} 300ms;
+    background-color: none;
+  }
+
+
+  .show-nav {
+    animation: ${fadeIn} 300ms ;
+    background-color:#F7F7F2;
+  }
+
+
+  height: 64px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+`;
+
+const Nav = styled.nav`
+  display: grid;
+  align-items: center;
+  grid-template-areas: "logo search nav";
+  height: 64px;
+  padding: 0 1em;
+
+  .menu-icon {
+    margin-right:1em;
+    height: 20px;
+  }
+
+  .logo {
+    display:flex;
+    align-items:center;
+  }
+
+  h1 {
+    cursor: pointer;
+  }
+
+  .search-container {
+    width: 100%;
+    grid-area: search;
+
+    select {
+      height: 3em;
+      width: 9em;
+    }
+
+    .logo {
+      grid-area: logo;
+    }
+  }
+
+  .menu {
+    justify-self: flex-end;
+    grid-area: nav;
+
+    img {
+      height: 30px;
+  }
+  }
+
+  @media (max-width: 700px) {
+
+height:auto;
+background-color:"";
+padding:1em;
+
+grid-template-areas:
+  "logo logo nav"
+  "search search search";
+
+.search-container {
+  width: 100%;
+  display: grid;
+  padding:.5em 0;
+
+  select {
+    width: auto;
+    padding-left: .5em;
+    border:none;
+    margin-bottom:.5em;
+  }
+}
+}
+`;
+
+
+
+const NavbarMobile = () => {
+
+  const {categories} = useSelector(state => state.categories);
+  const isVisible = useSelector(state => state.nav.isVisible);
+  const dispatch = useDispatch()
+  const history = useHistory()
   const [valid, setValid] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -276,15 +317,8 @@ const NavbarMobile = () => {
     return () => {};
   }, [email, password]);
 
-  const toggleSearchInput = () => {
-    if (toggleUserMenu) {
-      setToggleUserMenu(!toggleUserMenu);
-    }
-    setToggleVisibleSearch(!toggleVisibleSearch);
-  };
 
-  const usr = useRef();
-
+ 
   const toggleAccountMenu = () => {
     if (toggleVisibleSearch) {
       setToggleVisibleSearch(!toggleVisibleSearch);
@@ -296,8 +330,6 @@ const NavbarMobile = () => {
   const toggleMainMenu = () => {
     setToggleMenu(!toggleMenu);
   };
-
-  
 
   const login = async () => {
     try {
@@ -348,15 +380,17 @@ const NavbarMobile = () => {
         <div className="menu-search-container">
           <p>All Categories</p>
           <div className="input-container">
-          <input type="text" placeholder="Search all categories" />
+            <input type="text" placeholder="Search all categories" />
           </div>
         </div>
-  
       </MainMenu>
       <UsrMenu className={toggleUserMenu ? `sliding` : ""}>
         <p>Welcome</p>
         <div className="provider-container">
-          <SignInButton className="pulsing" onClick={() => registerAccount("google")}>
+          <SignInButton
+            className="pulsing"
+            onClick={() => registerAccount("google")}
+          >
             <img src={googleIcon} alt="" />
             <p>Sign in with Google</p>
           </SignInButton>
@@ -393,21 +427,34 @@ const NavbarMobile = () => {
         )}
       </UsrMenu>
 
-      <Navigation>
+      <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`} >
+      <Nav >
         <div className="logo">
-          <img onClick={toggleMainMenu} src={menuIcon} alt="" />
-          <p>TradingBazaar</p>
+          <img onClick={toggleMainMenu} className="menu-icon" src={menuIcon} alt="" />
+          <h1 onClick={() => history.push('/')}>TradingBazaar</h1>
         </div>
-        <div className="user-container">
-          <img onClick={toggleSearchInput} src={searchIcon} alt="" />
-          <img ref={usr} onClick={toggleAccountMenu} src={userIcon} alt="" />
+        {!isVisible ? (
+          <div className="search-container">
+            <select name="category" id="category">
+              <option>All Categories</option>
+              {categories.map((category) => {
+                return (
+                  <option key={category.name} value={category.name}>
+                    {category.name}
+                  </option>
+                );
+              })}
+            </select>
+            <StyledInput placeholder="What are you looking for today?" />
+          </div>
+        ) : (
+          ""
+        )}
+        <div className="menu">
+          <img onClick={toggleAccountMenu} className="nav" src={userIcon} alt="" />
         </div>
-      </Navigation>
-      {toggleVisibleSearch && (
-        <div className="search-container">
-          <StyledInput placeholder="What are you looking for today?" />
-        </div>
-      )}
+      </Nav>
+      </div>
     </Wrapper>
   );
 };

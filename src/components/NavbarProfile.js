@@ -35,6 +35,9 @@ const StyledLink = styled(Link)`
 
 const Navigation = styled.nav`
 
+
+
+
 li {
   padding: 0.5em;
   margin: 0 .5em;
@@ -102,6 +105,7 @@ p:first-child {
         background-color: ${(props) => props.theme.color.main};
         color: white;
         outline: none;
+        width:10em;
         border: none;
         font-family: ${(props) => props.theme.font.body};
         font-weight: 600;
@@ -117,7 +121,7 @@ p:first-child {
     }
 
     a {
-      margin: 0 .5em;
+      margin: 0 0em;
       text-decoration: none;
     }
   `;
@@ -125,7 +129,7 @@ p:first-child {
 const StyledInput = styled.input`
   border: 3px solid ${(props) => props.theme.color.main};
   height: 40px;
-  width: 400px;
+  width: 20em;
   outline: none;
   padding-left: 0.5em;
   font-family: ${(props) => props.theme.font.body};
@@ -178,7 +182,7 @@ const NavbarProfile = () => {
           <StyledLink to="/profile/active-items">Buy</StyledLink>
           <StyledLink to="/profile/active">Sell</StyledLink>
           <div className="menu-container">
-          <li className={toggleMenu ? 'active' : ""} onClick={handleMenu}>Menu</li>
+          <li onClick={handleMenu}>Menu</li>
           </div>
           <ProfileMenu toggleMenu={toggleMenu} />
         </div>

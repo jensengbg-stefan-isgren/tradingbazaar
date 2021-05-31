@@ -7,7 +7,7 @@ import { useMediaQuery } from "functions/UseMediaQuery";
 import NavbarMobileProfile from "components/NavbarProfileMobile";
 
 function MainNav() {
-  const showMobileNav = useMediaQuery("(max-width:768px)");
+  const showMobileNav = useMediaQuery("(max-width:1000px)");
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const showNavigation = () => {
     if (isAuthenticated) {
