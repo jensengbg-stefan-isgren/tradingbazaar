@@ -49,11 +49,19 @@ const ProductDetailsCard = () => {
   }
 
   const bidderText = () => {
-    if (adStatus === 0 && highlighted.bids) return 'Last bid by - '
-    else if (adStatus === 0 && !highlighted.bids) return 'No bids yet'
-    else if (adStatus === 1) return 'Auction won by - '
-    else if (adStatus === 2) return 'Bought directly by - '
-    else if (adStatus === 3) return 'No bids - Time expired'
+    switch (adStatus) {
+      case 0: {
+        if (highlighted.bids) return 'Last bid by - '
+        else return 'No bids yet'
+      }
+      case 1:
+        return 'Auction won by - '
+      case 2:
+        return 'Bought directly by - '
+      case 3:
+        return 'No bids - Time expired'
+      default:
+    }
   }
 
   const addBid = () => {

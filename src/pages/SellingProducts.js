@@ -13,14 +13,26 @@ const ProductSection = () => {
   return (
     <StyledProductWrapper>
       <Hero />
-      <h2>Products</h2>
-      {/* <section className="card-cont">
-        {Array.isArray(ads)
-          ? ads.map((ad) => <ProductCard key={ad.id} ad={ad} />)
-          : null}
-      </section> */}
-
-      <CardContainer ads={ads} />
+      <div>
+        <h2>Open Auctions</h2>
+        {ads.selling ? (
+          <CardContainer ads={ads.selling} />
+        ) : (
+          <div>
+            <h3>No open auctions at the moment</h3>
+          </div>
+        )}
+      </div>
+      <div>
+        <h2>Expired Auctions</h2>
+        {ads.expired ? (
+          <CardContainer ads={ads.expired} />
+        ) : (
+          <div>
+            <h3>No expired auctions</h3>
+          </div>
+        )}
+      </div>
     </StyledProductWrapper>
   )
 }
@@ -38,8 +50,10 @@ const StyledProductWrapper = styled.main`
   align-items: center;
   justify-content: flex-start; */
 
-  h2 {
+  h2,
+  h3 {
     padding: 1em;
+    text-align: center;
   }
 
   .card-cont {
