@@ -8,6 +8,7 @@ import { db } from 'services/firebase'
 import { bid } from 'features/productSlice'
 import timeLeftFunc from 'functions/timeLeftInterval'
 import TimeLeftParagraph from './TimeLeftParagraph'
+import { toast } from 'react-toastify'
 
 const ProductDetailsCard = () => {
   const [mainImage, setMainImage] = useState(null)
@@ -33,6 +34,8 @@ const ProductDetailsCard = () => {
   const [endDate, setEndDate] = useState({ date: '', time: '' })
 
   const { detailedProduct } = useSelector((state) => state.product)
+  const { isAuthenticated } = useSelector((state) => state.auth)
+
   const [highlighted, setHighlighted] = useState({
     highestBid: 0,
     bids: 0,
@@ -65,9 +68,11 @@ const ProductDetailsCard = () => {
   }
 
   const addBid = () => {
+    if (!isAuthenticated) return toast.warn('Please Login to make your bid')
     setMyBid(Number(myBid))
     const value = Number(myBid)
-    if (!value || value <= 0) return alert('Please write your bid in the field')
+    if (!value || value <= 0)
+      return toast.warn('Please write your bid in the field')
     dispatch(bid(value))
     setMyBid('')
   }

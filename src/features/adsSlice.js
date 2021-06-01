@@ -18,12 +18,8 @@ export const ads = createSlice({
       })
 
       selling = selling.sort((a, b) => {
-        // const dateA = new Date(a.adEndDate).getTime()
-        // const dateB = new Date(b.adEndDate).getTime()
-        // console.log('sorting', a, b)
         return a.endTimeStamp - b.endTimeStamp
       })
-      console.log('ads', selling, expired)
       state = { selling: [...selling], expired: [...expired] }
       return state
     },
