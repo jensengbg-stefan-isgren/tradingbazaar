@@ -40,6 +40,10 @@ h1 {
   font-size: 2em;
 }
 
+a {
+  text-decoration:none;
+}
+
 label, p {
   ${'' /* font-family: ${(props) => props.theme.font.title}; */}
   color: ${(props) => props.theme.font.dark};

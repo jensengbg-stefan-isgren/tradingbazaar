@@ -37,6 +37,13 @@ const StyledLink = styled(Link)`
 
 const Navigation = styled.nav`
 
+position: fixed;
+z-index:1000;
+width:100%;
+top:0;
+left:0;
+
+
 .logo {
   display: flex;
   align-items: center;
@@ -44,6 +51,10 @@ const Navigation = styled.nav`
   img {
     margin-right:1em;
     height:20px;
+  }
+
+  p {
+    cursor: pointer;
   }
 }
 
@@ -81,7 +92,7 @@ p:first-child {
     padding: 0 1em;
     justify-content: space-between;
     align-items: center;
-    position: fixed;
+    position: relative;
     z-index:1000;
     top:0;
     width:100%;

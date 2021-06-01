@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const MainMenu = styled.div`
   display: flex;
@@ -10,35 +10,64 @@ const MainMenu = styled.div`
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  top: 64px;
-  padding: 2em 1em;
+  top: 63px;
+  padding: 2em 0em;
+  padding-left:.5em;
   left: 0px;
   width: 20em;
   min-height: calc(100vh - 64px);
-  background-color: white;
+  background-color: #f7f7f2;
   position: absolute;
   transition: transform 0.2s ease-in-out;
   transform: translateX(-100%);
   z-index: 999;
+  
+
 
   &.sliding {
     transform: translateX(0%);
   }
 
+  .title-container {
+    display:flex;
+    justify-content:center;
+    width:100%;
+    margin-bottom:2em;
+
+  }
+
+
   .category-container {
     width:100%;
+  }
+
+  }
+
+  .category-list {
+    display:flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items: flex-start;
+    width:100%;
+    height: 100%;
+    font-size: .7em;
+    height:calc(100vh - 64px);
+
+    padding-bottom:2em;
+    
 
     li {
+    text-decoration: none;
     width:100%;
-    font-size: .9em;
+    font-size: 1.2em;
     font-family:${(props) => props.theme.font.body};
+    color: black;
 
     &:hover {
       cursor: pointer;
       background-color: pink;
     }
-  }
-
+    
   }
 
 
@@ -73,6 +102,7 @@ const MainMenu = styled.div`
   &.sliding-left {
     transform: translateX(0%);
   }
+  }
 `;
 
 const CategoryMenu = ({ toggleCatMenu }) => {
@@ -82,14 +112,18 @@ const CategoryMenu = ({ toggleCatMenu }) => {
   return (
     <React.Fragment>
       <MainMenu className={toggleCatMenu ? `sliding` : ""}>
-        <h3>Categories</h3>
         {categories ? (
-          <div className="category-container">
-            <ul>{categories.map((category) => 
-            {
-            return  <Link to={`/filteredproducts/${category.name}`} ><li key={category.name}>{category.name}</li></Link>
-            })}</ul>
-          </div>
+        
+            <ul className="category-list">
+              {categories.map((category) => {
+                return (
+                  <Link to={`/filteredproducts/${category.name}`}>
+                    <li key={category.name}>{category.name}</li>
+                  </Link>
+                );
+              })}
+            </ul>
+        
         ) : (
           ""
         )}
