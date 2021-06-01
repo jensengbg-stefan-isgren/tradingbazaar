@@ -49,6 +49,8 @@ label, p {
   color: ${(props) => props.theme.font.dark};
 }  
 
+
+
 `
 
 export default GlobalStyle

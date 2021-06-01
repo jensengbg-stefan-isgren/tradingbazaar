@@ -14,7 +14,7 @@ const WishList = () => {
         let locWishArr = [...wishedProdArr]
         let favProdArr = []
 
-        do {
+        while (locWishArr.length > 0) {
           let innerLoopfavs = []
           const loopWishArr = locWishArr.slice(0, 10)
           locWishArr = locWishArr.slice(10)
@@ -32,7 +32,8 @@ const WishList = () => {
               })
             )
           favProdArr = [...favProdArr, ...innerLoopfavs]
-        } while (locWishArr.length > 0)
+        }
+
         setAds([...favProdArr])
       }
       getFavoriteProds()
