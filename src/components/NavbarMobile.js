@@ -11,7 +11,6 @@ import React, { useState, useEffect } from "react";
 import { checkIfRegistered } from "features/auth/authSlice";
 import { useSelector } from "react-redux";
 import {useDispatch} from 'react-redux'
-import toggleCatMenu from 'components/CategoryMenu'
 import CategoryMenu from "components/CategoryMenu";
 
 const SignInButton = styled.button`
@@ -259,7 +258,6 @@ const NavbarMobile = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [toggleVisibleSearch, setToggleVisibleSearch] = useState(false);
   const [toggleUserMenu, setToggleUserMenu] = useState(false);
-  const [toggleMenu, setToggleMenu] = useState(false);
   const [toggleCatMenu, setToggleCatMenu] = useState(false)
 
   useEffect(() => {

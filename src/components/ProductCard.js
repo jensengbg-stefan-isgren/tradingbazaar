@@ -13,7 +13,6 @@ import React from 'react'
 const ProductCard = ({ ad }) => {
   const { uid, isAuthenticated, user } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
-
   //   console.log(ad)
 
   // const [isFavorite, setIsFavorite] = useState(favorites.includes(ad.id))

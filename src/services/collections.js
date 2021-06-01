@@ -7,6 +7,7 @@ export const addProduct = async () => {
 
 
   const newProduct = {
+    category: state.newAd.category,
     uid: state.auth.uid,
     title: state.newAd.title,
     description: state.newAd.description,

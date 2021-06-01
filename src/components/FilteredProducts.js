@@ -1,47 +1,52 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import styled from 'styled-components'
 import {useParams} from 'react-router-dom'
+import {db} from 'services/firebase'
+import CardContainer from 'components/CardContainer'
+import ProductCard from 'components/ProductCard'
+import {useSelector} from 'react-redux'
 
-const Wrapper = styled.div`
-  margin-top:2em;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
+const StyledProductWrapper = styled.main`
+padding-top: 10em;
+  /* height: 200em; */
+  /* margin: auto;
+  max-width: 95vw; */
+  /* display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
+  justify-content: flex-start; */
 
-`;
-
-const Container = styled.div`
-  margin-top: 4em;
-  min-height: 60vh;
-  width: 60vw;
-  place-content:center;
-  text-align: center;
-  border:1px solid lightgrey;
-
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(1, 1fr);
-    grid-auto-rows: minmax(5vh, 1fr);
+  h2 {
+    padding: 1em;
   }
-`;
+
+  .card-cont {
+    max-width: 95vw;
+    margin: auto;
+    display: grid;
+    /* grid-template-columns: repeat(auto-fit, minmax(19.2em, 1fr)); */
+    grid-template-columns: repeat(auto-fit, 19.2em);
+
+    row-gap: 0.8em;
+    column-gap: 0.8em;
+    justify-items: center;
+    justify-content: center;
+    /* gap: 0.5em; */
+  }
+`
 
 
 const FilteredProducts = () => {
 
-const {category} = useParams()
-console.log(category)
+  const {category} = useParams()
+  console.log(category)
+const {filteredProducts} = useSelector(state => state.product)
 
   return (
-    <Wrapper>
-    <div className="title-container">
-      <h3>FilteredProducts</h3>
-    </div>
-    <Container>
-      
-    </Container>
-  </Wrapper>
+    <StyledProductWrapper>
+      <h3>{category}</h3>
+      <CardContainer ads={filteredProducts} />
+    </StyledProductWrapper>
   )
 }
 

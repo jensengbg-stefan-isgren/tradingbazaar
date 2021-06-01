@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import {useDispatch} from 'react-redux'
+import {fetchFilteredProducts} from 'features/productSlice'
 
 const MainMenu = styled.div`
   display: flex;
@@ -11,8 +13,8 @@ const MainMenu = styled.div`
   align-items: center;
   flex-direction: column;
   top: 63px;
-  padding: 2em 0em;
-  padding-left:.5em;
+  /* padding: 2em 0em;
+  padding-left:.5em; */
   left: 0px;
   width: 20em;
   min-height: calc(100vh - 64px);
@@ -32,8 +34,8 @@ const MainMenu = styled.div`
     display:flex;
     justify-content:center;
     width:100%;
-    margin-bottom:2em;
-
+    margin-bottom:1em;
+    padding-top:2em;
   }
 
 
@@ -46,17 +48,23 @@ const MainMenu = styled.div`
   .category-list {
     display:flex;
     flex-direction: column;
-    justify-content:center;
+    justify-content:flex-start;
     align-items: flex-start;
     width:100%;
-    height: 100%;
     font-size: .7em;
-    height:calc(100vh - 64px);
-
+    height:calc(100vh - 150px);
+    overflow: scroll;
     padding-bottom:2em;
+    padding-top:2em;
+    overflow-x: hidden;
     
+    a {
+      width:100%;
+    }
 
     li {
+      margin-left: .5em;
+    padding:.5em;
     text-decoration: none;
     width:100%;
     font-size: 1.2em;
@@ -67,6 +75,12 @@ const MainMenu = styled.div`
       cursor: pointer;
       background-color: pink;
     }
+
+    @media (max-width: 1000px) {
+    font-size: 1.2em;
+    padding:.5em;
+    margin-left:.5em;
+  }
     
   }
 
@@ -102,31 +116,50 @@ const MainMenu = styled.div`
   &.sliding-left {
     transform: translateX(0%);
   }
+
+  ::-webkit-scrollbar {
+  width: .5em;
+}
+ 
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+ 
+::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 0px solid slategrey;
+}
+
   }
+
+
+
 `;
 
 const CategoryMenu = ({ toggleCatMenu }) => {
+  const dispatch = useDispatch()
   const { categories } = useSelector((state) => state.categories);
-  console.log(categories);
 
   return (
     <React.Fragment>
       <MainMenu className={toggleCatMenu ? `sliding` : ""}>
-        {categories ? (
-        
-            <ul className="category-list">
-              {categories.map((category) => {
-                return (
-                  <Link to={`/filteredproducts/${category.name}`}>
-                    <li key={category.name}>{category.name}</li>
-                  </Link>
-                );
-              })}
-            </ul>
-        
-        ) : (
-          ""
-        )}
+        <div className="title-container">
+          <h3>Categories</h3>
+        </div>
+      {categories ? (
+        <ul className="category-list">
+          {categories.map((category) => {
+            return (
+              <Link onClick={() => dispatch(fetchFilteredProducts(category.name))} key={category.name} to={`/filteredproducts/${category.name}`}>
+                <li >{category.name}</li>
+              </Link>
+            );
+          })}
+        </ul>
+    
+    ) : (
+      ""
+    )}
       </MainMenu>
     </React.Fragment>
   );

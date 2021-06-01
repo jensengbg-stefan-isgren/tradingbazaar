@@ -28,6 +28,11 @@ const fadeOut = keyframes`
 `;
 
 const Navigation = styled.nav`
+position: fixed;
+z-index:1000;
+width:100%;
+top:0;
+left:0;
 
 
   .no-nav {
