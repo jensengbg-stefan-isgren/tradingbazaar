@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import { useHistory } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import menuIcon from "assets/icons/menu.svg";
@@ -165,12 +165,13 @@ const Wrapper = styled.div`
 `;
 
 const NavbarMobileProfile = () => {
+  const catMenu = useRef()
+  const accountMenu = useRef()
   const [toggleCatMenu, setToggleCatMenu] = useState(false);
   // const showMobileNav = useMediaQuery("(max-width:1000px)");
   const [toggleMenu, setToggleMenu] = useState();
   const { categories } = useSelector((state) => state.categories);
   const isVisible = useSelector((state) => state.nav.isVisible);
-  console.log(isVisible);
   const history = useHistory();
 
   // const signOut = () => {
@@ -178,25 +179,18 @@ const NavbarMobileProfile = () => {
   //   history.push("/");
   // };
 
-  const handleMenu = () => {
-    setToggleMenu(!toggleMenu);
-  };
-
-  const handleCatMenu = () => {
-    setToggleCatMenu(!toggleCatMenu);
-  };
 
   return (
     <Wrapper>
       <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
         <Nav>
           <div className="logo">
-            <img onClick={handleCatMenu} src={menuIcon} alt="" />
+            <img ref={catMenu} src={menuIcon} alt="" />
             <h1 onClick={() => history.push("/")}>TradingBazaar</h1>
           </div>
 
           <div className="menu">
-            <img onClick={handleMenu} className="nav" src={userIcon} alt="" />
+            <img ref={accountMenu} className="nav" src={userIcon} alt="" />
           </div>
         </Nav>
         {!isVisible ? (
@@ -221,8 +215,8 @@ const NavbarMobileProfile = () => {
           ""
         )}
       </div>
-      <ProfileMenu toggleMenu={toggleMenu} />
-      <CategoryMenu toggleCatMenu={toggleCatMenu} />
+      <ProfileMenu setToggleMenu={setToggleMenu} toggleMenu={toggleMenu} accountMenu={accountMenu} />
+      <CategoryMenu setToggleCatMenu={setToggleCatMenu} toggleCatMenu={toggleCatMenu} catMenu={catMenu} />
     </Wrapper>
   );
 };

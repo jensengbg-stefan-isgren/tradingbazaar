@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React from "react";
+import React,{useEffect,useRef,useCallback} from "react";
 import { useHistory, Link } from "react-router-dom";
 import firebase from "firebase";
 import { useSelector, useDispatch } from "react-redux";
@@ -88,7 +88,36 @@ padding-top:1em;
 
 `;
 
-const ProfileMenu = ({ toggleMenu }) => {
+const ProfileMenu = ({ toggleMenu,setToggleMenu,accountMenu }) => {
+
+  const handleClick = useCallback(
+    (e) => {
+      if(accountMenu.current === e.target) {
+        setToggleMenu((toggleMenu) => 
+          !toggleMenu
+        )
+      }
+      else if (menu.current.contains(e.target)) {
+        // inside click
+        return;
+      } else  {
+        setToggleMenu(false)
+      }
+    },
+    [accountMenu,setToggleMenu],
+  )
+
+
+
+
+  const menu = useRef()
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    }
+  }, [handleClick])
 
   const showMobileNav = useMediaQuery("(max-width:1000px)");
   const dispatch = useDispatch();
@@ -101,8 +130,10 @@ const ProfileMenu = ({ toggleMenu }) => {
     history.push("/");
   };
 
+
+
   return (
-    <Menu className={toggleMenu ? `show` : ""}>
+    <Menu ref={menu} className={toggleMenu ? `show` : ""}>
       <p className="alias">{user.alias}</p>
       <div className="image-container">
         {user.photoUrl ? (

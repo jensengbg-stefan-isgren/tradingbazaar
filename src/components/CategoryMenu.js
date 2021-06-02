@@ -1,4 +1,4 @@
-import React,{useRef,useEffect} from "react";
+import React,{useRef,useEffect,useCallback} from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -6,6 +6,24 @@ import {useDispatch} from 'react-redux'
 import {fetchFilteredProducts} from 'features/productSlice'
 
 const CategoryMenu = ({ toggleCatMenu,setToggleCatMenu, catMenu }) => {
+
+
+
+  const handleClick = useCallback(async(e) => {
+    if(catMenu.current === e.target) {
+      setToggleCatMenu((toggleCatMenu) => 
+        !toggleCatMenu
+      )
+    }
+    else if (menu.current.contains(e.target)) {
+      // inside click
+      return;
+    } else  {
+      setToggleCatMenu(false)
+    }
+  },[catMenu,setToggleCatMenu])
+
+  
 
   const menu = useRef()
   const dispatch = useDispatch()
@@ -18,23 +36,9 @@ const CategoryMenu = ({ toggleCatMenu,setToggleCatMenu, catMenu }) => {
     return () => {
       document.removeEventListener("mousedown", handleClick);
     };
-  }, []);
+  }, [handleClick]);
 
-  const handleClick = e => {
- 
-    if(catMenu.current == e.target) {
-      setToggleCatMenu((toggleCatMenu) => 
-        !toggleCatMenu
-      )
-    }
-    else if (menu.current.contains(e.target)) {
-      console.log("UTANFÖR!!!")
-      // inside click
-      return;
-    } else  {
-      setToggleCatMenu(false)
-    }
-  };
+
 
 
   return (

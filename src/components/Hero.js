@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback } from "react";
 import styled from "styled-components";
 import heroImg from "assets/images/hero-bg.png";
 import { useDispatch, useSelector } from "react-redux";
@@ -92,9 +92,9 @@ const Container = styled.div`
 `;
 
 const Hero = () => {
-  const [category, setCategory] = useState("All Categories");
+  // const [category, setCategory] = useState("All Categories");
 
-  const [searchValue, setSearchValue] = useState("");
+  // const [searchValue, setSearchValue] = useState("");
   const { categories } = useSelector((state) => state.categories);
   const dispatch = useDispatch();
   const handleScroll = useCallback(async () => {
@@ -118,7 +118,7 @@ const Hero = () => {
 
   const handleInput = (e) => {
     console.log(e.target.value);
-    setSearchValue(e.target.value);
+    // setSearchValue(e.target.value);
   };
 
 
@@ -130,7 +130,7 @@ const Hero = () => {
         <SearchContainer id="search">
           {categories ? (
             <select
-              onChange={(e) => setCategory(e.target.value)}
+              // onChange={(e) => setCategory(e.target.value)}
               name="categories"
               id="categories"
             >

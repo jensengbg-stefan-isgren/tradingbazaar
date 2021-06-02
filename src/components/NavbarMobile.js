@@ -234,6 +234,7 @@ const Nav = styled.nav`
 `;
 
 const NavbarMobile = () => {
+  const menu = useRef()
   const accountMenu = useRef()
   const catMenu = useRef()
   const { categories } = useSelector((state) => state.categories);
@@ -272,12 +273,12 @@ const NavbarMobile = () => {
   const handleClick = e => {
     console.log(e.target)
     console.log(accountMenu.current)
-    if(accountMenu.current == e.target) {
+    if(accountMenu.current === e.target) {
       setToggleUserMenu((toggleUserMenu) => 
         !toggleUserMenu
       )
     }
-    else if (accountMenu.current.contains(e.target)) {
+    else if (menu.current.contains(e.target)) {
       console.log("UTANFÖR!!!")
       // inside click
       return;
@@ -336,7 +337,7 @@ const NavbarMobile = () => {
 
   return (
     <Wrapper>
-      <UsrMenu className={toggleUserMenu ? `sliding` : ""}>
+      <UsrMenu ref={menu} className={toggleUserMenu ? `sliding` : ""}>
         <p>Welcome</p>
         <div className="provider-container">
           <SignInButton

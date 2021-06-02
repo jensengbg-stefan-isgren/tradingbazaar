@@ -1,9 +1,7 @@
-import React,{useState,useEffect} from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import {useParams} from 'react-router-dom'
-import {db} from 'services/firebase'
 import CardContainer from 'components/CardContainer'
-import ProductCard from 'components/ProductCard'
 import {useSelector} from 'react-redux'
 
 const StyledProductWrapper = styled.main`
@@ -39,7 +37,6 @@ padding-top: 10em;
 const FilteredProducts = () => {
 
   const {category} = useParams()
-  console.log(category)
 const {filteredProducts} = useSelector(state => state.product)
 
   return (

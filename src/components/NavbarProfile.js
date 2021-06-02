@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import styled, { keyframes } from "styled-components";
 import { Link } from "react-router-dom";
 import ProfileMenu from "components/ProfileMenu";
@@ -163,6 +163,8 @@ const StyledInput = styled.input`
 `;
 
 const NavbarProfile = () => {
+  const catMenu = useRef()
+  const accountMenu = useRef()
   const history = useHistory();
   const { categories } = useSelector((state) => state.categories);
 
@@ -171,20 +173,13 @@ const NavbarProfile = () => {
 
   const isVisible = useSelector((state) => state.nav.isVisible);
 
-  const handleMenu = () => {
-    setToggleMenu(!toggleMenu);
-  };
 
-  const handleCatMenu = () => {
-    setToggleCatMenu(!toggleCatMenu)
-  }
-  
 
   return (
     <Navigation>
       <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
         <div className="logo">
-          <img onClick={handleCatMenu} src={menuIcon} alt="" />
+          <img ref={catMenu} src={menuIcon} alt="" />
           <p onClick={() => history.push('/')}>TradingBazaar</p>
         </div>
         {!isVisible ? (
@@ -209,12 +204,12 @@ const NavbarProfile = () => {
           <StyledLink to="/profile/active-items">Buy</StyledLink>
           <StyledLink to="/profile/active">Sell</StyledLink>
           <div className="menu-container">
-          <li onClick={handleMenu}>Menu</li>
+          <li ref={accountMenu}>Menu</li>
           </div>
-          <ProfileMenu toggleMenu={toggleMenu} />
+          <ProfileMenu setToggleMenu={setToggleMenu} toggleMenu={toggleMenu} accountMenu={accountMenu} />
         </div>
       </div>
-      <CategoryMenu toggleCatMenu={toggleCatMenu}/>
+      <CategoryMenu setToggleCatMenu={setToggleCatMenu} toggleCatMenu={toggleCatMenu} catMenu={catMenu}/>
     </Navigation>
   );
 };

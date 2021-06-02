@@ -210,7 +210,7 @@ const Navbar = () => {
           <StyledLink to="/register">Register</StyledLink>
         </div>
       </div>
-      <CategoryMenu className={toggleCatMenu ? `sliding` : ""} toggleCatMenu={toggleCatMenu} catMenu={catMenu} />
+      <CategoryMenu toggleCatMenu={toggleCatMenu} setToggleCatMenu={setToggleCatMenu} catMenu={catMenu} />
     </Navigation>
   );
 };
