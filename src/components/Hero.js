@@ -92,9 +92,7 @@ const Hero = () => {
       return
     } else {
       const rect = element.getBoundingClientRect()
-      console.log(rect)
       const isInViewport = rect.top >= 0
-      console.log(isInViewport)
       dispatch(setIsVisible(isInViewport))
     }
   }, [dispatch])
