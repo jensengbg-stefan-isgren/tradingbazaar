@@ -89,6 +89,7 @@ padding-top:1em;
 `;
 
 const ProfileMenu = ({ toggleMenu }) => {
+
   const showMobileNav = useMediaQuery("(max-width:1000px)");
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);

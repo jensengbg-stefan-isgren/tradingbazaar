@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import styled,{keyframes} from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { auth } from "services/firebase";
 import menuIcon from "assets/icons/menu.svg";
 import userIcon from "assets/icons/user.svg";
@@ -7,10 +7,10 @@ import { useHistory } from "react-router-dom";
 import googleIcon from "assets/icons/google-icon.svg";
 import facebookIcon from "assets/icons/facebook-icon.svg";
 import exclamationIcon from "assets/icons/exclamation.svg";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { checkIfRegistered } from "features/auth/authSlice";
 import { useSelector } from "react-redux";
-import {useDispatch} from 'react-redux'
+import { useDispatch } from "react-redux";
 import CategoryMenu from "components/CategoryMenu";
 
 const SignInButton = styled.button`
@@ -30,8 +30,6 @@ const SignInButton = styled.button`
     height: 30px;
   }
 `;
-
-
 
 const UsrMenu = styled.div`
   display: flex;
@@ -105,9 +103,6 @@ const UsrMenu = styled.div`
   }
 `;
 
-
-
-
 const fadeIn = keyframes`
   from {
     opacity: .4;
@@ -128,9 +123,6 @@ const fadeOut = keyframes`
   }
 `;
 
-
-
-
 const StyledInput = styled.input`
   border: 3px solid ${(props) => props.theme.color.main};
   min-width: 20em;
@@ -143,30 +135,23 @@ const StyledInput = styled.input`
   ::placeholder {
     font-family: ${(props) => props.theme.font.body};
     color: ${(props) => props.theme.color.body};
-
   }
-
 
   @media (max-width: 500px) {
-    border:none;
+    border: none;
   }
-    
 `;
 
-
 const Wrapper = styled.div`
-
-.no-nav {
+  .no-nav {
     animation: ${fadeOut} 300ms;
     background-color: none;
   }
 
-
   .show-nav {
-    animation: ${fadeIn} 300ms ;
-    background-color:#F7F7F2;
+    animation: ${fadeIn} 300ms;
+    background-color: #f7f7f2;
   }
-
 
   height: 64px;
   width: 100%;
@@ -183,13 +168,13 @@ const Nav = styled.nav`
   padding: 0 1em;
 
   .menu-icon {
-    margin-right:1em;
+    margin-right: 1em;
     height: 20px;
   }
 
   .logo {
-    display:flex;
-    align-items:center;
+    display: flex;
+    align-items: center;
   }
 
   h1 {
@@ -216,72 +201,91 @@ const Nav = styled.nav`
 
     img {
       height: 30px;
-  }
+    }
   }
 
   @media (max-width: 700px) {
+    height: auto;
+    background-color: "";
+    padding: .91em;
 
-height:auto;
-background-color:"";
-padding:1em;
 
-grid-template-areas:
-  "logo logo nav"
-  "search search search";
+    grid-template-areas:
+      "logo logo nav"
+      "search search search";
 
-.search-container {
-  width: 100%;
-  display: grid;
-  padding:.5em 0;
+    .search-container {
+      width: 100%;
+      display: grid;
+      padding: 0.5em 0;
 
-  select {
-    width: auto;
-    padding-left: .5em;
-    border:none;
-    margin-bottom:.5em;
+      select {
+        width: auto;
+        padding-left: 0.5em;
+        border: none;
+        margin-bottom: 0.5em;
+      }
+    }
+
+    .hide {
+      display:none;
+    }
   }
-}
-}
 `;
 
-
-
 const NavbarMobile = () => {
-
-  const {categories} = useSelector(state => state.categories);
-  const isVisible = useSelector(state => state.nav.isVisible);
-  const dispatch = useDispatch()
-  const history = useHistory()
+  const accountMenu = useRef()
+  const catMenu = useRef()
+  const { categories } = useSelector((state) => state.categories);
+  const isVisible = useSelector((state) => state.nav.isVisible);
+  const dispatch = useDispatch();
+  const history = useHistory();
   const [valid, setValid] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [toggleVisibleSearch, setToggleVisibleSearch] = useState(false);
   const [toggleUserMenu, setToggleUserMenu] = useState(false);
-  const [toggleCatMenu, setToggleCatMenu] = useState(false)
+  const [toggleCatMenu, setToggleCatMenu] = useState(false);
 
   useEffect(() => {
+    document.addEventListener("mousedown", handleClick);
     if (!email || password.length <= 0) {
       setValid(false);
     } else {
       setValid(true);
     }
-    return () => {};
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
   }, [email, password]);
 
-
- 
   const toggleAccountMenu = () => {
     if (toggleVisibleSearch) {
       setToggleVisibleSearch(!toggleVisibleSearch);
     }
 
-    setToggleUserMenu(!toggleUserMenu);
+    // setToggleUserMenu(!toggleUserMenu);
   };
 
-  const handleCatMenu = () => {
-    setToggleCatMenu(!toggleCatMenu);
+
+  const handleClick = e => {
+    console.log(e.target)
+    console.log(accountMenu.current)
+    if(accountMenu.current == e.target) {
+      setToggleUserMenu((toggleUserMenu) => 
+        !toggleUserMenu
+      )
+    }
+    else if (accountMenu.current.contains(e.target)) {
+      console.log("UTANFÖR!!!")
+      // inside click
+      return;
+    } else  {
+      setToggleUserMenu(false)
+    }
   };
+
 
   const login = async () => {
     try {
@@ -325,6 +329,10 @@ const NavbarMobile = () => {
   const handlePassword = (e) => {
     setPassword(e.target.value);
   };
+
+
+
+
 
   return (
     <Wrapper>
@@ -371,35 +379,47 @@ const NavbarMobile = () => {
         )}
       </UsrMenu>
 
-      <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`} >
-      <Nav >
-        <div className="logo">
-          <img onClick={handleCatMenu} className="menu-icon" src={menuIcon} alt="" />
-          <h1 onClick={() => history.push('/')}>TradingBazaar</h1>
-        </div>
-        {!isVisible ? (
-          <div className="search-container">
-            <select name="category" id="category">
-              <option>All Categories</option>
-              {categories.map((category) => {
-                return (
-                  <option key={category.name} value={category.name}>
-                    {category.name}
-                  </option>
-                );
-              })}
-            </select>
-            <StyledInput placeholder="What are you looking for today?" />
+      <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
+        <Nav>
+          <div className="logo">
+            <img
+            ref={catMenu}
+              // onClick={handleCatMenu}
+              className="menu-icon"
+              src={menuIcon}
+              alt=""
+            />
+            <h1 onClick={() => history.push("/")}>TradingBazaar</h1>
           </div>
-        ) : (
-          ""
-        )}
-        <div className="menu">
-          <img onClick={toggleAccountMenu} className="nav" src={userIcon} alt="" />
-        </div>
-      </Nav>
+          {!isVisible ? (
+            <div className={`search-container ${toggleCatMenu || toggleUserMenu ? "hide" : ""}`}>
+              <select name="category" id="category">
+                <option>All Categories</option>
+                {categories.map((category) => {
+                  return (
+                    <option key={category.name} value={category.name}>
+                      {category.name}
+                    </option>
+                  );
+                })}
+              </select>
+              <StyledInput placeholder="What are you looking for today?" />
+            </div>
+          ) : (
+            ""
+          )}
+          <div className="menu">
+            <img
+            ref={accountMenu}
+              onClick={(toggleAccountMenu)}
+              className="nav"
+              src={userIcon}
+              alt=""
+            />
+          </div>
+        </Nav>
       </div>
-      <CategoryMenu toggleCatMenu={toggleCatMenu}/>
+      <CategoryMenu toggleCatMenu={toggleCatMenu} setToggleCatMenu={setToggleCatMenu} catMenu={catMenu} />
     </Wrapper>
   );
 };

@@ -1,9 +1,66 @@
-import React from "react";
+import React,{useRef,useEffect} from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {useDispatch} from 'react-redux'
 import {fetchFilteredProducts} from 'features/productSlice'
+
+const CategoryMenu = ({ toggleCatMenu,setToggleCatMenu, catMenu }) => {
+
+  const menu = useRef()
+  const dispatch = useDispatch()
+  const { categories } = useSelector((state) => state.categories);
+
+  useEffect(() => {
+    // add when mounted
+    document.addEventListener("mousedown", handleClick);
+    // return function to be called when unmounted
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, []);
+
+  const handleClick = e => {
+ 
+    if(catMenu.current == e.target) {
+      setToggleCatMenu((toggleCatMenu) => 
+        !toggleCatMenu
+      )
+    }
+    else if (menu.current.contains(e.target)) {
+      console.log("UTANFÖR!!!")
+      // inside click
+      return;
+    } else  {
+      setToggleCatMenu(false)
+    }
+  };
+
+
+  return (
+    <React.Fragment>
+      <MainMenu ref={menu} className={toggleCatMenu ? `sliding` : ""}>
+        <div className="title-container">
+          <h3>Categories</h3>
+        </div>
+      {categories ? (
+        <ul className="category-list">
+          {categories.map((category) => {
+            return (
+              <Link onClick={() => dispatch(fetchFilteredProducts(category.name))} key={category.name} to={`/filteredproducts/${category.name}`}>
+                <li >{category.name}</li>
+              </Link>
+            );
+          })}
+        </ul>
+    
+    ) : (
+      ""
+    )}
+      </MainMenu>
+    </React.Fragment>
+  );
+};
 
 const MainMenu = styled.div`
   display: flex;
@@ -136,33 +193,6 @@ const MainMenu = styled.div`
 
 `;
 
-const CategoryMenu = ({ toggleCatMenu }) => {
-  const dispatch = useDispatch()
-  const { categories } = useSelector((state) => state.categories);
-
-  return (
-    <React.Fragment>
-      <MainMenu className={toggleCatMenu ? `sliding` : ""}>
-        <div className="title-container">
-          <h3>Categories</h3>
-        </div>
-      {categories ? (
-        <ul className="category-list">
-          {categories.map((category) => {
-            return (
-              <Link onClick={() => dispatch(fetchFilteredProducts(category.name))} key={category.name} to={`/filteredproducts/${category.name}`}>
-                <li >{category.name}</li>
-              </Link>
-            );
-          })}
-        </ul>
-    
-    ) : (
-      ""
-    )}
-      </MainMenu>
-    </React.Fragment>
-  );
-};
-
 export default CategoryMenu;
+
+

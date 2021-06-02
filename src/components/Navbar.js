@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import menuIcon from 'assets/icons/menu.svg'
 import CategoryMenu from 'components/CategoryMenu'
-import {useState} from 'react'
+import {useState,useRef} from 'react'
 
 const fadeIn = keyframes`
   from {
@@ -142,26 +142,50 @@ const StyledInput = styled.input`
 `;
 
 const Navbar = () => {
+  const catMenu = useRef()
   const history = useHistory();
   const [toggleCatMenu, setToggleCatMenu] = useState(false)
   const { categories } = useSelector((state) => state.categories);
   const isVisible = useSelector((state) => state.nav.isVisible);
 
   useEffect(() => {
-    return () => {};
+    document.addEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
   }, []);
 
 
-  const handleCatMenu = () => {
-    setToggleCatMenu(!toggleCatMenu)
-  }
+
+  // const handleCatMenu = () => {
+  //   setToggleCatMenu(!toggleCatMenu)
+  // }
+
+  
+  const handleClick = e => {
+    // console.log(e.target)
+    // console.log(accountMenu.current)
+    // if(accountMenu.current == e.target) {
+    //   setToggleUserMenu((toggleUserMenu) => 
+    //     !toggleUserMenu
+    //   )
+    // }
+    // else if (accountMenu.current.contains(e.target)) {
+    //   console.log("UTANFÖR!!!")
+    //   // inside click
+    //   return;
+    // } else  {
+    //   setToggleUserMenu(false)
+    // }
+  };
+
   
 
   return (
     <Navigation>
       <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
         <div className="logo">
-          <img onClick={handleCatMenu} src={menuIcon} alt="" />
+          <img ref={catMenu} src={menuIcon} alt="" />
           <p onClick={() => history.push("/")}>TradingBazaar</p>
         </div>
         {!isVisible ? (
@@ -186,7 +210,7 @@ const Navbar = () => {
           <StyledLink to="/register">Register</StyledLink>
         </div>
       </div>
-      <CategoryMenu className={toggleCatMenu ? `sliding` : ""} toggleCatMenu={toggleCatMenu}/>
+      <CategoryMenu className={toggleCatMenu ? `sliding` : ""} toggleCatMenu={toggleCatMenu} catMenu={catMenu} />
     </Navigation>
   );
 };
