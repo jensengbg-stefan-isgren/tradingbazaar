@@ -14,17 +14,6 @@ import React from 'react'
 const ProductCard = ({ ad }) => {
   const { isAuthenticated, user } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
-<<<<<<< HEAD
-  //   console.log(ad)
-
-  // const [isFavorite, setIsFavorite] = useState(favorites.includes(ad.id))
-
-  // setIsFavorite(true)
-
-  // if (favorites.includes(ad.id)) setIsFavorite(true)
-  // console.log(ad.id, favorites.includes(ad.id), favorites)
-=======
->>>>>>> dev
 
   async function toggleFavorite(event) {
     // if (!isAuthenticated) return alert('Please Login to select your Favorites')

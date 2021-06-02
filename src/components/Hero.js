@@ -1,16 +1,8 @@
-<<<<<<< HEAD
-import React, { useEffect, useCallback } from "react";
-import styled from "styled-components";
-import heroImg from "assets/images/hero-bg.png";
-import { useDispatch, useSelector } from "react-redux";
-import { setIsVisible } from "features/navSlice";
-=======
 import React, { useEffect, useCallback, useState } from 'react'
 import styled from 'styled-components'
 import heroImg from 'assets/images/hero-bg.jpg'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsVisible } from 'features/navSlice'
->>>>>>> dev
 // import {db} from 'services/firebase'
 
 const Wrapper = styled.section`
@@ -46,11 +38,7 @@ const Wrapper = styled.section`
     background-size: cover;
     background-position: fixed;
   }
-<<<<<<< HEAD
-`;
-=======
 `
->>>>>>> dev
 
 const SearchContainer = styled.div`
   select,
@@ -62,11 +50,7 @@ const SearchContainer = styled.div`
   }
 
   input {
-<<<<<<< HEAD
-    width: 25em;
-=======
     min-width: 25em;
->>>>>>> dev
     padding-left: 1em;
   }
 
@@ -74,32 +58,12 @@ const SearchContainer = styled.div`
     color: black;
     background-color: #f7f7f2;
   }
-<<<<<<< HEAD
-
-  option {
-    background-color: #f7f7f2;
-  }
-
-  @media (max-width: 700px) {
-    display:flex;
-    width:80%;
-    flex-direction: column;
-    justify-content: center;
-
-    input {
-      width:100%;
-    }
-  }
-`;
-
-=======
 
   option {
     background-color: #f7f7f2;
   }
 `
 
->>>>>>> dev
 const Container = styled.div`
   height: 70vh;
   position: relative;
@@ -117,37 +81,6 @@ const Container = styled.div`
 `
 
 const Hero = () => {
-<<<<<<< HEAD
-  // const [category, setCategory] = useState("All Categories");
-
-  // const [searchValue, setSearchValue] = useState("");
-  const { categories } = useSelector((state) => state.categories);
-  const dispatch = useDispatch();
-  const handleScroll = useCallback(async () => {
-    const element = document.getElementById("search");
-    if (!element) {
-      return;
-    } else {
-      const rect = element.getBoundingClientRect();
-      const isInViewport = rect.top >= 0;
-      dispatch(setIsVisible(isInViewport));
-    }
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(setIsVisible(true));
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [dispatch, handleScroll]);
-
-  const handleInput = (e) => {
-    console.log(e.target.value);
-    // setSearchValue(e.target.value);
-  };
-
-=======
   const [category, setCategory] = useState('All Categories')
 
   const [searchValue, setSearchValue] = useState('')
@@ -189,7 +122,6 @@ const Hero = () => {
   //     console.log(doc.data())
   //   });
   // }
->>>>>>> dev
 
   // }
 
@@ -200,11 +132,7 @@ const Hero = () => {
         <SearchContainer id="search">
           {categories ? (
             <select
-<<<<<<< HEAD
-              // onChange={(e) => setCategory(e.target.value)}
-=======
               onChange={(e) => setCategory(e.target.value)}
->>>>>>> dev
               name="categories"
               id="categories"
             >
@@ -214,19 +142,11 @@ const Hero = () => {
                   <option key={category.name} value={category.name}>
                     {category.name}
                   </option>
-<<<<<<< HEAD
-                );
-              })}
-            </select>
-          ) : (
-            ""
-=======
                 )
               })}
             </select>
           ) : (
             ''
->>>>>>> dev
           )}
           <input
             onChange={handleInput}
