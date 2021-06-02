@@ -1,35 +1,31 @@
 import './App.css'
 import './styles/fonts.css'
 import theme from './styles/theme'
-import React, { useEffect,useCallback } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { routes } from './router/routes'
 import { useDispatch } from 'react-redux'
 import GlobalStyle from 'styles/globalStyles'
 import { ThemeProvider } from 'styled-components'
 import { authUser } from 'features/auth/authSlice'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import {db} from 'services/firebase'
-import {addCategories} from 'features/categoriesSlice'
+import { db } from 'services/firebase'
+import { addCategories } from 'features/categoriesSlice'
 
 const App = () => {
   const dispatch = useDispatch()
 
-const getCategories = useCallback(
-  async() => {
-    let snapshot = await db.collection("categories").get()
+  const getCategories = useCallback(async () => {
+    let snapshot = await db.collection('categories').get()
     snapshot.forEach((doc) => {
       const data = doc.data()
       dispatch(addCategories(data))
     })
-
-  },
-  [dispatch],
-)
+  }, [dispatch])
 
   useEffect(() => {
     getCategories()
     dispatch(authUser())
-  }, [dispatch,getCategories])
+  }, [dispatch, getCategories])
 
   return (
     <React.Fragment>

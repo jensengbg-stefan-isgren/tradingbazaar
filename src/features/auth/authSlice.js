@@ -32,6 +32,7 @@ export const authSlice = createSlice({
       state.errorMessage = message
     },
     addUser: (state, action) => {
+      console.log('addUser', action.payload)
       state.user = action.payload
     },
     // addFavoritesToUser: (state, action) => {
@@ -58,9 +59,9 @@ export const authSlice = createSlice({
     [bid.fulfilled]: (state, action) => {
       const payload = {}
       payload.payload = action.payload.user
+      console.log('to be finished', payload.payload)
       authSlice.caseReducers.addUser(state, payload)
       // Add update to user bids
-      console.log('to be finished')
       // state.test2 = action.payload
     },
   },

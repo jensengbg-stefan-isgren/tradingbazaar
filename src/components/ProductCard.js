@@ -7,12 +7,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import { authToggleFavorite } from 'features/auth/authSlice'
 import TimeLeftFunc from 'functions/timeLeft'
 import TimeLeftParagraph from 'components/TimeLeftParagraph'
+import { toast } from 'react-toastify'
 
 import React from 'react'
 
 const ProductCard = ({ ad }) => {
-  const { uid, isAuthenticated, user } = useSelector((state) => state.auth)
+  const { isAuthenticated, user } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
+<<<<<<< HEAD
   //   console.log(ad)
 
   // const [isFavorite, setIsFavorite] = useState(favorites.includes(ad.id))
@@ -21,29 +23,15 @@ const ProductCard = ({ ad }) => {
 
   // if (favorites.includes(ad.id)) setIsFavorite(true)
   // console.log(ad.id, favorites.includes(ad.id), favorites)
+=======
+>>>>>>> dev
 
   async function toggleFavorite(event) {
-    if (!uid) return alert('Please Login to select your Favorites')
+    // if (!isAuthenticated) return alert('Please Login to select your Favorites')
+    if (!isAuthenticated)
+      return toast.warn('Please Login to save your favorite items')
 
     dispatch(authToggleFavorite(ad.id))
-
-    // const favoriteRef = await db.collection('users').doc(uid)
-
-    // console.log(event)
-    // favoriteRef.update({
-    //   favs: firebase.firestore.FieldValue.arrayUnion(ad.id),
-    // })
-    // console.log('result fav', favoriteRef)
-
-    // .collection('favorites')
-    // .add({ productId: ad.id })
-
-    // console.log(await db.collection('users').doc(uid).get())
-
-    // console.log('favorite key', favoriteRef.key())
-    // favoriteRef
-    //   .set({ productId: ad.id })
-    //   .then((el) => console.log('result', el))
   }
 
   return (
@@ -63,7 +51,7 @@ const ProductCard = ({ ad }) => {
           <p>{!ad.bids ? 0 : ad.bids} Bids</p>
           <BtnFavorite
             onClick={toggleFavorite}
-            disabled={!isAuthenticated}
+            // disabled={!isAuthenticated}
             bck={
               user?.favorites?.includes(ad.id) ? FavoriteFill : FavoriteOutline
             }
