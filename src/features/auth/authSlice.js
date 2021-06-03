@@ -14,7 +14,7 @@ export const authSlice = createSlice({
     isAuthenticated: null,
     isRegistered: null,
     errorMessage: null,
-    user: null,
+    user: { favorites: [] },
     providerData: null,
     test2: '',
   },
@@ -32,7 +32,7 @@ export const authSlice = createSlice({
       state.errorMessage = message
     },
     addUser: (state, action) => {
-      console.log('addUser', action.payload)
+      // console.log('addUser', action.payload)
       state.user = action.payload
     },
     // addFavoritesToUser: (state, action) => {
@@ -54,12 +54,12 @@ export const authSlice = createSlice({
       state.user.favorites = [...action.payload]
     },
     [authToggleFavorite.rejected]: (state, action) => {
-      console.log('rej', action)
+      console.log('rejected', action)
     },
     [bid.fulfilled]: (state, action) => {
       const payload = {}
       payload.payload = action.payload.user
-      console.log('to be finished', payload.payload)
+      // console.log('to be finished', payload.payload)
       authSlice.caseReducers.addUser(state, payload)
       // Add update to user bids
       // state.test2 = action.payload
