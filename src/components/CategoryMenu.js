@@ -1,32 +1,28 @@
-import React,{useRef,useEffect,useCallback} from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import {useDispatch} from 'react-redux'
-import {fetchFilteredProducts} from 'features/productSlice'
+import { useDispatch } from "react-redux";
+import { fetchFilteredProducts } from "features/productSlice";
+import {db} from 'services/firebase'
 
-const CategoryMenu = ({ toggleCatMenu,setToggleCatMenu, catMenu }) => {
+const CategoryMenu = ({ toggleCatMenu, setToggleCatMenu, catMenu }) => {
+  const handleClick = useCallback(
+    async (e) => {
+      if (catMenu.current === e.target) {
+        setToggleCatMenu((toggleCatMenu) => !toggleCatMenu);
+      } else if (menu.current.contains(e.target)) {
+        // inside click
+        return;
+      } else {
+        setToggleCatMenu(false);
+      }
+    },
+    [catMenu, setToggleCatMenu]
+  );
 
-
-
-  const handleClick = useCallback(async(e) => {
-    if(catMenu.current === e.target) {
-      setToggleCatMenu((toggleCatMenu) => 
-        !toggleCatMenu
-      )
-    }
-    else if (menu.current.contains(e.target)) {
-      // inside click
-      return;
-    } else  {
-      setToggleCatMenu(false)
-    }
-  },[catMenu,setToggleCatMenu])
-
-  
-
-  const menu = useRef()
-  const dispatch = useDispatch()
+  const menu = useRef();
+  const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.categories);
 
   useEffect(() => {
@@ -39,28 +35,42 @@ const CategoryMenu = ({ toggleCatMenu,setToggleCatMenu, catMenu }) => {
   }, [handleClick]);
 
 
+  const searchCategory = async(e) => {
+    console.log(e)
+    let snapShot = await db.collection('categories').where('name','==', `${e}`).get()
+    snapShot.forEach((doc) => {
+      console.log(doc.data())
 
+    })
+  }
+  
 
   return (
     <React.Fragment>
       <MainMenu ref={menu} className={toggleCatMenu ? `sliding` : ""}>
         <div className="title-container">
           <h3>Categories</h3>
+          <div className="search-container">
+            <input onChange={(e) => searchCategory(e.target.value)} type="text" placeholder="Search category" />
+          </div>
         </div>
-      {categories ? (
-        <ul className="category-list">
-          {categories.map((category) => {
-            return (
-              <Link onClick={() => dispatch(fetchFilteredProducts(category.name))} key={category.name} to={`/filteredproducts/${category.name}`}>
-                <li >{category.name}</li>
-              </Link>
-            );
-          })}
-        </ul>
-    
-    ) : (
-      ""
-    )}
+        {categories ? (
+          <ul className="category-list">
+            {categories.map((category) => {
+              return (
+                <Link
+                  onClick={() => dispatch(fetchFilteredProducts(category.name))}
+                  key={category.name}
+                  to={`/filteredproducts/${category.name}`}
+                >
+                  <li>{category.name}</li>
+                </Link>
+              );
+            })}
+          </ul>
+        ) : (
+          ""
+        )}
       </MainMenu>
     </React.Fragment>
   );
@@ -97,6 +107,23 @@ const MainMenu = styled.div`
     width:100%;
     margin-bottom:1em;
     padding-top:2em;
+    flex-direction: column;
+    align-items: center;
+
+      .search-container {
+        width:100%;
+        margin-top:1em;
+        display:flex;
+        justify-content: center;
+
+
+        input {
+          width:20em;
+      border:none;
+      outline:none;
+      padding:1em;
+    }
+      }
   }
 
 
@@ -198,5 +225,3 @@ const MainMenu = styled.div`
 `;
 
 export default CategoryMenu;
-
-

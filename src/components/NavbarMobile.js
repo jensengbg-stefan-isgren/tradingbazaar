@@ -12,6 +12,7 @@ import { checkIfRegistered } from "features/auth/authSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import CategoryMenu from "components/CategoryMenu";
+import searchIcon from 'assets/icons/search.svg'
 
 const SignInButton = styled.button`
   display: flex;
@@ -196,7 +197,10 @@ const Nav = styled.nav`
   }
 
   .menu {
-    justify-self: flex-end;
+    display:flex;
+    justify-content:flex-end;
+    align-items: center;
+    gap:1em;
     grid-area: nav;
 
     img {
@@ -234,6 +238,7 @@ const Nav = styled.nav`
 `;
 
 const NavbarMobile = () => {
+  const [toggleSearchBar,setToggleSearchBar] = useState(false)
   const menu = useRef()
   const accountMenu = useRef()
   const catMenu = useRef()
@@ -331,7 +336,11 @@ const NavbarMobile = () => {
     setPassword(e.target.value);
   };
 
-
+  const handleSearchBar = () => {
+    setToggleSearchBar(!toggleSearchBar)
+    console.log(toggleSearchBar)
+  }
+  
 
 
 
@@ -393,7 +402,7 @@ const NavbarMobile = () => {
             <h1 onClick={() => history.push("/")}>TradingBazaar</h1>
           </div>
           {!isVisible ? (
-            <div className={`search-container ${toggleCatMenu || toggleUserMenu ? "hide" : ""}`}>
+            <div className={`search-container ${toggleCatMenu || toggleUserMenu || toggleSearchBar ? "hide" : ""}`}>
               <select name="category" id="category">
                 <option>All Categories</option>
                 {categories.map((category) => {
@@ -410,6 +419,7 @@ const NavbarMobile = () => {
             ""
           )}
           <div className="menu">
+           {!isVisible ?  <img onClick={handleSearchBar} src={searchIcon} alt="" /> : ""}
             <img
             ref={accountMenu}
               onClick={(toggleAccountMenu)}

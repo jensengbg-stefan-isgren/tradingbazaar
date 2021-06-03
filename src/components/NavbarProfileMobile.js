@@ -7,6 +7,8 @@ import ProfileMenu from "components/ProfileMenu";
 import userIcon from "assets/icons/user.svg";
 import CategoryMenu from "components/CategoryMenu";
 import useSearch from 'hooks/useSearch'
+import searchIcon from 'assets/icons/search.svg'
+import {setIsVisible} from 'features/navSlice'
 // import { useMediaQuery } from "functions/UseMediaQuery";
 
 const fadeIn = keyframes`
@@ -74,7 +76,10 @@ const Nav = styled.nav`
   }
 
   .menu {
-    justify-self: flex-end;
+    display:flex;
+    justify-content:flex-end;
+    align-items: center;
+    gap:1em;
     grid-area: nav;
 
     img {
@@ -166,20 +171,30 @@ const Wrapper = styled.div`
 `;
 
 const NavbarMobileProfile = () => {
+
   const {searchResults,category,setCategory} = useSearch()
   const catMenu = useRef()
   const accountMenu = useRef()
   const [toggleCatMenu, setToggleCatMenu] = useState(false);
   // const showMobileNav = useMediaQuery("(max-width:1000px)");
-  const [toggleMenu, setToggleMenu] = useState();
+  const [toggleMenu, setToggleMenu] = useState(false);
   const { categories } = useSelector((state) => state.categories);
   const isVisible = useSelector((state) => state.nav.isVisible);
   const history = useHistory();
+
+  const [toggleSearchBar,setToggleSearchBar] = useState(false)
 
   // const signOut = () => {
   //   auth.signOut();
   //   history.push("/");
   // };
+
+  console.log(isVisible)
+
+const handleSearchBar = () => {
+  setToggleSearchBar(!toggleSearchBar)
+  console.log(toggleSearchBar)
+}
 
 
   return (
@@ -192,13 +207,14 @@ const NavbarMobileProfile = () => {
           </div>
 
           <div className="menu">
+            {!isVisible ? <img onClick={handleSearchBar}  src={searchIcon} alt="" /> : ""}
             <img ref={accountMenu} className="nav" src={userIcon} alt="" />
           </div>
         </Nav>
         {!isVisible ? (
           <div
             className={`search-container ${
-              toggleCatMenu || toggleMenu ? "hide" : ""
+              toggleCatMenu || toggleMenu || toggleSearchBar   ? "hide" : ""
             }`}
           >
             <select name="category" id="category">
