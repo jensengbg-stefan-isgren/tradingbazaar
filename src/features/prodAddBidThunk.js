@@ -1,11 +1,20 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import firebase, { db } from 'services/firebase'
+import { toast } from 'react-toastify'
 
 export default createAsyncThunk(
   'product/testStatus',
-  async (myBid, { getState }) => {
-    const { productId } = getState().product
+  async (_, { thunkAPI, getState }) => {
+    const { productId, newBid } = getState().product
     const { uid, user } = getState().auth
+
+    const locBid = Number(newBid)
+    // setMyBid(Number(myBid))
+    // const value = Number(myBid)
+    if (!locBid || locBid <= 0) {
+      toast.error('Please write a valid value in the field')
+      return thunkAPI.rejectWithValue()
+    }
 
     const product = await (
       await db.collection('sellingProducts').doc(productId).get()
@@ -14,16 +23,11 @@ export default createAsyncThunk(
     const highestBid = product.highestBid || product.startPrice
     const bids = product.bids || 0
 
-    if (myBid < highestBid + 10) {
-      console.log(
+    if (locBid < highestBid + 10) {
+      toast.error(
         `Your bid is too low. Lowest bid you can do is ${highestBid + 10} Kr`
       )
-      return {
-        product,
-        message: `Your bid is too low. Lowest bid you can do is ${
-          highestBid + 10
-        } Kr`,
-      }
+      return thunkAPI.rejectWithValue()
     }
 
     const batch = db.batch()
@@ -36,14 +40,14 @@ export default createAsyncThunk(
 
     batch.set(dbBid, {
       uid: uid,
-      sum: myBid,
+      sum: locBid,
       datetime: firebase.firestore.FieldValue.serverTimestamp(),
     })
 
     const dbHighest = db.collection('sellingProducts').doc(productId)
 
     batch.update(dbHighest, {
-      highestBid: myBid,
+      highestBid: locBid,
       bids: bids + 1,
       leadingBidder: user.alias || user.firstName,
     })
@@ -55,7 +59,7 @@ export default createAsyncThunk(
 
     await batch.commit()
 
-    product.highestBid = myBid
+    product.highestBid = locBid
     product.bids = bids + 1
     const newUser = { ...user }
 
@@ -63,7 +67,7 @@ export default createAsyncThunk(
     else if (!newUser.userBids.includes(productId)) {
       newUser.userBids.push(productId)
     }
-    console.log('thunk data ok', productId)
+    toast.success(`Awesome! Your bid was added successfully`)
 
     // Add user bid to Response??
     return { productDetail: product, productId, user: newUser }
