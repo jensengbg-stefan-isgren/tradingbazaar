@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import ProfileMenu from "components/ProfileMenu";
 import userIcon from "assets/icons/user.svg";
 import CategoryMenu from "components/CategoryMenu";
+import useSearch from 'hooks/useSearch'
 // import { useMediaQuery } from "functions/UseMediaQuery";
 
 const fadeIn = keyframes`
@@ -165,6 +166,7 @@ const Wrapper = styled.div`
 `;
 
 const NavbarMobileProfile = () => {
+  const {searchResults,category,setCategory} = useSearch()
   const catMenu = useRef()
   const accountMenu = useRef()
   const [toggleCatMenu, setToggleCatMenu] = useState(false);
@@ -200,7 +202,7 @@ const NavbarMobileProfile = () => {
             }`}
           >
             <select name="category" id="category">
-              <option>All Categories</option>
+              <option onChange={(e) => setCategory(e.target.value)} value={0}>All Categories</option>
               {categories.map((category) => {
                 return (
                   <option key={category.name} value={category.name}>
@@ -209,7 +211,7 @@ const NavbarMobileProfile = () => {
                 );
               })}
             </select>
-            <StyledInput placeholder="What are you looking for today?" />
+            <StyledInput onChange={(e) => searchResults(e.target.value,category)} placeholder="What are you looking for today?" />
           </div>
         ) : (
           ""

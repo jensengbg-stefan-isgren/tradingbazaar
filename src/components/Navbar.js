@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import menuIcon from 'assets/icons/menu.svg'
 import CategoryMenu from 'components/CategoryMenu'
 import {useState,useRef} from 'react'
+import useSearch from 'hooks/useSearch'
 
 const fadeIn = keyframes`
   from {
@@ -142,6 +143,7 @@ const StyledInput = styled.input`
 `;
 
 const Navbar = () => {
+  const {searchResults,category,setCategory} = useSearch()
   const catMenu = useRef()
   const history = useHistory();
   const [toggleCatMenu, setToggleCatMenu] = useState(false)
@@ -190,8 +192,8 @@ const Navbar = () => {
         </div>
         {!isVisible ? (
           <div className="search-container">
-            <select name="category" id="category">
-              <option>All Categories</option>
+            <select onChange={(e) => setCategory(e.target.value)} name="category" id="category">
+              <option value={0}>All Categories</option>
               {categories.map((category) => {
                 return (
                   <option key={category.name} value={category.name}>
@@ -200,7 +202,7 @@ const Navbar = () => {
                 );
               })}
             </select>
-            <StyledInput placeholder="What are you looking for today?" />
+            <StyledInput onChange={(e) => searchResults(e.target.value,category)} placeholder="What are you looking for today?" />
           </div>
         ) : (
           ""

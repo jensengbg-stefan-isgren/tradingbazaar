@@ -1,9 +1,10 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback,useState } from 'react'
 import styled from 'styled-components'
 import heroImg from 'assets/images/hero-bg.jpg'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsVisible } from 'features/navSlice'
-// import {db} from 'services/firebase'
+import useSearch from 'hooks/useSearch'
+
 
 const Wrapper = styled.section`
   position: relative;
@@ -41,6 +42,12 @@ const Wrapper = styled.section`
 `
 
 const SearchContainer = styled.div`
+  width:100%;
+  padding:0 1em;
+  display:flex;
+  justify-content: center;
+  flex-direction: row;
+
   select,
   input {
     min-height: 3.5em;
@@ -62,6 +69,14 @@ const SearchContainer = styled.div`
   option {
     background-color: #f7f7f2;
   }
+
+  @media (max-width: 768px) {
+  flex-direction: column;
+
+  input {
+    min-width:auto;
+  }
+}
 `
 
 const Container = styled.div`
@@ -74,14 +89,25 @@ const Container = styled.div`
   align-items: center;
 
   h1 {
-    transform: translateY(-1em);
+    margin-bottom: 1em;
     color: #f7f7f2;
-    font-size: 3.5vw;
+    font-size: clamp(40px, 5vw, 70px);
+
+
   }
+
+  .title-container {
+    padding:0em 1em;
+  }
+
+
+
 `
 
 const Hero = () => {
-  // const [category, setCategory] = useState('All Categories')
+
+
+  const {searchResults,category,setCategory} = useSearch()
 
   // const [searchValue, setSearchValue] = useState('')
   const { categories } = useSelector((state) => state.categories)
@@ -106,34 +132,22 @@ const Hero = () => {
     }
   }, [dispatch, handleScroll])
 
-  const handleInput = (e) => {
 
-    // setSearchValue(e.target.value)
-  }
-
-  // const searchProducts = async() => {
-
-  // if(category == "All Categories") {
-  //   const snapshot = await db.collection('sellingProducts').where('title', '===', `${searchValue}`).get()
-  //   snapshot.forEach(doc => {
-  //     console.log(doc.data())
-  //   });
-  // }
-
-  // }
 
   return (
     <Wrapper>
       <Container>
+        <div className="title-container">
         <h1>We make trading products easy for everyone</h1>
+        </div>
         <SearchContainer id="search">
           {categories ? (
             <select
-              // onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => setCategory(e.target.value)}
               name="categories"
               id="categories"
             >
-              <option>All Categories</option>
+              <option value={0}>All Categories</option>
               {categories.map((category) => {
                 return (
                   <option key={category.name} value={category.name}>
@@ -146,7 +160,7 @@ const Hero = () => {
             ''
           )}
           <input
-            onChange={handleInput}
+            onChange={(e) => searchResults(e.target.value,category)}
             placeholder="What are you looking for today?"
             type="text"
           />

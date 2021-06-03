@@ -330,6 +330,7 @@ const ProductDetailsCard = () => {
 }
 
 const Wrapper = styled.div`
+padding-top: 5em;
   height: auto;
   width: auto;
   display: grid;

@@ -24,7 +24,8 @@ export const productSlice = createSlice({
   initialState: {
     detailedProduct: null,
     productId: null,
-    filteredProducts: null
+    filteredProducts: null,
+    searchResults: null,
   },
 
   reducers: {
@@ -34,6 +35,9 @@ export const productSlice = createSlice({
     },
     clearProduct: (state, action) => {
       state.detailedProduct = action.payload
+    },
+    searchProducts : (state,action) => {
+      state.searchResults = action.payload
     },
   },
   extraReducers: {
@@ -47,5 +51,5 @@ export const productSlice = createSlice({
   },
 })
 
-export const {addDetailedProduct, clearProduct } = productSlice.actions
+export const {searchProducts,addDetailedProduct, clearProduct } = productSlice.actions
 export default productSlice.reducer

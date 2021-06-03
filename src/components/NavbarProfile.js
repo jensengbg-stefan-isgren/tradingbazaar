@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import {useHistory} from 'react-router-dom';
 import menuIcon from 'assets/icons/menu.svg'
 import CategoryMenu from 'components/CategoryMenu'
+import useSearch from 'hooks/useSearch'
 
 const fadeIn = keyframes`
   from {
@@ -150,7 +151,7 @@ p:first-child {
 const StyledInput = styled.input`
   border: 3px solid ${(props) => props.theme.color.main};
   height: 40px;
-  width: 20em;
+  width: 18em;
   outline: none;
   padding-left: 0.5em;
   font-family: ${(props) => props.theme.font.body};
@@ -163,6 +164,9 @@ const StyledInput = styled.input`
 `;
 
 const NavbarProfile = () => {
+
+  const {searchResults,category,setCategory} = useSearch()
+
   const catMenu = useRef()
   const accountMenu = useRef()
   const history = useHistory();
@@ -184,8 +188,8 @@ const NavbarProfile = () => {
         </div>
         {!isVisible ? (
           <div className="search-container">
-            <select name="category" id="category">
-              <option>All Categories</option>
+            <select onChange={(e)=> setCategory(e.target.value)} name="category" id="category">
+              <option value={0}>All Categories</option>
               {categories.map((category) => {
                 return (
                   <option key={category.name} value={category.name}>
@@ -194,7 +198,7 @@ const NavbarProfile = () => {
                 );
               })}
             </select>
-            <StyledInput placeholder="What are you looking for today?" />
+            <StyledInput onChange={(e) => searchResults(e.target.value,category)} placeholder="What are you looking for today?" />
           </div>
         ) : (
           ""

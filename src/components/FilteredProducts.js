@@ -5,7 +5,11 @@ import CardContainer from 'components/CardContainer'
 import {useSelector} from 'react-redux'
 
 const StyledProductWrapper = styled.main`
-padding-top: 10em;
+display:flex;
+flex-direction: column;
+justify-content:center;
+align-items: center;
+padding-top: 5em;
   /* height: 200em; */
   /* margin: auto;
   max-width: 95vw; */
@@ -41,7 +45,9 @@ const {filteredProducts} = useSelector(state => state.product)
 
   return (
     <StyledProductWrapper>
-      <h3>{category}</h3>
+      <div className="title-container">
+      <h2>{category}</h2>
+      </div>
       <CardContainer ads={filteredProducts} />
     </StyledProductWrapper>
   )
