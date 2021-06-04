@@ -20,81 +20,84 @@ export const routes = [
     exact: true,
     main: () => <SellingProducts />,
     navbar: () => <MainNav />,
-    footer: () => <Footer/>
+    footer: () => <Footer/>,
   },
   {
     path: '/profile/active-items',
     exact: true,
     main: () => <ActiveItems />,
     navbar: () => <MainNav />,
-    footer: () => <Footer/>
+    footer: () => <Footer/>,
   },
   {
     path: '/profile/wish-list',
     exact: true,
     main: () => <WishList />,
     navbar: () => <MainNav />,
-    footer: () => <Footer/>
+    footer: () => <Footer/>,
   },
   {
     path: '/profile/active',
     exact: true,
     main: () => <ActiveAds />,
     navbar: () => <MainNav />,
-    footer: () => <Footer/>
+    footer: () => <Footer/>,
   },
   {
     path: '/profile/settings',
     exact: true,
     main: () => <Settings />,
     navbar: () => <MainNav />,
-    footer: () => <Footer/>
+    footer: () => <Footer/>,
   },
   {
     path: '/profile/settings/account',
     exact: true,
     main: () => <ProfileSettings />,
     navbar: () => <MainNav />,
-    footer: () => <Footer/>
+    footer: () => <Footer/>,
   },
   {
     path: '/login',
     main: () => <Login />,
     navbar: () => '',
+    footer: () => '',
   },
   {
     path: '/register',
     main: () => <Register />,
     navbar: () => '',
+    footer: () => '',
   },
   {
     path: '/addad',
 
     main: () => <AddAd />,
     navbar: () => <MainNav />,
-    footer: () => <Footer/>
+    footer: () => <Footer/>,
   },
   {
     path: '/profile/overview',
     main: () => <Profile />,
     navbar: () => <MainNav />,
-    footer: () => <Footer/>
+    footer: () => <Footer/>,
   },
   {
     path: '/resetcredentials',
     main: () => <ResetCredentials />,
     navbar: () => '',
+    footer: () => '',
   },
   {
     path: '/item/:id',
     main: () => <ProductDetailsCard />,
     navbar: () => <MainNav />,
-    footer: () => <Footer/>
+    footer: () => <Footer/>,
   },
   {
     path: '/filteredproducts/:category',
     main: () => <FilteredProducts />,
     navbar: () => <MainNav />,
-    footer: () => <Footer/>
+    footer: () => <Footer/>,
   },
 ]
