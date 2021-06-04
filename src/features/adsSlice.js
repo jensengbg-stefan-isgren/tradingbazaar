@@ -6,7 +6,6 @@ export const ads = createSlice({
 
   reducers: {
     fillAdList: (state, action) => {
-      console.log(action.payload)
       const { adList } = action.payload
       let selling = []
       let expired = []

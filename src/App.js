@@ -41,9 +41,7 @@ const App = () => {
                   exact={route.exact}
                   children={
                     <>
-                      <route.navbar /> 
-                      <route.main /> 
-                      <route.footer/>
+                      <route.navbar /> <route.main /> <route.footer />
                     </>
                   }
                 />

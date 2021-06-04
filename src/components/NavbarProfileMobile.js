@@ -8,8 +8,6 @@ import userIcon from "assets/icons/user.svg";
 import CategoryMenu from "components/CategoryMenu";
 import useSearch from 'hooks/useSearch'
 import searchIcon from 'assets/icons/search.svg'
-import {setIsVisible} from 'features/navSlice'
-// import { useMediaQuery } from "functions/UseMediaQuery";
 
 const fadeIn = keyframes`
   from {
@@ -189,7 +187,6 @@ const NavbarMobileProfile = () => {
   //   history.push("/");
   // };
 
-  console.log(isVisible)
 
 const handleSearchBar = () => {
   setToggleSearchBar(!toggleSearchBar)

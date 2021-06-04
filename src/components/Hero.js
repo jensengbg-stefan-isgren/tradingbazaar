@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback,useState } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import styled from 'styled-components'
 import heroImg from 'assets/images/hero-bg.jpg'
 import { useDispatch, useSelector } from 'react-redux'

@@ -12,7 +12,7 @@ const useSearch = () => {
 const searchResults = async(searchValue,category) => {
 
   
-  if(searchValue.length == 0) {
+  if(searchValue.length === 0) {
   
     const snapshot = await db.collection('sellingProducts').get()
     let adList = []
@@ -23,9 +23,10 @@ const searchResults = async(searchValue,category) => {
     dispatch(fillAdList({ adList }))
 
   } else {
-    if(category == 0) {
+    if(category === 0) {
       let adList = []
-      let querySnapshot = await db.collection('sellingProducts').where('title', '==', `${searchValue}`).get()
+      let querySnapshot = await db.collection('sellingProducts')
+      .where('title', '==', `${searchValue}`).get()
       if(querySnapshot.docs.length == 0) {
         return
       } else {
