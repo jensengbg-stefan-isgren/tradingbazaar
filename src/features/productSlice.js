@@ -26,7 +26,6 @@ const initialState = {
     bids: 0,
     leadingBidder: '',
   },
-  detailedProduct: null,
   filteredProducts: null,
   searchResults: null,
   productId: null,
