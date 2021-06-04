@@ -12,6 +12,7 @@ import ActiveAds from 'components/ActiveAds'
 import WishList from 'pages/WishList'
 import ProductDetailsCard from 'components/ProductDetailsCard'
 import FilteredProducts from 'components/FilteredProducts'
+import Footer from 'components/Footer'
 
 export const routes = [
   {
@@ -19,36 +20,42 @@ export const routes = [
     exact: true,
     main: () => <SellingProducts />,
     navbar: () => <MainNav />,
+    footer: () => <Footer/>
   },
   {
     path: '/profile/active-items',
     exact: true,
     main: () => <ActiveItems />,
     navbar: () => <MainNav />,
+    footer: () => <Footer/>
   },
   {
     path: '/profile/wish-list',
     exact: true,
     main: () => <WishList />,
     navbar: () => <MainNav />,
+    footer: () => <Footer/>
   },
   {
     path: '/profile/active',
     exact: true,
     main: () => <ActiveAds />,
     navbar: () => <MainNav />,
+    footer: () => <Footer/>
   },
   {
     path: '/profile/settings',
     exact: true,
     main: () => <Settings />,
     navbar: () => <MainNav />,
+    footer: () => <Footer/>
   },
   {
     path: '/profile/settings/account',
     exact: true,
     main: () => <ProfileSettings />,
     navbar: () => <MainNav />,
+    footer: () => <Footer/>
   },
   {
     path: '/login',
@@ -65,11 +72,13 @@ export const routes = [
 
     main: () => <AddAd />,
     navbar: () => <MainNav />,
+    footer: () => <Footer/>
   },
   {
     path: '/profile/overview',
     main: () => <Profile />,
     navbar: () => <MainNav />,
+    footer: () => <Footer/>
   },
   {
     path: '/resetcredentials',
@@ -80,10 +89,12 @@ export const routes = [
     path: '/item/:id',
     main: () => <ProductDetailsCard />,
     navbar: () => <MainNav />,
+    footer: () => <Footer/>
   },
   {
     path: '/filteredproducts/:category',
     main: () => <FilteredProducts />,
     navbar: () => <MainNav />,
+    footer: () => <Footer/>
   },
 ]
