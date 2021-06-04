@@ -7,6 +7,11 @@ import {useHistory} from 'react-router-dom';
 import menuIcon from 'assets/icons/menu.svg'
 import CategoryMenu from 'components/CategoryMenu'
 import useSearch from 'hooks/useSearch'
+import {
+  BrowserRouter as Router,
+  Switch,
+  useLocation
+} from "react-router-dom";
 
 const fadeIn = keyframes`
   from {
@@ -165,6 +170,11 @@ const StyledInput = styled.input`
 
 const NavbarProfile = () => {
 
+
+  const location = useLocation()
+
+  console.log(location)
+
   const {searchResults,category,setCategory} = useSearch()
 
   const catMenu = useRef()
@@ -186,7 +196,7 @@ const NavbarProfile = () => {
           <img ref={catMenu} src={menuIcon} alt="" />
           <p onClick={() => history.push('/')}>TradingBazaar</p>
         </div>
-        {!isVisible ? (
+        {!isVisible || location.pathname != "/" ? (
           <div className="search-container">
             <select onChange={(e)=> setCategory(e.target.value)} name="category" id="category">
               <option value={0}>All Categories</option>

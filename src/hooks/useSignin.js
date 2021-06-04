@@ -46,7 +46,7 @@ const useSignin = () => {
       if (!isNewUser) {
         dispatch(authUser())
  
-
+        dispatch(checkIfRegistered({ status: false, message: null }))
         history.push('/profile/overview')
       } else {
         let profileData = {
@@ -80,15 +80,14 @@ const useSignin = () => {
         await db.collection('users').doc(uid).set(profileData)
 
         dispatch(addUser(profileData))
+        dispatch(checkIfRegistered({ status: false, message: null }))
         history.push('/profile/overview')
       }
     } catch ({ code, message }) {
       if (code === 'auth/account-exists-with-different-credential') {
         await dispatch(checkIfRegistered({ status: true, message: message }))
         history.push('/login')
-      } else {
-        history.push('/login')  
-      }
+      } 
     }
   }
 
