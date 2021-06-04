@@ -7,7 +7,7 @@ export default function useProtectedRoute() {
   const history = useHistory()
 
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged(function (user) {
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         toast('Access to protected route denied, redirecting to login...')
         history.push('/login')

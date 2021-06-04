@@ -6,6 +6,8 @@ import getUserAds from 'functions/getUserAds'
 import { useHistory } from 'react-router'
 
 const ActiveItems = () => {
+  document.title = 'Trading Bazaar | My Ads'
+
   const uid = useSelector((state) => state.auth.uid)
   const [ads, setAds] = useState([])
   const history = useHistory()

@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux'
 import getProdsByArrOfId from 'functions/getProdsByArrOfId'
 
 const ActiveItems = () => {
+  document.title = 'Trading Bazaar | My Bids'
+
   const activeProdArr = useSelector((state) => state.auth.user?.userBids)
   const [ads, setAds] = useState([])
 

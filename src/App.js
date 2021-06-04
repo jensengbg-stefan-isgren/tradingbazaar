@@ -3,7 +3,7 @@ import './styles/fonts.css'
 import theme from './styles/theme'
 import React, { useEffect, useCallback, useState } from 'react'
 import { routes } from './router/routes'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import GlobalStyle from 'styles/globalStyles'
 import { ThemeProvider } from 'styled-components'
 import { authUser } from 'features/auth/authSlice'
@@ -44,10 +44,10 @@ const App = () => {
                 if (route.auth)
                   return (
                     <ProtectedRoute
+                      key={index}
                       path={route.path}
                       exact={route.exact}
                       redirectto="/"
-                      key={index}
                       children={() => (
                         <>
                           <route.navbar /> <route.main />
@@ -79,9 +79,9 @@ const App = () => {
 
 const checkAuth = () =>
   new Promise((resolve) => {
-    firebase.auth().onAuthStateChanged((user) => {
-      user ? resolve(true) : resolve(false)
-    })
+    firebase
+      .auth()
+      .onAuthStateChanged((user) => (user ? resolve(true) : resolve(false)))
   })
 
 const ProtectedRoute = ({ children: Comp, path, redirectto, ...rest }) => {
@@ -93,7 +93,7 @@ const ProtectedRoute = ({ children: Comp, path, redirectto, ...rest }) => {
         const isUserLogged = await checkAuth()
         setState(isUserLogged ? 'loggedin' : 'redirect')
         if (!isUserLogged) toast('Please Login to access the Page')
-      } catch (error) {
+      } catch {
         setState('redirect')
       }
     })()

@@ -7,6 +7,8 @@ import React from 'react'
 import Hero from 'components/Hero'
 
 const ProductSection = () => {
+  document.title = 'Trading Bazaar'
+
   const ads = useSelector((state) => state.ads)
   UseGetAds()
   console.log('rendering')
