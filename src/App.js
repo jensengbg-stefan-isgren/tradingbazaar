@@ -1,7 +1,7 @@
 import './App.css'
 import './styles/fonts.css'
 import theme from './styles/theme'
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import { routes } from './router/routes'
 import { useDispatch, useSelector } from 'react-redux'
 import GlobalStyle from 'styles/globalStyles'
@@ -13,13 +13,12 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom'
-import { db } from 'services/firebase'
+import firebase, { db } from 'services/firebase'
 import { addCategories } from 'features/categoriesSlice'
 import { toast } from 'react-toastify'
 
 const App = () => {
   const dispatch = useDispatch()
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
 
   const getCategories = useCallback(async () => {
     let snapshot = await db.collection('categories').get()
@@ -41,19 +40,35 @@ const App = () => {
           <GlobalStyle />
           <div className="App">
             <Switch>
-              {routes.map((route, index) => (
-                <Route
-                  key={index}
-                  path={route.path}
-                  exact={route.exact}
-                  // component={() => GetRoute(route, isAuthenticated)}
-                  children={
-                    <>
-                      <route.navbar /> <route.main />
-                    </>
-                  }
-                />
-              ))}
+              {routes.map((route, index) => {
+                if (route.auth)
+                  return (
+                    <ProtectedRoute
+                      path={route.path}
+                      exact={route.exact}
+                      redirectto="/"
+                      key={index}
+                      children={() => (
+                        <>
+                          <route.navbar /> <route.main />
+                        </>
+                      )}
+                    />
+                  )
+                else
+                  return (
+                    <Route
+                      key={index}
+                      path={route.path}
+                      exact={route.exact}
+                      children={
+                        <>
+                          <route.navbar /> <route.main />
+                        </>
+                      }
+                    />
+                  )
+              })}
             </Switch>
           </div>
         </ThemeProvider>
@@ -62,49 +77,47 @@ const App = () => {
   )
 }
 
-// if (!isAuthenticated) {
+const checkAuth = () =>
+  new Promise((resolve) => {
+    firebase.auth().onAuthStateChanged((user) => {
+      user ? resolve(true) : resolve(false)
+    })
+  })
 
-//   console.log(
-//     'firebase current user',
-//     firebase.auth().currentUser
-//   )
-//   return <GetRoute route={route} authenticated={true} />
-// }
+const ProtectedRoute = ({ children: Comp, path, redirectto, ...rest }) => {
+  const [state, setState] = useState('loading')
 
-// return await new Promise((resolve) => {
-//   firebase.auth().onAuthStateChanged((user) => {
-//     if (user) {
-//       resolve(
-//         <GetRoute route={route} authenticated={true} />
-//       )
-//     } else {
-//       resolve(
-//         <GetRoute route={route} authenticated={false} />
-//       )
-//     }
-//   })
-// })
-//   else
-//     return (
-//       <GetRoute
-//         route={route}
-//         authenticated={isAuthenticated}
-//       />
-//     )
-// }}
+  useEffect(() => {
+    ;(async function () {
+      try {
+        const isUserLogged = await checkAuth()
+        setState(isUserLogged ? 'loggedin' : 'redirect')
+        if (!isUserLogged) toast('Please Login to access the Page')
+      } catch (error) {
+        setState('redirect')
+      }
+    })()
+  }, [])
 
-const GetRoute = (route, authenticated) => {
-  // console.log('get Route', firebase.auth().currentUser)
-  if ((route.auth && authenticated) || !route.auth) {
-    return (
-      <>
-        <route.navbar /> <route.main />
-      </>
-    )
-  } else {
-    toast('Please Login to have access to the page')
-    return <Redirect to="/" />
+  if (state === 'loading') {
+    return <div>Loading..</div>
   }
+
+  return (
+    <Route
+      path={path}
+      {...rest}
+      render={(props) =>
+        state === 'loggedin' ? (
+          <div>
+            <Comp {...props} />
+          </div>
+        ) : (
+          <Redirect to={redirectto} />
+        )
+      }
+    />
+  )
 }
 
 export default App
