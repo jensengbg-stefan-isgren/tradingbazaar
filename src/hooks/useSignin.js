@@ -86,6 +86,8 @@ const useSignin = () => {
       if (code === 'auth/account-exists-with-different-credential') {
         await dispatch(checkIfRegistered({ status: true, message: message }))
         history.push('/login')
+      } else {
+        history.push('/login')  
       }
     }
   }
