@@ -1,10 +1,10 @@
 import { db } from '../services/firebase'
 import store from 'store/store'
+import { toast } from 'react-toastify'
+
 // import data from 'data/categories'
 export const addProduct = async () => {
   const state = store.getState()
-
-
 
   const newProduct = {
     uid: state.auth.uid,
@@ -18,7 +18,6 @@ export const addProduct = async () => {
   }
   for (let i = 2; i < 6; i++) {
     const field = `imgLink${i}`
-    // console.log('Has own property', props.hasOwnProperty(`imgLink${i}`))
     if (
       state.newAd.hasOwnProperty(field) &&
       state.newAd[field] != null &&
@@ -28,25 +27,22 @@ export const addProduct = async () => {
   }
 
   try {
-    console.log('Try submitting: ', newProduct)
-
-    const docRef = await db.collection('sellingProducts').add(newProduct)
-    console.log('Document written with ID: ', docRef.id)
+    // const docRef = await db.collection('sellingProducts').add(newProduct)
+    await db.collection('sellingProducts').add(newProduct)
+    toast.success('Ad successfully added')
+    // console.log('Document written with ID: ', docRef.id)
   } catch (error) {
+    toast.error('Oops!! Something went wrong')
+
     console.error('Error adding document: ', error)
   }
 }
 
-
-
-export const getProduct = async(id) => {
+export const getProduct = async (id) => {
   let snapshot = await db.collection('sellingProducts').doc(id).get()
   let data = await snapshot.data()
   return data
 }
-
-
-
 
 // export const addCategories = async() => {
 // data.forEach(async(item) => {

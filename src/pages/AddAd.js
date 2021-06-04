@@ -5,10 +5,17 @@ import { adInputEdit, checkImages } from 'features/newAdSlice'
 import { useRef, useState } from 'react'
 import Modal from 'components/Modal'
 import placeholder from 'assets/images/img-placeholder.svg'
+import useProtectedRoute from 'functions/useProtectedRoute'
+import { toast } from 'react-toastify'
 
 const AddAd = () => {
+  useProtectedRoute()
+
+  document.title = 'Trading Bazaar | Add Ad'
+
   const addAd1 = useRef(null)
   const addAd2 = useRef(null)
+  const stepBtnRef = useRef(null)
 
   const [showModal, setShowModal] = useState(false)
 
@@ -16,6 +23,11 @@ const AddAd = () => {
     e.preventDefault()
     addAd1.current.classList.toggle('slide')
     addAd2.current.classList.toggle('slide')
+    stepBtnRef.current.innerText = stepBtnRef.current.innerText
+      .toLowerCase()
+      .includes('next')
+      ? 'Previous Step'
+      : 'Next Step'
   }
 
   const dispatch = useDispatch()
@@ -34,7 +46,7 @@ const AddAd = () => {
     imgLink5,
   } = useSelector((state) => state.newAd)
 
-  const {categories} = useSelector((state) => state.categories)
+  const { categories } = useSelector((state) => state.categories)
   const getImgRef = (field) => {
     switch (field) {
       case 'imgLink1':
@@ -64,8 +76,8 @@ const AddAd = () => {
       !adEndDate ||
       !imgLink1
     )
-      return alert('Fill all the fields in the Form')
-    console.log('checkimg', checkImages)
+      return toast('Please fill all the fields in the Form')
+    // console.log('checkimg', checkImages)
     dispatch(checkImages())
     addProduct()
   }
@@ -122,13 +134,30 @@ const AddAd = () => {
                 <label className="std-label" htmlFor="inputCategory">
                   Category
                 </label>
-                    {categories ?  <select onChange={(e) => dispatch(
-                      adInputEdit({ field: 'category', value: e.target.value })
-                    ) } name="category" id="category">
-                  {categories.map((category) => {
-                    return <option key={category.name} value={category.name}>{category.name}</option>
-                  })}
-                </select> : ""}
+                {categories ? (
+                  <select
+                    onChange={(e) =>
+                      dispatch(
+                        adInputEdit({
+                          field: 'category',
+                          value: e.target.value,
+                        })
+                      )
+                    }
+                    name="category"
+                    id="category"
+                  >
+                    {categories.map((category) => {
+                      return (
+                        <option key={category.name} value={category.name}>
+                          {category.name}
+                        </option>
+                      )
+                    })}
+                  </select>
+                ) : (
+                  ''
+                )}
               </InputContainer>
               <InputContainer>
                 <p className="std-label">Product Conditions</p>
@@ -375,8 +404,23 @@ const AddAd = () => {
               </InputContainer>
             </section>
             <div className="btn-group">
-              <button onClick={handleNextStep}>Previous Step</button>
-              <input type="submit" value="Add Product" />
+              <button ref={stepBtnRef} onClick={handleNextStep}>
+                Next Step
+              </button>
+              <input
+                type="submit"
+                value="Add Product"
+                disabled={
+                  !title ||
+                  !description ||
+                  !category ||
+                  !startPrice ||
+                  !acceptedPrice ||
+                  !productConditions ||
+                  !adEndDate ||
+                  !imgLink1
+                }
+              />
             </div>
           </form>
         </main>
@@ -406,6 +450,7 @@ const ModalContainer = ({ imgRef, imgName, onClick, onChange }) => {
 }
 
 const InputContainer = styled.div`
+  font-size: 0.8em;
   width: 95vw;
   max-width: 30em;
   padding: 0.2em;
