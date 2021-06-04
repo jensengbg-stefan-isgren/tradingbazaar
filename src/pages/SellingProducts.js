@@ -9,7 +9,7 @@ import Hero from 'components/Hero'
 const ProductSection = () => {
   const ads = useSelector((state) => state.ads)
   UseGetAds()
-
+  console.log('rendering')
   return (
     <StyledProductWrapper>
       <Hero />

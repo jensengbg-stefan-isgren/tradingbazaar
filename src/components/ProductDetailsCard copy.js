@@ -1,46 +1,76 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import ChangeHighlight from 'react-change-highlight'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { bid, setNewBid } from 'features/productSlice'
+import { addDetailedProduct, clearProduct } from 'features/productSlice'
+import { db } from 'services/firebase'
+import { bid } from 'features/productSlice'
 import timeLeftFunc from 'functions/timeLeftInterval'
 import TimeLeftParagraph from './TimeLeftParagraph'
 import { toast } from 'react-toastify'
-import UseGetAd from 'services/useGetAd'
 
 const ProductDetailsCard = () => {
   const { id } = useParams()
 
-  // const {
-  //   detailedProduct,
-  //   seller,
-  //   adStatus,
-  //   isFavorite,
-  //   endDate,
-  // } = useSelector((state) => state.product)
-
   const detailedProduct = useSelector((state) => state.product.detailedProduct)
-  const seller = useSelector((state) => state.product.seller)
-  const adStatus = useSelector((state) => state.product.adStatus)
-  const isFavorite = useSelector((state) => state.product.isFavorite)
-  const endDate = useSelector((state) => state.product.endDate)
-
   const { uid, isAuthenticated } = useSelector((state) => state.auth)
+  const favorites = useSelector((state) => state.auth.user.favorites)
 
-  const dispatch = useDispatch()
+  // const state = useSelector((state) => ({
+  //   uid: state.auth.uid,
+  //   isAuthenticated: state.auth.isAuthenticated,
+  //   favorites: state.auth.user.favorites,
+  // }))
 
   const [mainImage, setMainImage] = useState(null)
-  // const [myBid, setMyBid] = useState('')
+  const [seller, setSeller] = useState()
+  const [adStatus, setAdStatus] = useState(0)
+  // adStatus
+  // = 0 -> bid open
+  // = 1 -> sold
+  // = 2 -> sold directly
+  // = 3 -> expired
+  const [myBid, setMyBid] = useState('')
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  })
 
   const highestBidRef = useRef(null)
   const bidsRef = useRef(null)
   const leadingBidderRef = useRef(null)
 
+  const [endDate, setEndDate] = useState({ date: '', time: '' })
+  console.log(
+    'now',
+    // user?.favorites.includes(id),
+    detailedProduct,
+    isAuthenticated,
+    seller?.id
+  )
+  const [isFavorite, setIsFavorite] = useState(
+    favorites ? favorites.includes(id) : false
+  )
+
+  const [highlighted, setHighlighted] = useState({
+    highestBid: 0,
+    bids: 0,
+    leadingBidder: 0,
+  })
+
+  const dispatch = useDispatch()
+
+  const timerCallback = (timeObj) => {
+    setTimeLeft({ ...timeObj })
+  }
+
   const bidderText = () => {
     switch (adStatus) {
       case 0: {
-        if (detailedProduct.bids) return 'Last bid by - '
+        if (highlighted.bids) return 'Last bid by - '
         else return 'No bids yet'
       }
       case 1:
@@ -55,16 +85,114 @@ const ProductDetailsCard = () => {
 
   const addBid = () => {
     if (!isAuthenticated) return toast.warn('Please Login to make your bid')
-    // setMyBid(Number(myBid))
-    // const value = Number(myBid)
-    // if (!value || value <= 0)
-    //   return toast.warn('Please write your bid in the field')
-    // dispatch(bid(value))
-    // setMyBid('')
-    dispatch(bid())
+    setMyBid(Number(myBid))
+    const value = Number(myBid)
+    if (!value || value <= 0)
+      return toast.warn('Please write your bid in the field')
+    dispatch(bid(value))
+    setMyBid('')
   }
 
-  UseGetAd(id)
+  const getProduct = useCallback(
+    (callback) => {
+      // const snapshot = await db.collection('sellingProducts').doc(id).get()
+      // const data = await snapshot.data()
+      let stopInterval = 0
+
+      const unSubscribe = db
+        .collection('sellingProducts')
+        .doc(id)
+        .onSnapshot((doc) => {
+          dispatch(
+            addDetailedProduct({ productDetail: doc.data(), productId: id })
+          )
+          let { highestBid, bids, leadingBidder } = doc.data()
+          highestBid = highestBid ? highestBid : doc.data().startPrice
+          bids = bids ? bids : 0
+          // leadingBidder = leadingBidder ? leadingBidder : 'Anonymous'
+
+          setHighlighted({ highestBid, bids, leadingBidder })
+          const date = new Date(doc.data().adEndDate || '')
+          const now = new Date()
+
+          if (date.getFullYear() === 1900) setAdStatus(2)
+          else if (now > date) {
+            if (doc.data().highestBid > 0) setAdStatus(1)
+            else setAdStatus(3)
+          }
+
+          setEndDate({
+            date: `${date.getDate()}/${
+              date.getMonth() + 1
+            }/${date.getFullYear()}`,
+            time: `${date.getHours()}:${('0' + String(date.getMinutes())).slice(
+              -2
+            )}`,
+          })
+          // console.log(user?.favorites.includes(id))
+          if (favorites && favorites.includes(id)) setIsFavorite(true)
+          else setIsFavorite(false)
+
+          db.collection('users')
+            .doc(doc.uid)
+            .get()
+            .then((data) => setSeller(data))
+
+          const timerDate = doc.data().adEndDate || 0
+          stopInterval = timeLeftFunc(timerDate || 0, timerCallback)
+
+          callback(stopInterval, unSubscribe)
+        })
+
+      // vi får kolla upp om en annan användare kan läsa från user ifall man sätter regler.
+      // const snapshott = await db.collection('users').doc(data.uid).get()
+      // const data2 = await snapshott.data()
+      // setSeller(data2)
+      // dispatch(addDetailedProduct({ productDetail: data, productId: id }))
+    },
+    [dispatch, id, favorites]
+  )
+
+  useEffect(() => {
+    console.log('effect1')
+    let stopInterval = 0
+    let unSubscribe = null
+    // const date = new Date(new Date().getTime() + 1 * 6000)
+    // const date = detailedProduct?.adEndDate || 0
+
+    // if (stopInterval) clearInterval(stopInterval)
+    // stopInterval = timeLeftFunc(date || 0, timerCallback)
+
+    // if (isAuthenticated || favorites) {
+
+    function callback(interval, unSubscr) {
+      stopInterval = interval
+      unSubscribe = unSubscr
+    }
+
+    // const { unSubscribe, stopInterval } = getProduct(callback)
+    getProduct(callback)
+    return () => {
+      console.log('returning')
+      dispatch(clearProduct(null))
+      unSubscribe()
+      clearInterval(stopInterval)
+    }
+    // }
+  }, [getProduct, dispatch])
+
+  // const [stopIntervall, setStopInterval] = useState(0)
+  // useEffect(() => {
+  //   console.log('effect2')
+
+  //   let stopInterval = 0
+  //   // const date = new Date(new Date().getTime() + 1 * 6000)
+  //   const date = detailedProduct?.adEndDate || 0
+
+  //   if (stopInterval) clearInterval(stopInterval)
+  //   stopInterval = timeLeftFunc(date || 0, timerCallback)
+  //   return () => clearInterval(stopInterval)
+  // }, [detailedProduct])
 
   const handleImage = (e) => {
     setMainImage(e.target.src)
@@ -144,7 +272,7 @@ const ProductDetailsCard = () => {
                   highlightClassName="highlightClass"
                   hideAfter="800"
                 >
-                  <p ref={highestBidRef}>{detailedProduct.highestBid}kr</p>
+                  <p ref={highestBidRef}>{highlighted.highestBid}kr</p>
                 </ChangeHighlight>
                 {/* <>
                     <p>{detailedProduct.startPrice}kr</p>
@@ -159,7 +287,7 @@ const ProductDetailsCard = () => {
 
               <div className="time-container">
                 <p>Time left</p>
-                <TimerComponent />
+                <TimeLeftParagraph timeLeft={timeLeft} />
                 {/* {renderTimeLeft()} */}
               </div>
               <div className="bid-container">
@@ -170,7 +298,7 @@ const ProductDetailsCard = () => {
                   hideAfter="800"
                 >
                   <p ref={bidsRef}>
-                    {!detailedProduct.bids ? 0 : detailedProduct.bids}st
+                    {!highlighted.bids ? 0 : highlighted.bids}st
                   </p>
                 </ChangeHighlight>
               </div>
@@ -186,7 +314,7 @@ const ProductDetailsCard = () => {
                   {bidderText()}
                   {/* adStatus === 0 ?  highlighted.leadingBidder ? `Last bid by - ` : `No bids yet`  */}
                   <strong ref={leadingBidderRef}>
-                    {detailedProduct.leadingBidder}
+                    {highlighted.leadingBidder}
                   </strong>
                 </p>
               </ChangeHighlight>
@@ -198,14 +326,13 @@ const ProductDetailsCard = () => {
             {uid !== detailedProduct.uid || !isAuthenticated ? (
               !adStatus ? (
                 <div className="buyer-section">
-                  <BidInput />
-                  {/* <input
+                  <input
                     className="input"
                     type="number"
                     placeholder="Enter your price"
-                    value={newBid}
-                    onChange={(e) => dispatch(setNewBid(e.target.value))}
-                  /> */}
+                    value={myBid}
+                    onChange={(e) => setMyBid(e.target.value)}
+                  />
                   <button
                     onClick={addBid}
                     // disabled={uid === detailedProduct.uid}
@@ -259,50 +386,7 @@ const GridElement = React.memo(({ className, children }) => {
   return <div className={className}>{children}</div>
 })
 
-const BidInput = () => {
-  const dispatch = useDispatch()
-  const newBid = useSelector((state) => state.product.newBid)
-  return (
-    <>
-      <input
-        className="input"
-        type="number"
-        placeholder="Enter your price"
-        value={newBid}
-        onChange={(e) => dispatch(setNewBid(e.target.value))}
-      />
-    </>
-  )
-}
-
-const TimerComponent = () => {
-  const detailedProduct = useSelector((state) => state.product.detailedProduct)
-
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  })
-  const timerCallback = (timeObj) => {
-    setTimeLeft({ ...timeObj })
-  }
-  useEffect(() => {
-    let interval = timeLeftFunc(detailedProduct.adEndDate || 0, timerCallback)
-    return () => {
-      if (interval) clearInterval(interval)
-    }
-  }, [detailedProduct])
-
-  return (
-    <>
-      <TimeLeftParagraph timeLeft={timeLeft} />
-    </>
-  )
-}
-
 const Wrapper = styled.div`
-padding-top: 5em;
   height: auto;
   width: auto;
   display: grid;
