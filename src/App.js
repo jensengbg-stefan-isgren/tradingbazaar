@@ -1,37 +1,37 @@
-import './App.css'
-import './styles/fonts.css'
-import theme from './styles/theme'
-import React, { useEffect, useCallback, useState } from 'react'
-import { routes } from './router/routes'
-import { useDispatch } from 'react-redux'
-import GlobalStyle from 'styles/globalStyles'
-import { ThemeProvider } from 'styled-components'
-import { authUser } from 'features/auth/authSlice'
+import './App.css';
+import './styles/fonts.css';
+import theme from './styles/theme';
+import React, { useEffect, useCallback, useState } from 'react';
+import { routes } from './router/routes';
+import { useDispatch } from 'react-redux';
+import GlobalStyle from 'styles/globalStyles';
+import { ThemeProvider } from 'styled-components';
+import { authUser } from 'features/auth/authSlice';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
-} from 'react-router-dom'
-import firebase, { db } from 'services/firebase'
-import { addCategories } from 'features/categoriesSlice'
-import { toast } from 'react-toastify'
+} from 'react-router-dom';
+import firebase, { db } from 'services/firebase';
+import { addCategories } from 'features/categoriesSlice';
+import { toast } from 'react-toastify';
 
 const App = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const getCategories = useCallback(async () => {
-    let snapshot = await db.collection('categories').get()
+    let snapshot = await db.collection('categories').get();
     snapshot.forEach((doc) => {
-      const data = doc.data()
-      dispatch(addCategories(data))
-    })
-  }, [dispatch])
+      const data = doc.data();
+      dispatch(addCategories(data));
+    });
+  }, [dispatch]);
 
   useEffect(() => {
-    getCategories()
-    dispatch(authUser())
-  }, [dispatch, getCategories])
+    getCategories();
+    dispatch(authUser());
+  }, [dispatch, getCategories]);
 
   return (
     <React.Fragment>
@@ -41,20 +41,21 @@ const App = () => {
           <div className="App">
             <Switch>
               {routes.map((route, index) => {
-                if (route.auth)
+                if (route.beforeRoute.length)
                   return (
                     <ProtectedRoute
                       key={index}
                       path={route.path}
                       exact={route.exact}
-                      redirectto="/"
+                      redirectto={route.redirect}
+                      routeCheck={route.beforeRoute}
                       children={() => (
                         <>
                           <route.navbar /> <route.main />
                         </>
                       )}
                     />
-                  )
+                  );
                 else
                   return (
                     <Route
@@ -67,40 +68,62 @@ const App = () => {
                         </>
                       }
                     />
-                  )
+                  );
               })}
             </Switch>
           </div>
         </ThemeProvider>
       </Router>
     </React.Fragment>
-  )
-}
+  );
+};
 
 const checkAuth = () =>
   new Promise((resolve) => {
     firebase
       .auth()
-      .onAuthStateChanged((user) => (user ? resolve(true) : resolve(false)))
-  })
+      .onAuthStateChanged((user) => (user ? resolve(true) : resolve(false)));
+  });
 
-const ProtectedRoute = ({ children: Comp, path, redirectto, ...rest }) => {
-  const [state, setState] = useState('loading')
+const checkAd = (id) =>
+  new Promise((resolve) => {
+    db.collection('sellingProducts')
+      .doc(id)
+      .get()
+      .then((doc) => resolve(doc.exists));
+  });
 
+const ProtectedRoute = ({
+  children: Comp,
+  path,
+  routeCheck,
+  redirectto,
+  ...rest
+}) => {
+  const [state, setState] = useState(0);
   useEffect(() => {
-    ;(async function () {
+    (async function () {
       try {
-        const isUserLogged = await checkAuth()
-        setState(isUserLogged ? 'loggedin' : 'redirect')
-        if (!isUserLogged) toast('Please Login to access the Page')
-      } catch {
-        setState('redirect')
-      }
-    })()
-  }, [])
+        let isValid = true;
+        if (routeCheck.includes('auth')) {
+          isValid = await checkAuth();
+          if (!isValid) toast('Please Login to access the Page');
+        }
 
-  if (state === 'loading') {
-    return <div>Loading..</div>
+        if (isValid && routeCheck.includes('ad')) {
+          const id = rest?.computedMatch?.params?.id;
+          if (id) isValid = await checkAd(id);
+          if (!isValid) toast('The selected item does not exist');
+        }
+        setState(isValid ? 1 : -1);
+      } catch {
+        setState(-1);
+      }
+    })();
+  }, [routeCheck, rest?.computedMatch?.params]);
+
+  if (state === 0) {
+    return <div>Loading..</div>;
   }
 
   return (
@@ -108,7 +131,7 @@ const ProtectedRoute = ({ children: Comp, path, redirectto, ...rest }) => {
       path={path}
       {...rest}
       render={(props) =>
-        state === 'loggedin' ? (
+        state === 1 ? (
           <div>
             <Comp {...props} />
           </div>
@@ -117,7 +140,7 @@ const ProtectedRoute = ({ children: Comp, path, redirectto, ...rest }) => {
         )
       }
     />
-  )
-}
+  );
+};
 
-export default App
+export default App;
