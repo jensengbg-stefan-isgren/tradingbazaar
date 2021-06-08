@@ -4,11 +4,12 @@ import styled from "styled-components";
 
 const Wrapper = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: auto;
+  margin-top:5em;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  background-color: white;
+  background-color: ${({theme}) => theme.background};
 `;
 
 const SettingsContainer = styled.div`
@@ -29,7 +30,7 @@ const SettingsContainer = styled.div`
 export const ItemContainer = styled.div`
   height: 100%;
   width: 100%;
-  background-color: white;
+  background-color: ${({theme}) => theme.background};
   border: 1px solid grey;
   display: flex;
   justify-content: flex-start;
@@ -39,7 +40,6 @@ export const ItemContainer = styled.div`
 
   h3 {
     font-size: 1em;
-    font-family: ${(props) => props.theme.font.body};
   }
 `;
 

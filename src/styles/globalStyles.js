@@ -86,6 +86,18 @@ em {
   cursor: pointer;
 }
 
+footer {
+  background-color: ${({theme}) => theme.footer.background};
+}
+
+
+button > p {
+  color: ${({theme}) => theme.buttonText};
+}
+
+.auth-button {
+  background-color: white;
+}
 
 `
 

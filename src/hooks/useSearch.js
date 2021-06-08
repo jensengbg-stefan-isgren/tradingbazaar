@@ -6,11 +6,12 @@ import {fillAdList} from 'features/adsSlice'
 const useSearch = () => {
 
 
+
   const [category,setCategory] = useState(0)
 
   const dispatch = useDispatch()
 const searchResults = async(searchValue,category) => {
-
+  
   
   if(searchValue.length === 0) {
   
@@ -36,6 +37,12 @@ const searchResults = async(searchValue,category) => {
           adList = [...adList,{ ...doc.data(), id: doc.id }]
         });
         dispatch(fillAdList({adList}))
+        let element = document.getElementById('products')
+        element.scrollIntoView({behavior: "smooth"});
+        
+        
+
+
       }
     } else {
       let adList = []
@@ -50,6 +57,8 @@ const searchResults = async(searchValue,category) => {
           
         });
         dispatch(fillAdList({adList}))
+        let element = document.getElementById('products')
+        element.scrollIntoView({behavior: "smooth"});
       }
     }
   
