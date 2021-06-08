@@ -52,10 +52,12 @@ left:0;
 
 
 .logo {
+  grid-area: logo;
   display: flex;
   align-items: center;
 
   img {
+    padding-left: 1em;
     margin-right:1em;
     height:20px;
   }
@@ -92,21 +94,43 @@ p:first-child {
 
     .container {
     height: 4em;
-    display: flex;
-    padding: 0 1em;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-areas: 'logo search nav';
     position: relative;
     z-index:1000;
     top:0;
     width:100%;
     font-size: 16px;
 
+    @media screen and (max-width: 1244px) {
+      height:64px;
+        grid-template-areas: 'logo nav'
+        'search search';
+    }
+    
+
+    .search-container {
+      width:100%;
+          display: flex;
+          align-items: center;
+          place-content:center;
+          grid-area: search;
+          background-color: ${({theme}) => theme.background};
+
+
+          @media (max-width:1244px) {
+            padding:0 1em 1em 1em;
+          }
+        }
+
      .nav-links {
+       height:64px;
+       grid-area: nav;
        display:flex;
        gap:2em;
        cursor: pointer;
        align-items: center;
+       justify-content: flex-end;
 
 
         .active {
@@ -123,6 +147,8 @@ p:first-child {
             height:1em;
           }
         }
+
+
       }       
      }
 
@@ -134,7 +160,7 @@ p:first-child {
 
         color: ${({theme}) => theme.select.textColor};
         outline: none;
-        width:10em;
+        width:30%;
 
         font-weight: 600;
         font-size: 0.8em;
@@ -156,7 +182,7 @@ p:first-child {
 const StyledInput = styled.input`
   background-color: ${({theme}) => theme.input.background};
   height: 40px;
-  width: 18em;
+  width: 70%;
   padding-left: 0.5em;
   border: 1px solid ${({theme}) => theme.input.borderColor};
   color: ${({theme}) => theme.input.textColor};
@@ -218,9 +244,10 @@ const NavbarProfile = () => {
           <div className="menu-container">
           <li ref={accountMenu}>Menu</li>
           </div>
-          <ProfileMenu setToggleMenu={setToggleMenu} toggleMenu={toggleMenu} accountMenu={accountMenu} />
+         
         </div>
       </div>
+      <ProfileMenu setToggleMenu={setToggleMenu} toggleMenu={toggleMenu} accountMenu={accountMenu} />
       <CategoryMenu setToggleCatMenu={setToggleCatMenu} toggleCatMenu={toggleCatMenu} catMenu={catMenu}/>
     </Navigation>
   );

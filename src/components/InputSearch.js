@@ -39,8 +39,7 @@ const InputSearch = () => {
 const StyledInput = styled.input`
   background-color: ${({ theme }) => theme.input.background};
   height: 40px;
-  width: 18em;
-  padding-left: 0.5em;
+  width: 70%;
   border: 1px solid ${({ theme }) => theme.input.borderColor};
   color: ${({ theme }) => theme.input.textColor};
 
