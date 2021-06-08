@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components';
 
 const FooterWrapper = styled.footer`
-  min-height:400px;
+  min-height:10em;
   background-color:darkgrey;
   margin-top:4em;
 

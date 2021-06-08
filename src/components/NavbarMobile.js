@@ -1,8 +1,10 @@
 import firebase from "firebase";
 import styled, { keyframes } from "styled-components";
 import { auth } from "services/firebase";
-import menuIcon from "assets/icons/menu.svg";
-import userIcon from "assets/icons/user.svg";
+import menuDark from "assets/icons/menu-dark.svg";
+import menuLight from "assets/icons/menu-light.svg";
+import userLight from "assets/icons/user-light.svg";
+import userDark from "assets/icons/user-dark.svg";
 import { useHistory } from "react-router-dom";
 import googleIcon from "assets/icons/google-icon.svg";
 import facebookIcon from "assets/icons/facebook-icon.svg";
@@ -12,7 +14,9 @@ import { checkIfRegistered } from "features/auth/authSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import CategoryMenu from "components/CategoryMenu";
-import searchIcon from 'assets/icons/search.svg'
+import searchDark from 'assets/icons/search-dark.svg'
+import searchLight from 'assets/icons/search-light.svg'
+import ToggleSwitch from 'components/ToggleSwitch'
 
 const SignInButton = styled.button`
   display: flex;
@@ -125,17 +129,15 @@ const fadeOut = keyframes`
 `;
 
 const StyledInput = styled.input`
-  border: 3px solid ${(props) => props.theme.color.main};
+ 
   min-width: 20em;
   outline: none;
   height: 3em;
   padding-left: 0.5em;
-  font-family: ${(props) => props.theme.font.body};
-  color: ${(props) => props.theme.color.body};
+
 
   ::placeholder {
-    font-family: ${(props) => props.theme.font.body};
-    color: ${(props) => props.theme.color.body};
+
   }
 
   @media (max-width: 500px) {
@@ -151,7 +153,7 @@ const Wrapper = styled.div`
 
   .show-nav {
     animation: ${fadeIn} 300ms;
-    background-color: #f7f7f2;
+    background-color: ${({theme}) => theme.background};
   }
 
   height: 64px;
@@ -253,6 +255,7 @@ const NavbarMobile = () => {
   const [toggleVisibleSearch, setToggleVisibleSearch] = useState(false);
   const [toggleUserMenu, setToggleUserMenu] = useState(false);
   const [toggleCatMenu, setToggleCatMenu] = useState(false);
+  const {themeMode} = useSelector(state => state.theme)
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClick);
@@ -348,6 +351,7 @@ const NavbarMobile = () => {
     <Wrapper>
       <UsrMenu ref={menu} className={toggleUserMenu ? `sliding` : ""}>
         <p>Welcome</p>
+        <ToggleSwitch/>
         <div className="provider-container">
           <SignInButton
             className="pulsing"
@@ -396,10 +400,10 @@ const NavbarMobile = () => {
             ref={catMenu}
               // onClick={handleCatMenu}
               className="menu-icon"
-              src={menuIcon}
+              src={themeMode === 'light' ? menuDark : menuLight}
               alt=""
             />
-            <h1 onClick={() => history.push("/")}>TradingBazaar</h1>
+            <h3 className="logo-title" onClick={() => history.push("/")}>TradingBazaar</h3>
           </div>
           {!isVisible ? (
             <div className={`search-container ${toggleCatMenu || toggleUserMenu || toggleSearchBar ? "hide" : ""}`}>
@@ -419,12 +423,12 @@ const NavbarMobile = () => {
             ""
           )}
           <div className="menu">
-           {!isVisible ?  <img onClick={handleSearchBar} src={searchIcon} alt="" /> : ""}
+           {!isVisible ?  <img onClick={handleSearchBar} src={themeMode === 'light' ? searchDark : searchLight} alt="" /> : ""}
             <img
             ref={accountMenu}
               onClick={(toggleAccountMenu)}
               className="nav"
-              src={userIcon}
+              src={themeMode === 'light' ? userDark : userLight}
               alt=""
             />
           </div>

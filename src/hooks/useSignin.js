@@ -36,6 +36,7 @@ const useSignin = () => {
 
     try {
       let response = await firebase.auth().signInWithPopup(authProvider)
+     
       const {
         additionalUserInfo,
         user: { uid },
@@ -58,12 +59,13 @@ const useSignin = () => {
           alias: null
         }
 
+       
         switch (providerId) {
           case 'google.com':
             profileData.firstName = profile.given_name
             profileData.lastName = profile.family_name
             profileData.email = profile.email
-            profileData.photoUrl = profile.picture
+            profileData.photoUrl = profile.picture.replace('s96-c', 's768-c')
             profileData.alias = `${profile.given_name} ${profile.family_name}` 
             break
           case 'facebook.com':

@@ -6,55 +6,81 @@ import { useSelector, useDispatch } from "react-redux";
 import { authUser } from "features/auth/authSlice";
 import userIcon from "assets/icons/user.svg";
 import { useMediaQuery } from "functions/UseMediaQuery";
+import ToggleSwitch from 'components/ToggleSwitch'
 
 const StyledLink = styled(Link)`
   text-decoration: none;
-  font-family: ${(props) => props.theme.font.body};
-  color: ${(props) => props.theme.color.main};
+  color: ${({theme}) => theme.profileMenu.textColor};
   font-size: 1em;
   padding: 1em;
   width: 100%;
   display: flex;
   justify-content: center;
-
+  font-family: ${({theme}) => theme.font.body};
+  
   &:hover {
-    background-color: lightpink;
+   
+    background-color: ${({theme}) => theme.profileMenu.hover};
+      color: ${({theme}) => theme.profileMenu.hoverColor};
   }
   
 `;
 
 const Menu = styled.div`
 
+.list {
+  width:100%;
+}
+
+.toggle-container {
+  width:100%;
+  margin-bottom:.7em;
+
+  a {
+    width:100%;
+  }
+}
+
+min-height: calc(100vh - 64px);
+ background-color: ${({theme}) => theme.menu.background};
 ul {
   width:100%;
 }
 
+li {
+  color: ${({theme}) => theme.profileMenu.textColor};
+  font-size: 1em;
+}
+
 .alias {
-  font-family: ${(props) => props.theme.font.body};
-  color: ${(props) => props.theme.color.main};
-  font-size: 1.5em;
+
+  font-size: 1.3em;
 }
 
 padding-top:1em;
 
 
   .image-container {
-    padding: 1em 0;
+    padding: 1em 1em;
     width: 100%;
+    height:15em;
     display: flex;
     justify-content: center;
 
     img {
-      border-radius: 50%;
+      border-radius:4px;
+      object-fit: cover;
+      width:100%;
+      height:100%;
     }
 
 
   }
 
   .link {
+    font-family: ${({theme}) => theme.font.body};
     text-decoration: none;
-    font-family: ${(props) => props.theme.font.body};
-    color: ${(props) => props.theme.color.main};
+    color: ${({theme}) => theme.profileMenu.textColor};
     font-size: 1em;
     padding: 1em;
     width: 100%;
@@ -62,20 +88,22 @@ padding-top:1em;
     justify-content: center;
 
     &:hover {
-      background-color: lightpink;
+      background-color: ${({theme}) => theme.profileMenu.hover};
+      color: ${({theme}) => theme.profileMenu.hoverColor};
+      
     }
   }
 
   display: flex;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
     rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
   top: 64px;
   left:100%;
   width: 15em;
-  background-color: #f7f7f2;
+ 
   position: absolute;
   z-index: 999;
   transition: transform 0.2s ease-in-out;
@@ -134,7 +162,7 @@ const ProfileMenu = ({ toggleMenu,setToggleMenu,accountMenu }) => {
 
   return (
     <Menu ref={menu} className={toggleMenu ? `show` : ""}>
-      <p className="alias">{user.alias}</p>
+      <h3 className="alias">{user.alias}</h3>
       <div className="image-container">
         {user.photoUrl ? (
           <img src={user.photoUrl} alt="profile-pic" />
@@ -142,13 +170,24 @@ const ProfileMenu = ({ toggleMenu,setToggleMenu,accountMenu }) => {
           <img alt="user-icon" src={userIcon}></img>
         )}
       </div>
-      {showMobileNav ? <ul>
+      {showMobileNav ? 
+      <div className="list" >
+       <div className="toggle-container">
+       <ToggleSwitch/>
+       </div>
+          <ul>
         <StyledLink to="/profile/overview">Buy</StyledLink>
         <StyledLink to="/profile/overview">Sell</StyledLink>
         <StyledLink to="/profile/overview">Wishlist</StyledLink>
-      </ul> : ""}
+      </ul>
+      </div>
+     : ""}
       <StyledLink to="/profile/overview">Overview</StyledLink>
       <StyledLink to="/profile/settings">Settings</StyledLink>
+      <StyledLink to="" >Messages</StyledLink>
+      <StyledLink to="" >My reviews</StyledLink>
+      <StyledLink to="" >Give us feedback</StyledLink>
+      <StyledLink to="" >Contact us</StyledLink>
       <li className="link" onClick={logOut}>
         Log out
       </li>

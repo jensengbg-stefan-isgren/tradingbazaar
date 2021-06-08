@@ -1,13 +1,16 @@
 import React, { useState,useRef } from "react";
 import { useHistory } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import menuIcon from "assets/icons/menu.svg";
+import userLight from "assets/icons/user-light.svg";
+import userDark from "assets/icons/user-dark.svg";
+import menuDark from 'assets/icons/menu-dark.svg';
+import menuLight from 'assets/icons/menu-light.svg';
 import { useSelector } from "react-redux";
 import ProfileMenu from "components/ProfileMenu";
-import userIcon from "assets/icons/user.svg";
 import CategoryMenu from "components/CategoryMenu";
 import useSearch from 'hooks/useSearch'
-import searchIcon from 'assets/icons/search.svg'
+import searchLight from 'assets/icons/search-light.svg'
+import searchDark from 'assets/icons/search-dark.svg'
 
 const fadeIn = keyframes`
   from {
@@ -30,17 +33,15 @@ const fadeOut = keyframes`
 `;
 
 const StyledInput = styled.input`
-  border: 3px solid ${(props) => props.theme.color.main};
+
   min-width: 20em;
   outline: none;
   height: 3em;
   padding-left: 0.5em;
-  font-family: ${(props) => props.theme.font.body};
-  color: ${(props) => props.theme.color.body};
+
 
   ::placeholder {
-    font-family: ${(props) => props.theme.font.body};
-    color: ${(props) => props.theme.color.body};
+
   }
 
   @media (max-width: 700px) {
@@ -147,7 +148,7 @@ const Wrapper = styled.div`
 
   .show-nav {
     animation: ${fadeIn} 300ms;
-    background-color: #f7f7f2;
+    background-color: ${({theme}) => theme.background};
   }
 
   height: 64px;
@@ -178,34 +179,28 @@ const NavbarMobileProfile = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const { categories } = useSelector((state) => state.categories);
   const isVisible = useSelector((state) => state.nav.isVisible);
+  const {themeMode} = useSelector(state => state.theme)
   const history = useHistory();
 
   const [toggleSearchBar,setToggleSearchBar] = useState(false)
-
-  // const signOut = () => {
-  //   auth.signOut();
-  //   history.push("/");
-  // };
-
 
 const handleSearchBar = () => {
   setToggleSearchBar(!toggleSearchBar)
   console.log(toggleSearchBar)
 }
 
-
   return (
     <Wrapper>
       <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
         <Nav>
           <div className="logo">
-            <img ref={catMenu} src={menuIcon} alt="" />
-            <h1 onClick={() => history.push("/")}>TradingBazaar</h1>
+            {themeMode === 'light' ? <img ref={catMenu} src={menuDark} alt="" /> : <img ref={catMenu} src={menuLight} alt="" />}
+            <h3 className="logo-title" onClick={() => history.push("/")}>TradingBazaar</h3>
           </div>
 
           <div className="menu">
-            {!isVisible ? <img onClick={handleSearchBar}  src={searchIcon} alt="" /> : ""}
-            <img ref={accountMenu} className="nav" src={userIcon} alt="" />
+            {!isVisible ? <img onClick={handleSearchBar}  src={themeMode === 'light' ? searchDark : searchLight} alt="" /> : ""}
+            {themeMode === 'light' ? <img ref={accountMenu} className="nav" src={userDark} alt="" /> : <img ref={accountMenu} className="nav" src={userLight} alt="" />}
           </div>
         </Nav>
         {!isVisible ? (

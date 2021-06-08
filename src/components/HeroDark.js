@@ -1,10 +1,11 @@
 import React, { useEffect, useCallback } from 'react'
 import styled from 'styled-components'
-import heroImg from 'assets/images/hero-bg.jpg'
+import heroImg from 'assets/images/mario.jpeg'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsVisible } from 'features/navSlice'
 import useSearch from 'hooks/useSearch'
-import Arrow from 'components/Arrow'
+import Arrow from 'components/ArrowLight'
+
 
 const Wrapper = styled.section`
   position: relative;
@@ -18,21 +19,21 @@ const Wrapper = styled.section`
     left: 0;
     height: 100vh;
     width: 100%;
-    background: rgba(226, 5, 225, 0.5);
+    background: rgba(15, 0, 41, 0.83);
     background: -webkit-linear-gradient(
       bottom left,
-      rgba(226, 5, 225, 0.5),
-      rgba(206, 233, 2, 0.5)
+      rgba(15, 0, 41, 0.83),
+      rgba(15, 0, 41, 0.83)
     );
     background: -moz-linear-gradient(
       bottom left,
-      rgba(226, 5, 225, 0.5),
-      rgba(206, 233, 2, 0.5)
+      rgba(15, 0, 41, 0.83),
+      rgba(15, 0, 41, 0.83)
     );
     background: linear-gradient(
         to top right,
-        rgba(226, 5, 225, 0.5),
-        rgba(206, 233, 2, 0.5)
+        rgba(15, 0, 41, 0.83),
+        rgba(15, 0, 41, 0.83)
       ),
       url(${heroImg});
     /* opacity: 0.9; */
@@ -50,16 +51,10 @@ const SearchContainer = styled.div`
 
   select,
   input {
-    background-color:  ${({theme}) => theme.input.background};
-    color: ${({theme}) => theme.input.textColor};
     min-height: 3.5em;
     padding: 0.5em;
-    border: 0px solid ${({theme}) => theme.input.borderColor};
+    border: none;
     outline: none;
-
-    ::placeholder {
-      color: ${({theme}) => theme.input.textColor};
-    }
   }
 
   input {
@@ -68,15 +63,12 @@ const SearchContainer = styled.div`
   }
 
   select {
-    border: 0px solid ${({theme}) => theme.input.borderColor};
-    border-right:none;
     color: black;
-    background-color: ${({theme}) => theme.select.background};
-    color: ${({theme}) => theme.input.textColor};
+    background-color: #f7f7f2;
   }
 
   option {
-    background-color: ${({theme}) => theme.select.background};
+    background-color: #f7f7f2;
   }
 
   @media (max-width: 768px) {
@@ -140,14 +132,18 @@ const Hero = () => {
     }
   }, [dispatch, handleScroll])
 
+  const scroll = () => {
+    let element = document.getElementById('products')
+    element.scrollIntoView({behavior: "smooth"});
+  }
+  
 
 
   return (
     <Wrapper>
       <Container>
-        
         <div className="title-container">
-        <Arrow/>
+          <Arrow onClick={scroll}/>
         <h1>We make trading products easy for everyone</h1>
         </div>
         <SearchContainer id="search">

@@ -77,6 +77,7 @@ const CategoryMenu = ({ toggleCatMenu, setToggleCatMenu, catMenu }) => {
 };
 
 const MainMenu = styled.div`
+
   display: flex;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
     rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
@@ -89,7 +90,7 @@ const MainMenu = styled.div`
   left: 0px;
   width: 20em;
   min-height: calc(100vh - 64px);
-  background-color: #f7f7f2;
+  background-color: ${({theme}) => theme.profileMenu.background};
   position: absolute;
   transition: transform 0.2s ease-in-out;
   transform: translateX(-100%);
@@ -118,10 +119,17 @@ const MainMenu = styled.div`
 
 
         input {
-          width:20em;
-      border:none;
-      outline:none;
-      padding:1em;
+          width:90%;
+          background-color:  ${({theme}) => theme.input.background};
+    color: ${({theme}) => theme.input.textColor};
+    min-height: 2.5em;
+    padding: 0.5em;
+    border: 1px solid ${({theme}) => theme.input.borderColor};
+    outline: none;
+
+    ::placeholder {
+      color: ${({theme}) => theme.input.textColor};
+    }
     }
       }
   }
@@ -129,6 +137,7 @@ const MainMenu = styled.div`
 
   .category-container {
     width:100%;
+  
   }
 
   }
@@ -142,8 +151,8 @@ const MainMenu = styled.div`
     font-size: .7em;
     height:calc(100vh - 150px);
     overflow: scroll;
-    padding-bottom:2em;
-    padding-top:2em;
+    padding-bottom:5em;
+    padding-top:1em;
     overflow-x: hidden;
     
     a {
@@ -156,12 +165,12 @@ const MainMenu = styled.div`
     text-decoration: none;
     width:100%;
     font-size: 1.2em;
-    font-family:${(props) => props.theme.font.body};
-    color: black;
+    color: ${({theme}) => theme.menu.textColor};
 
     &:hover {
       cursor: pointer;
-      background-color: pink;
+      background-color: ${({theme}) => theme.menu.hover};
+      color: ${({theme}) => theme.menu.hoverColor};
     }
 
     @media (max-width: 1000px) {
@@ -184,7 +193,7 @@ const MainMenu = styled.div`
       padding: 1em;
       width: 100%;
       height: 3em;
-      font-family: ${(props) => props.theme.font.body};
+    
     }
     :focus {
       border: 1px solid darkgray;
@@ -211,10 +220,11 @@ const MainMenu = styled.div`
  
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: ${({theme}) => theme.background};
 }
  
 ::-webkit-scrollbar-thumb {
-  background-color: darkgrey;
+  background-color: ${({theme})=> theme.toggleSwitch.background};
   outline: 0px solid slategrey;
 }
 

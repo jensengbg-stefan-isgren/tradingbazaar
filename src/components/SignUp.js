@@ -44,7 +44,7 @@ const SignUpContainer = styled.div`
   padding-left: 10%;
 
   p {
-    color: ${(props) => props.theme.color.main};
+  
     font-family: "Open Sans", sans-serif;
     font-size: 1em;
   }
@@ -57,7 +57,7 @@ const SignUpContainer = styled.div`
   h4 {
     font-family: "Passion One", cursive;
     font-size: 2em;
-    color: ${(props) => props.theme.color.main};
+ 
   }
 
   div > p:nth-child(5) {
@@ -87,7 +87,7 @@ const RegisterButton = styled.button`
   outline: none;
   border: none;
   margin: 0.5em 0;
-  background-color: ${(props) => props.theme.button.color};
+
   border-radius: 5px;
 
   p,
@@ -95,7 +95,7 @@ const RegisterButton = styled.button`
     justify-self: center;
     font-family: "Open Sans", sans-serif;
     font-size: 1.2em;
-    color: ${(props) => props.theme.color.main};
+ 
   }
 `;
 

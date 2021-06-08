@@ -459,9 +459,7 @@ const Container = styled.div`
       transition: all 0.2s ease;
     }
     .highlightClass {
-      color: ${(props) => props.theme.color.input};
 
-      background-color: ${(props) => props.theme.button.outline};
       font-weight: bold;
     }
   }

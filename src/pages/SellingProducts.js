@@ -1,19 +1,39 @@
 import styled from 'styled-components'
-// import ProductCard from 'components/ProductCard'
 import CardContainer from 'components/CardContainer'
 import { useSelector } from 'react-redux'
 import UseGetAds from 'services/useGetAds'
 import React from 'react'
 import Hero from 'components/Hero'
+import HeroDark from 'components/HeroDark'
+import UpArrowDark from 'assets/icons/uparrow-dark.svg'
+import UpArrowLight from 'assets/icons/uparrow-light.svg'
+
+
 
 const ProductSection = () => {
+
+const {isVisible} = useSelector(state => state.nav)
+
+
+
+const {themeMode} = useSelector(state => state.theme)
+
+
+const scrollToTop = () => {
+  let element = document.getElementById('root')
+  element.scrollIntoView({behavior: "smooth"});
+}
+
+
   const ads = useSelector((state) => state.ads)
   UseGetAds()
   console.log('rendering')
   return (
-    <StyledProductWrapper>
-      <Hero />
-      <div>
+   
+          <StyledProductWrapper>
+            <div className="container">
+{themeMode === 'light' ? <Hero/> : <HeroDark/>}
+      <div id="products">
         <h2>Open Auctions</h2>
         {ads.selling ? (
           <CardContainer ads={ads.selling} />
@@ -32,8 +52,14 @@ const ProductSection = () => {
             <h3>No expired auctions</h3>
           </div>
         )}
+        
+      </div>
+      <div className="image-container">
+      {!isVisible ? <img onClick={scrollToTop} className="arrow-icon" src={themeMode === 'light' ? UpArrowDark : UpArrowLight} alt="" /> : ""}
+      </div>
       </div>
     </StyledProductWrapper>
+    
   )
 }
 
@@ -42,13 +68,27 @@ const ProductSection = () => {
 // }
 
 const StyledProductWrapper = styled.main`
-  /* height: 200em; */
-  /* margin: auto;
-  max-width: 95vw; */
-  /* display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start; */
+
+.container {
+  position: relative;
+
+
+  .image-container {
+    height:2em;
+    position:sticky;
+    bottom: 1em;
+    width:100%;
+    padding-right:.5em;
+    display:flex;
+    justify-content: flex-end;
+
+    img {
+      height:2em;
+    }
+  }
+}
+
+
 
   h2,
   h3 {

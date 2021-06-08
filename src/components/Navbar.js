@@ -3,10 +3,12 @@ import styled, { keyframes } from "styled-components";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import menuIcon from 'assets/icons/menu.svg'
+import menuLight from 'assets/icons/menu-light.svg'
+import menuDark from 'assets/icons/menu-dark.svg'
 import CategoryMenu from 'components/CategoryMenu'
 import {useState,useRef} from 'react'
 import useSearch from 'hooks/useSearch'
+import ToggleSwitch from 'components/ToggleSwitch'
 
 const fadeIn = keyframes`
   from {
@@ -75,21 +77,23 @@ left:0;
 
 
     select {
+      background-color: ${({theme}) => theme.input.background};
+        border: 1px solid ${({theme}) => theme.input.borderColor};
         height: 40px;
-        background-color: ${(props) => props.theme.color.main};
-        color: white;
+        border-right:none;
+
+        color: ${({theme}) => theme.select.textColor};
         outline: none;
         width:10em;
-        border: none;
-        font-family: ${(props) => props.theme.font.body};
+
         font-weight: 600;
         font-size: 0.8em;
         padding-left: .5em;
       }
 
     p {
-      font-family: ${(props) => props.theme.font.title};
-      color: ${(props) => props.theme.color.main};
+    
+      color: ${({ theme }) => theme.text};
       font-size: 2em;
       cursor: pointer;
     }
@@ -107,13 +111,12 @@ left:0;
   .nav-links {
     display: flex;
     place-content: flex-end;
+    align-items: center;
   }
 `;
 
 const StyledLink = styled(Link)`
   text-decoration: none;
-  font-family: ${(props) => props.theme.font.title};
-  color: ${(props) => props.theme.color.main};
   font-size: 1.4em;
   padding: 0.5em;
 
@@ -123,22 +126,22 @@ const StyledLink = styled(Link)`
 
   &:hover {
     border-radius: 4px;
-    background: #f7f7f2;
+    
   }
 `;
 
 const StyledInput = styled.input`
-  border: 3px solid ${(props) => props.theme.color.main};
+  background-color: ${({theme}) => theme.input.background};
   height: 40px;
-  width: 20em;
-  outline: none;
+  width: 18em;
   padding-left: 0.5em;
-  font-family: ${(props) => props.theme.font.body};
-  color: ${(props) => props.theme.color.body};
+  border: 1px solid ${({theme}) => theme.input.borderColor};
+  color: ${({theme}) => theme.input.textColor};
+  
 
   ::placeholder {
-    font-family: ${(props) => props.theme.font.body};
-    color: ${(props) => props.theme.color.body};
+    color: ${({theme}) => theme.input.textColor};
+    
   }
 `;
 
@@ -149,6 +152,7 @@ const Navbar = () => {
   const [toggleCatMenu, setToggleCatMenu] = useState(false)
   const { categories } = useSelector((state) => state.categories);
   const isVisible = useSelector((state) => state.nav.isVisible);
+  const {themeMode} = useSelector(state => state.theme)
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClick);
@@ -187,8 +191,8 @@ const Navbar = () => {
     <Navigation>
       <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
         <div className="logo">
-          <img ref={catMenu} src={menuIcon} alt="" />
-          <p onClick={() => history.push("/")}>TradingBazaar</p>
+          <img ref={catMenu} src={themeMode === 'light' ? menuDark : menuLight} alt="" />
+          <h3 className="logo-title" onClick={() => history.push("/")}>TradingBazaar</h3>
         </div>
         {!isVisible ? (
           <div className="search-container">
@@ -208,6 +212,7 @@ const Navbar = () => {
           ""
         )}
         <div className="nav-links">
+          <ToggleSwitch/>
           <StyledLink to="/login">Login</StyledLink>
           <StyledLink to="/register">Register</StyledLink>
         </div>

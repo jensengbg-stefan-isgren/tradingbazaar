@@ -17,8 +17,7 @@ const SignUpContainer = styled.div`
   padding-bottom: 10em;
 
   p {
-    color: ${(props) => props.theme.color.main};
-    font-family: ${(props) => props.theme.font.body};
+
     font-size: 1em;
   }
 
@@ -28,9 +27,9 @@ const SignUpContainer = styled.div`
   }
 
   h4 {
-    font-family: ${(props) => props.theme.font.title};
+
     font-size: 2em;
-    color: ${(props) => props.theme.color.main};
+
   }
 
   button {
@@ -41,8 +40,7 @@ const SignUpContainer = styled.div`
     width: 100%;
     display: block;
     cursor: pointer;
-    font-family: ${(props) => props.theme.font.title};
-    color: ${(props) => props.theme.color.main};
+
     font-size: 1em;
     margin: 0.5em 0em 0.5em;
   }
@@ -95,8 +93,7 @@ const InputField = styled.input`
 
   ::placeholder {
     opacity: 0.8;
-    color: ${(props) => props.theme.color.main};
-    font-family: ${(props) => props.theme.font.body};
+
   }
 
   :focus {
@@ -106,9 +103,9 @@ const InputField = styled.input`
   p,
   img {
     justify-self: center;
-    font-family: ${(props) => props.theme.font.body};
+  
     font-size: 1.2em;
-    color: ${(props) => props.theme.color.main};
+ 
   }
 `;
 

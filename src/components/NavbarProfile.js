@@ -4,12 +4,14 @@ import { Link } from "react-router-dom";
 import ProfileMenu from "components/ProfileMenu";
 import { useSelector } from "react-redux";
 import {useHistory} from 'react-router-dom';
-import menuIcon from 'assets/icons/menu.svg'
+import menuLight from 'assets/icons/menu-light.svg'
+import menuDark from 'assets/icons/menu-dark.svg'
 import CategoryMenu from 'components/CategoryMenu'
 import useSearch from 'hooks/useSearch'
+import ToggleSwitch from 'components/ToggleSwitch'
+
+
 import {
-  BrowserRouter as Router,
-  Switch,
   useLocation
 } from "react-router-dom";
 
@@ -35,8 +37,7 @@ const fadeOut = keyframes`
 
 const StyledLink = styled(Link)`
   text-decoration: none;
-  font-family: ${(props) => props.theme.font.title};
-  color: ${(props) => props.theme.color.main};
+
   font-size: 1.4em;
   padding: 0.5em;
 `;
@@ -67,10 +68,7 @@ left:0;
 
 li {
   padding: 0.5em;
-  margin: 0 .5em;
   text-decoration: none;
-  font-family: ${(props) => props.theme.font.title};
-  color: ${(props) => props.theme.color.main};
   font-size: 1.4em;
 }
 
@@ -86,7 +84,7 @@ p:first-child {
 
   .show-nav {
     animation: ${fadeIn} 300ms ;
-    background-color:#F7F7F2;
+    background-color:${({theme}) => theme.background};
   }
 
 
@@ -108,6 +106,7 @@ p:first-child {
        display:flex;
        gap:2em;
        cursor: pointer;
+       align-items: center;
 
 
         .active {
@@ -128,21 +127,22 @@ p:first-child {
      }
 
       select {
+        background-color: ${({theme}) => theme.input.background};
+        border: 1px solid ${({theme}) => theme.input.borderColor};
         height: 40px;
-        background-color: ${(props) => props.theme.color.main};
-        color: white;
+        border-right:none;
+
+        color: ${({theme}) => theme.select.textColor};
         outline: none;
         width:10em;
-        border: none;
-        font-family: ${(props) => props.theme.font.body};
+
         font-weight: 600;
         font-size: 0.8em;
         padding-left: .5em;
       }
 
       p {
-        font-family: ${(props) => props.theme.font.title};
-        color: ${(props) => props.theme.color.main};
+
         font-size: 2em;
       }
     }
@@ -154,26 +154,23 @@ p:first-child {
   `;
 
 const StyledInput = styled.input`
-  border: 3px solid ${(props) => props.theme.color.main};
+  background-color: ${({theme}) => theme.input.background};
   height: 40px;
   width: 18em;
-  outline: none;
   padding-left: 0.5em;
-  font-family: ${(props) => props.theme.font.body};
-  color: ${(props) => props.theme.color.body};
+  border: 1px solid ${({theme}) => theme.input.borderColor};
+  color: ${({theme}) => theme.input.textColor};
+  
 
   ::placeholder {
-    font-family: ${(props) => props.theme.font.body};
-    color: ${(props) => props.theme.color.body};
+    color: ${({theme}) => theme.input.textColor};
+    
   }
 `;
 
 const NavbarProfile = () => {
 
-
   const location = useLocation()
-
-  console.log(location)
 
   const {searchResults,category,setCategory} = useSearch()
 
@@ -186,17 +183,17 @@ const NavbarProfile = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
 
   const isVisible = useSelector((state) => state.nav.isVisible);
-
+  const {themeMode} = useSelector((state) => state.theme);
 
 
   return (
     <Navigation>
       <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
-        <div className="logo">
-          <img ref={catMenu} src={menuIcon} alt="" />
-          <p onClick={() => history.push('/')}>TradingBazaar</p>
+        <div className="logo">  
+          {themeMode === 'light' ? <img ref={catMenu} src={menuDark} alt="" /> :<img ref={catMenu} src={menuLight} alt="" />}
+          <h3 className="logo-title" onClick={() => history.push('/')}>TradingBazaar</h3>
         </div>
-        {!isVisible || location.pathname != "/" ? (
+        {!isVisible || location.pathname !== "/" ? (
           <div className="search-container">
             <select onChange={(e)=> setCategory(e.target.value)} name="category" id="category">
               <option value={0}>All Categories</option>
@@ -214,6 +211,7 @@ const NavbarProfile = () => {
           ""
         )}
         <div className="nav-links">
+          <ToggleSwitch/>
           <StyledLink to="/profile/wish-list">Wishlist</StyledLink>
           <StyledLink to="/profile/active-items">Buy</StyledLink>
           <StyledLink to="/profile/active">Sell</StyledLink>

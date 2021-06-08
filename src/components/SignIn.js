@@ -47,7 +47,7 @@ const SignInContainer = styled.div`
   padding-bottom: 10em;
 
   p {
-    color: ${(props) => props.theme.color.main};
+
     font-family: "Open Sans", sans-serif;
     font-size: 1em;
   }
@@ -60,7 +60,7 @@ const SignInContainer = styled.div`
   h4 {
     font-family: "Passion One", cursive;
     font-size: 2em;
-    color: ${(props) => props.theme.color.main};
+
   }
 
   div > p:nth-child(5) {
@@ -102,16 +102,16 @@ const SignInButton = styled.button`
   outline: none;
   border: none;
   margin: 0.5em 0;
-  background-color: ${(props) => props.theme.button.color};
+
   border-radius: 5px;
   cursor: pointer;
 
   p,
   img {
     justify-self: center;
-    font-family: ${(props) => props.theme.font.body};
+
     font-size: 1.2em;
-    color: ${(props) => props.theme.color.main};
+
   }
 
   :disabled {
@@ -163,6 +163,7 @@ const SignIn = () => {
                 Dont have an account, Click
                 <span onClick={() => history.push("/register")}> here</span>
               </p>
+         
               {errorMessage ? (
                 <div className="error-container">
                   <img className="warning-icon" src={exclamationIcon} alt="" />
