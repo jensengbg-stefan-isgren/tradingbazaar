@@ -49,8 +49,9 @@ export const lightTheme = {
   textColor: '#040A10'
  },
  productCard: {
-  background: '#F9E9EC',
-  textColor: '#040610'
+  background: '#FFFFFF',
+  textColor: '#040610',
+  shadow: "0px 8px 15px rgba(0, 0, 0, 0.1)"
 },
 menu : {
   hoverColor: '#FFFFFF',
@@ -65,7 +66,9 @@ profileMenu: {
   textColor: '#040A10'
 },
 footer: {
-  background:'#F9E9EC' 
+  background:'#040A10',
+  textColor: '#FFFFFF',
+  shadow: "0px 8px 15px rgba(36, 36, 66, 0.1)"
 },
 addBtn: {
   backgroundColor:'#040610',
@@ -102,7 +105,8 @@ export const darkTheme = {
  },
  productCard: {
   background: '#040610',
-  textColor: '#040610'
+  textColor: '#040610',
+  shadow: "0px 8px 15px rgba(36, 36, 66, 0.1)"
  },
  menu : {
   hoverColor: '#040A10',
@@ -117,7 +121,9 @@ export const darkTheme = {
    textColor: '#FFFFFF'
  },
  footer: {
-  background:'#040610' 
+   textColor: '#FFFFFF',
+  background:'#040610',
+  shadow: "0px 8px 15px rgba(36, 36, 66, 0.1)"
  },
  addBtn: {
    backgroundColor:'#FFFFFF',
