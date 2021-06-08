@@ -335,6 +335,7 @@ const Wrapper = styled.div`
 
 const Container = styled.div`
   margin-top: 1em;
+  margin:0 1em;
   height: auto;
   width: auto;
   background-color: ${({ theme }) => theme.productCard.background};
@@ -492,6 +493,7 @@ const Container = styled.div`
   }
 
   @media only screen and (max-width: 768px) {
+
     grid-template-columns: repeat(1, 100%);
     /* grid-template-areas:
       'title'

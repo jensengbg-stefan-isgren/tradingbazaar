@@ -19,19 +19,27 @@ const fadeIn = keyframes`
   to {
     opacity:1;
   }
-`
+`;
 
 const fadeOut = keyframes`
   from {
-    background-color: ${({ theme }) => theme.background};
+    background-color: white;
   }
 
   to {
-    background-color: transparent;
+    background-color: none;
   }
-`
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+
+  font-size: 1.4em;
+  padding: 0.5em;
+`;
 
 const Navigation = styled.nav`
+
 position: fixed;
 z-index:1000;
 width:100%;
@@ -39,96 +47,148 @@ top:0;
 left:0;
 
 
-  .no-nav {
+.logo {
+  grid-area: logo;
+  display: flex;
+  align-items: center;
+
+  img {
+    padding-left: 1em;
+    margin-right:1em;
+    height:20px;
+  }
+
+  p {
+    cursor: pointer;
+  }
+}
+
+
+li {
+  padding: 0.5em;
+  text-decoration: none;
+  font-size: 1.4em;
+}
+
+p:first-child {
+  cursor: pointer;
+}
+
+.no-nav {
     animation: ${fadeOut} 300ms;
+    background-color: none;
   }
 
 
   .show-nav {
     animation: ${fadeIn} 300ms ;
-    background-color:${({ theme }) => theme.background};
+    background-color:${({theme}) => theme.background};
   }
 
-  .container {
 
-    
+  background-color: "";
 
-    height: 64px;
-    display: flex;
-    padding: 0 1em;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
+    .container {
+    height: 4em;
+    display: grid;
+    grid-template-areas: 'logo search nav';
+    position: relative;
     z-index:1000;
     top:0;
     width:100%;
     font-size: 16px;
-    background-color: "";
 
-    .logo {
-      display: flex;
-      align-items:center;
-
-
-      img {
-        margin-right:1em;
-        height:20px;
-      }
+    @media screen and (max-width: 1244px) {
+      height:64px;
+        grid-template-areas: 'logo nav'
+        'search search';
     }
+    
+
+    .search-container {
+      width:100%;
+          display: flex;
+          align-items: center;
+          place-content:center;
+          grid-area: search;
+          background-color: ${({theme}) => theme.background};
 
 
-    select {
-      background-color: ${({ theme }) => theme.input.background};
-        border: 1px solid ${({ theme }) => theme.input.borderColor};
+          @media (max-width:1244px) {
+            padding:0 .5em 1em .5em;
+          }
+        }
+
+     .nav-links {
+       height:64px;
+       grid-area: nav;
+       display:flex;
+       gap:2em;
+       cursor: pointer;
+       align-items: center;
+       justify-content: flex-end;
+
+
+        .active {
+          background-color: white;
+        }
+
+        .menu-container {
+          display:flex;
+          justify-content: center;
+          align-items:center;
+          position: relative;
+
+          img {
+            height:1em;
+          }
+        }
+
+
+      }       
+     }
+
+      select {
+        background-color: ${({theme}) => theme.input.background};
+        border: 1px solid ${({theme}) => theme.input.borderColor};
         height: 40px;
         border-right:none;
 
-        color: ${({ theme }) => theme.select.textColor};
+        color: ${({theme}) => theme.select.textColor};
         outline: none;
-        width:10em;
+        width:30%;
 
         font-weight: 600;
         font-size: 0.8em;
         padding-left: .5em;
       }
 
-    p {
-    
-      color: ${({ theme }) => theme.text};
-      font-size: 2em;
-      cursor: pointer;
+      p {
+
+        font-size: 2em;
+      }
     }
- 
 
-  }
+    a {
+      margin: 0 0em;
+      text-decoration: none;
+    }
+  `;
 
+// const StyledInput = styled.input`
+//   background-color: ${({theme}) => theme.input.background};
+//   height: 40px;
+//   width: 70%;
+//   padding-left: 0.5em;
+//   border: 1px solid ${({theme}) => theme.input.borderColor};
+//   color: ${({theme}) => theme.input.textColor};
+  
 
-
-  }
-
-  a {
-    text-decoration: none;
-  }
-  .nav-links {
-    display: flex;
-    place-content: flex-end;
-    align-items: center;
-  }
-`
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  font-size: 1.4em;
-  padding: 0.5em;
-
-  :nth-child(2) {
-    margin-left: 1em;
-  }
-
-  &:hover {
-    border-radius: 4px;
-  }
-`
+//   ::placeholder {
+//     color: ${({theme}) => theme.input.textColor};
+    
+//   }
+// `;
 
 const Navbar = () => {
   // const { searchResults, category, setCategory } = useSearch()

@@ -89,6 +89,9 @@ em {
 footer {
   width:100%;
   background-color: ${({theme}) => theme.footer.background};
+  h3,p {
+    color: ${({theme}) => theme.footer.textColor};
+  }
 }
 
 
