@@ -448,7 +448,7 @@ const InputContainer = styled.div`
 
       label {
         flex-grow: 1;
-        border: 0.2rem solid ${(props) => props.theme.button.bckDark};
+      
         min-width: 6em;
         padding: 0.3em 0.5em;
         text-align: center;
@@ -465,12 +465,11 @@ const InputContainer = styled.div`
         /* height: 100%; */
 
         &:checked + label {
-          background: ${(props) => props.theme.button.bckDark};
-          color: ${(props) => props.theme.button.color};
+   
         }
 
         &:focus + label {
-          border: 0.3rem solid ${(props) => props.theme.button.outline};
+     
           padding: 0.2em 0.4em;
         }
       }
@@ -490,7 +489,6 @@ const InputContainer = styled.div`
 
     &:focus,
     &:active {
-      border: 0.3rem solid ${(props) => props.theme.button.outline};
       padding: 0.1em 0.1em;
     }
   }

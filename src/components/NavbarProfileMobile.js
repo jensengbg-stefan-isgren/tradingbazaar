@@ -1,10 +1,16 @@
-import React,{useState} from "react";
+import React, { useState,useRef } from "react";
 import { useHistory } from "react-router-dom";
-import styled, {keyframes} from "styled-components";
-import menuIcon from "assets/icons/menu.svg";
+import styled, { keyframes } from "styled-components";
+import userLight from "assets/icons/user-light.svg";
+import userDark from "assets/icons/user-dark.svg";
+import menuDark from 'assets/icons/menu-dark.svg';
+import menuLight from 'assets/icons/menu-light.svg';
 import { useSelector } from "react-redux";
-import ProfileMenu from 'components/ProfileMenu'
-// import { useMediaQuery } from "functions/UseMediaQuery";
+import ProfileMenu from "components/ProfileMenu";
+import CategoryMenu from "components/CategoryMenu";
+import useSearch from 'hooks/useSearch'
+import searchLight from 'assets/icons/search-light.svg'
+import searchDark from 'assets/icons/search-dark.svg'
 
 const fadeIn = keyframes`
   from {
@@ -26,30 +32,26 @@ const fadeOut = keyframes`
   }
 `;
 
-
-
-
 const StyledInput = styled.input`
-  border: 3px solid ${(props) => props.theme.color.main};
+
   min-width: 20em;
   outline: none;
   height: 3em;
   padding-left: 0.5em;
-  font-family: ${(props) => props.theme.font.body};
-  color: ${(props) => props.theme.color.body};
+
 
   ::placeholder {
-    font-family: ${(props) => props.theme.font.body};
-    color: ${(props) => props.theme.color.body};
-
 
   }
 
+  @media (max-width: 700px) {
+    width: 100%;
+    padding: 0 1em;
+  }
 
   @media (max-width: 500px) {
-    border:none;
+    border: none;
   }
-    
 `;
 
 const Nav = styled.nav`
@@ -59,38 +61,35 @@ const Nav = styled.nav`
   height: 64px;
   padding: 0 1em;
 
+  .logo {
+    display: flex;
+    align-items: center;
+    img {
+      height: 20px;
+      margin-right: 1em;
+    }
+  }
+
   h1 {
     cursor: pointer;
   }
 
-  .search-container {
-    width: 100%;
-    grid-area: search;
-
-    select {
-      height: 3em;
-      width: 9em;
-    }
-
-    .logo {
-      grid-area: logo;
-    }
-  }
-
   .menu {
-    justify-self: flex-end;
+    display:flex;
+    justify-content:flex-end;
+    align-items: center;
+    gap:1em;
     grid-area: nav;
 
     img {
-      height: 20px;
+      height: 30px;
     }
   }
 
   @media (max-width: 700px) {
-
-    height:auto;
-    background-color:"";
-    padding:1em;
+    height: 64px;
+    background-color: "";
+    padding: 1em;
 
     grid-template-areas:
       "logo logo nav"
@@ -99,31 +98,57 @@ const Nav = styled.nav`
     .search-container {
       width: 100%;
       display: grid;
-      padding:.5em 0;
+      padding: 0.5em 1em;
 
       select {
         width: auto;
-        padding-left: .5em;
-        border:none;
-        margin-bottom:.5em;
+        border: none;
+        margin-bottom: 0.5em;
       }
     }
   }
-
-
 `;
 
 const Wrapper = styled.div`
+  .container {
+    .hide {
+      display: none;
+    }
 
-.no-nav {
+    .search-container {
+    }
+  }
+
+  .search-container {
+    width: 100%;
+    display: grid;
+    gap: 0.5em;
+    grid-area: search;
+    padding-top: 0;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 1em;
+
+    select {
+      padding: 0 1em;
+      border: none;
+      height: 3em;
+      width: 100%;
+    }
+
+    .logo {
+      grid-area: logo;
+    }
+  }
+
+  .no-nav {
     animation: ${fadeOut} 300ms;
     background-color: none;
   }
 
-
   .show-nav {
-    animation: ${fadeIn} 300ms ;
-    background-color:#F7F7F2;
+    animation: ${fadeIn} 300ms;
+    background-color: ${({theme}) => theme.background};
   }
 
   height: 64px;
@@ -131,36 +156,61 @@ const Wrapper = styled.div`
   position: fixed;
   top: 0;
   z-index: 999;
+
+  @media (max-width: 700px) {
+    .container {
+      .hide {
+        display: none;
+      }
+
+      .search-container {
+      }
+    }
+  }
 `;
 
 const NavbarMobileProfile = () => {
+
+  const {searchResults,category,setCategory} = useSearch()
+  const catMenu = useRef()
+  const accountMenu = useRef()
+  const [toggleCatMenu, setToggleCatMenu] = useState(false);
   // const showMobileNav = useMediaQuery("(max-width:1000px)");
-  const [toggleMenu, setToggleMenu] = useState();
+  const [toggleMenu, setToggleMenu] = useState(false);
   const { categories } = useSelector((state) => state.categories);
   const isVisible = useSelector((state) => state.nav.isVisible);
-  console.log(isVisible)
+  const {themeMode} = useSelector(state => state.theme)
   const history = useHistory();
 
-  // const signOut = () => {
-  //   auth.signOut();
-  //   history.push("/");
-  // };
+  const [toggleSearchBar,setToggleSearchBar] = useState(false)
 
-  const handleMenu = () => {
-    setToggleMenu(!toggleMenu);
-  };
+const handleSearchBar = () => {
+  setToggleSearchBar(!toggleSearchBar)
+  console.log(toggleSearchBar)
+}
 
   return (
     <Wrapper>
-      <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`} >
-      <Nav >
-        <div className="logo">
-          <h1 onClick={() => history.push('/')}>TradingBazaar</h1>
-        </div>
+      <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
+        <Nav>
+          <div className="logo">
+            {themeMode === 'light' ? <img ref={catMenu} src={menuDark} alt="" /> : <img ref={catMenu} src={menuLight} alt="" />}
+            <h3 className="logo-title" onClick={() => history.push("/")}>TradingBazaar</h3>
+          </div>
+
+          <div className="menu">
+            {!isVisible ? <img onClick={handleSearchBar}  src={themeMode === 'light' ? searchDark : searchLight} alt="" /> : ""}
+            {themeMode === 'light' ? <img ref={accountMenu} className="nav" src={userDark} alt="" /> : <img ref={accountMenu} className="nav" src={userLight} alt="" />}
+          </div>
+        </Nav>
         {!isVisible ? (
-          <div className="search-container">
+          <div
+            className={`search-container ${
+              toggleCatMenu || toggleMenu || toggleSearchBar   ? "hide" : ""
+            }`}
+          >
             <select name="category" id="category">
-              <option>All Categories</option>
+              <option onChange={(e) => setCategory(e.target.value)} value={0}>All Categories</option>
               {categories.map((category) => {
                 return (
                   <option key={category.name} value={category.name}>
@@ -169,17 +219,14 @@ const NavbarMobileProfile = () => {
                 );
               })}
             </select>
-            <StyledInput placeholder="What are you looking for today?" />
+            <StyledInput onChange={(e) => searchResults(e.target.value,category)} placeholder="What are you looking for today?" />
           </div>
         ) : (
           ""
         )}
-        <div className="menu">
-          <img onClick={handleMenu} className="nav" src={menuIcon} alt="" />
-        </div>
-      </Nav>
       </div>
-     <ProfileMenu toggleMenu={toggleMenu}/>
+      <ProfileMenu setToggleMenu={setToggleMenu} toggleMenu={toggleMenu} accountMenu={accountMenu} />
+      <CategoryMenu setToggleCatMenu={setToggleCatMenu} toggleCatMenu={toggleCatMenu} catMenu={catMenu} />
     </Wrapper>
   );
 };
