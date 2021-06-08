@@ -1,28 +1,28 @@
-import styled from 'styled-components';
-import CardContainer from 'components/CardContainer';
-import { useSelector } from 'react-redux';
-import UseGetAds from 'services/useGetAds';
-import React from 'react';
-import Hero from 'components/Hero';
-import HeroDark from 'components/HeroDark';
-import UpArrowDark from 'assets/icons/uparrow-dark.svg';
-import UpArrowLight from 'assets/icons/uparrow-light.svg';
+import styled from 'styled-components'
+import CardContainer from 'components/CardContainer'
+import { useSelector } from 'react-redux'
+// import UseGetAds from 'services/useGetAds';
+import React from 'react'
+import Hero from 'components/Hero'
+import HeroDark from 'components/HeroDark'
+import UpArrowDark from 'assets/icons/uparrow-dark.svg'
+import UpArrowLight from 'assets/icons/uparrow-light.svg'
 
 const ProductSection = () => {
-  document.title = 'Trading Bazaar';
+  document.title = 'Trading Bazaar'
 
-  const { isVisible } = useSelector((state) => state.nav);
+  const { isVisible } = useSelector((state) => state.nav)
 
-  const { themeMode } = useSelector((state) => state.theme);
+  const { themeMode } = useSelector((state) => state.theme)
 
   const scrollToTop = () => {
-    let element = document.getElementById('root');
-    element.scrollIntoView({ behavior: 'smooth' });
-  };
+    let element = document.getElementById('root')
+    element.scrollIntoView({ behavior: 'smooth' })
+  }
 
-  const ads = useSelector((state) => state.ads);
-  UseGetAds();
-  console.log('rendering');
+  const ads = useSelector((state) => state.ads)
+  // UseGetAds();
+  console.log('rendering')
   return (
     <StyledProductWrapper>
       <div className="container">
@@ -61,8 +61,8 @@ const ProductSection = () => {
         </div>
       </div>
     </StyledProductWrapper>
-  );
-};
+  )
+}
 
 // {
 //   /* <ProductCard imgLink="https://cdn.pixabay.com/photo/2020/08/23/08/54/slippers-5510231_960_720.jpg" /> */
@@ -106,6 +106,6 @@ const StyledProductWrapper = styled.main`
     justify-content: center;
     /* gap: 0.5em; */
   }
-`;
+`
 
-export default React.memo(ProductSection);
+export default React.memo(ProductSection)
