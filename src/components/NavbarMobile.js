@@ -50,7 +50,7 @@ const UsrMenu = styled.div`
   max-width: 20em;
   min-width: 18em;
   min-height: calc(100vh - 64px);
-  background-color: white;
+  background-color: ${({theme}) => theme.background};
   position: absolute;
   transition: transform 0.2s ease-in-out;
   transform: translateX(100%);
@@ -58,6 +58,10 @@ const UsrMenu = styled.div`
 
   &.sliding {
     transform: translateX(0%);
+  }
+
+  .greeting {
+    margin-bottom:1.5em;
   }
 
   .error-container {
@@ -86,7 +90,6 @@ const UsrMenu = styled.div`
     margin: 1em 0;
 
     button {
-      font-family: ${(props) => props.theme.font.body};
       outline: none;
       border: none;
       height: 3em;
@@ -100,7 +103,6 @@ const UsrMenu = styled.div`
       padding: 1em;
       width: 100%;
       height: 3em;
-      font-family: ${(props) => props.theme.font.body};
     }
     :focus {
       border: 1px solid darkgray;
@@ -120,7 +122,7 @@ const fadeIn = keyframes`
 
 const fadeOut = keyframes`
   from {
-    background-color: white;
+    background-color: ${({theme}) => theme.background};
   }
 
   to {
@@ -362,7 +364,7 @@ const NavbarMobile = () => {
   return (
     <Wrapper>
       <UsrMenu ref={menu} className={toggleUserMenu ? `sliding` : ""}>
-        <p>Welcome</p>
+        <p className="greeting">Welcome</p>
         <ToggleSwitch/>
         <div className="provider-container">
           <SignInButton
