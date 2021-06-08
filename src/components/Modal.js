@@ -1,6 +1,6 @@
-import { createPortal } from 'react-dom';
-import styled from 'styled-components';
-const modalRoot = document.getElementById('modal');
+import { createPortal } from 'react-dom'
+import styled from 'styled-components'
+const modalRoot = document.getElementById('modal')
 
 const Modal = (props) => {
   return createPortal(
@@ -8,8 +8,8 @@ const Modal = (props) => {
       <section>{props.children}</section>
     </StyledModal>,
     modalRoot
-  );
-};
+  )
+}
 
 const StyledModal = styled.div`
   position: absolute;
@@ -29,9 +29,9 @@ const StyledModal = styled.div`
   justify-content: center;
 
   section {
-    background: ${(props) => props.theme.color.lightBckGround};
+    background: ${({ theme }) => theme.background};
     padding: 2em;
   }
-`;
+`
 
-export default Modal;
+export default Modal

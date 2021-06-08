@@ -1,6 +1,7 @@
 import { db } from '../services/firebase'
 import store from 'store/store'
 import { toast } from 'react-toastify'
+import { trigram } from 'n-gram'
 // import data from 'data/categories'
 
 export const addProduct = () => {
@@ -33,6 +34,22 @@ export const addProduct = () => {
       )
         newProduct[field] = state.newAd[field]
     }
+
+    // let triString = {}
+    const triStringArray = trigram(
+      newProduct.title.toLowerCase() +
+        ' ' +
+        newProduct.description.toLowerCase()
+    )
+    console.log(triStringArray)
+    let triStringObj = {}
+    triStringArray.forEach(
+      (tri) => (triStringObj = { ...triStringObj, [tri]: true })
+    )
+
+    console.log('triobj', triStringObj)
+
+    newProduct.trigram = triStringObj
 
     if (productId) {
       try {
