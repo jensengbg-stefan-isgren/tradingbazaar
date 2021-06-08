@@ -87,6 +87,7 @@ em {
 }
 
 footer {
+  width:100%;
   background-color: ${({theme}) => theme.footer.background};
 }
 
@@ -97,6 +98,11 @@ button > p {
 
 .auth-button {
   background-color: white;
+}
+
+.app {
+  position: relative;
+  min-height:100vh;
 }
 
 `
