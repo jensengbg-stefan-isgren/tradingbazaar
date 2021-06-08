@@ -30,65 +30,45 @@ export const routes = [
     exact: true,
     main: () => <ActiveItems />,
     navbar: () => <MainNav />,
-<<<<<<< HEAD
-    footer: () => "",
-=======
     beforeRoute: ['auth'],
     redirect: '/',
     footer: () => <Footer />,
->>>>>>> dev
   },
   {
     path: '/profile/wish-list',
     exact: true,
     main: () => <WishList />,
     navbar: () => <MainNav />,
-<<<<<<< HEAD
-    footer: () => "",
-=======
     beforeRoute: ['auth'],
     redirect: '/',
     footer: () => <Footer />,
->>>>>>> dev
   },
   {
     path: '/profile/active',
     exact: true,
     main: () => <ActiveAds />,
     navbar: () => <MainNav />,
-<<<<<<< HEAD
-    footer: () => "",
-=======
     beforeRoute: ['auth'],
     redirect: '/',
     footer: () => <Footer />,
->>>>>>> dev
   },
   {
     path: '/profile/settings',
     exact: true,
     main: () => <Settings />,
     navbar: () => <MainNav />,
-<<<<<<< HEAD
-    footer: () => "",
-=======
     beforeRoute: ['auth'],
     redirect: '/',
     footer: () => <Footer />,
->>>>>>> dev
   },
   {
     path: '/profile/settings/account',
     exact: true,
     main: () => <ProfileSettings />,
     navbar: () => <MainNav />,
-<<<<<<< HEAD
-    footer: () => "",
-=======
     beforeRoute: ['auth'],
     redirect: '/',
     footer: () => <Footer />,
->>>>>>> dev
   },
   {
     path: '/login',
