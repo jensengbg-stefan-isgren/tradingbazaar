@@ -8,10 +8,12 @@ import MainNav from '../pages/MainNav';
 import ActiveItems from 'pages/ActiveItems';
 import Settings from 'components/Settings/Settings';
 import ProfileSettings from 'components/Settings/ProfileSettings';
-import ActiveAds from 'pages/ActiveAds';
+import ActiveAds from 'components/ActiveAds';
 import WishList from 'pages/WishList';
-import Page404 from 'pages/404';
 import ProductDetailsCard from 'components/ProductDetailsCard';
+import FilteredProducts from 'components/FilteredProducts';
+import Footer from 'components/Footer';
+import Page404 from 'pages/404';
 
 export const routes = [
   {
@@ -21,6 +23,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: [],
     redirect: '/',
+    footer: () => <Footer />,
   },
   {
     path: '/profile/active-items',
@@ -29,6 +32,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['auth'],
     redirect: '/',
+    footer: () => <Footer />,
   },
   {
     path: '/profile/wish-list',
@@ -37,6 +41,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['auth'],
     redirect: '/',
+    footer: () => <Footer />,
   },
   {
     path: '/profile/active',
@@ -45,6 +50,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['auth'],
     redirect: '/',
+    footer: () => <Footer />,
   },
   {
     path: '/profile/settings',
@@ -53,6 +59,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['auth'],
     redirect: '/',
+    footer: () => <Footer />,
   },
   {
     path: '/profile/settings/account',
@@ -61,6 +68,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['auth'],
     redirect: '/',
+    footer: () => <Footer />,
   },
   {
     path: '/login',
@@ -68,6 +76,7 @@ export const routes = [
     navbar: () => '',
     beforeRoute: [],
     redirect: '/',
+    footer: () => '',
   },
   {
     path: '/register',
@@ -75,6 +84,7 @@ export const routes = [
     navbar: () => '',
     beforeRoute: [],
     redirect: '/',
+    footer: () => '',
   },
   {
     path: '/addad',
@@ -82,6 +92,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['auth'],
     redirect: '/',
+    footer: () => <Footer />,
   },
   {
     path: '/profile/overview',
@@ -89,6 +100,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['auth'],
     redirect: '/',
+    footer: () => <Footer />,
   },
   {
     path: '/resetcredentials',
@@ -96,6 +108,7 @@ export const routes = [
     navbar: () => '',
     beforeRoute: [],
     redirect: '/',
+    footer: () => '',
   },
   {
     path: '/item/:id',
@@ -110,5 +123,12 @@ export const routes = [
     navbar: () => '',
     beforeRoute: [],
     redirect: '/',
+    footer: () => <Footer />,
+  },
+  {
+    path: '/filteredproducts/:category',
+    main: () => <FilteredProducts />,
+    navbar: () => <MainNav />,
+    footer: () => <Footer />,
   },
 ];

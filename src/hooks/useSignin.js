@@ -36,6 +36,7 @@ const useSignin = () => {
 
     try {
       let response = await firebase.auth().signInWithPopup(authProvider)
+     
       const {
         additionalUserInfo,
         user: { uid },
@@ -46,7 +47,7 @@ const useSignin = () => {
       if (!isNewUser) {
         dispatch(authUser())
  
-
+        dispatch(checkIfRegistered({ status: false, message: null }))
         history.push('/profile/overview')
       } else {
         let profileData = {
@@ -58,12 +59,13 @@ const useSignin = () => {
           alias: null
         }
 
+       
         switch (providerId) {
           case 'google.com':
             profileData.firstName = profile.given_name
             profileData.lastName = profile.family_name
             profileData.email = profile.email
-            profileData.photoUrl = profile.picture
+            profileData.photoUrl = profile.picture.replace('s96-c', 's768-c')
             profileData.alias = `${profile.given_name} ${profile.family_name}` 
             break
           case 'facebook.com':
@@ -80,13 +82,14 @@ const useSignin = () => {
         await db.collection('users').doc(uid).set(profileData)
 
         dispatch(addUser(profileData))
+        dispatch(checkIfRegistered({ status: false, message: null }))
         history.push('/profile/overview')
       }
     } catch ({ code, message }) {
       if (code === 'auth/account-exists-with-different-credential') {
         await dispatch(checkIfRegistered({ status: true, message: message }))
         history.push('/login')
-      }
+      } 
     }
   }
 

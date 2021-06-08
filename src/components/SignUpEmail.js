@@ -18,8 +18,7 @@ const SignUpContainer = styled.div`
   padding-bottom: 10em;
 
   p {
-    color: ${(props) => props.theme.color.main};
-    font-family: ${(props) => props.theme.font.body};
+
     font-size: 1em;
   }
 
@@ -54,8 +53,7 @@ const SignUpContainer = styled.div`
     width: 100%;
     margin: 0.5em 0em 0.5em auto;
     cursor: pointer;
-    font-family: ${(props) => props.theme.font.title};
-    color: ${(props) => props.theme.color.main};
+
     font-size: 1em;
   }
 
@@ -76,7 +74,7 @@ const SignUpContainer = styled.div`
   }
 `;
 const InputField = styled.input`
-  font-family: ${(props) => props.theme.font.body};
+ 
   padding-left: 1em;
   cursor: pointer;
   width: 100%;
@@ -89,8 +87,7 @@ const InputField = styled.input`
   border-radius: 5px;
   ::placeholder {
     opacity: 0.8;
-    color: ${(props) => props.theme.color.main};
-    font-family: ${(props) => props.theme.font.body};
+
   }
 
   p,

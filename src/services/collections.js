@@ -1,12 +1,12 @@
-import { db } from '../services/firebase';
-import store from 'store/store';
-import { toast } from 'react-toastify';
+import { db } from '../services/firebase'
+import store from 'store/store'
+import { toast } from 'react-toastify'
 // import data from 'data/categories'
 
 export const addProduct = () => {
   return new Promise(async (resolve, reject) => {
-    const state = store.getState();
-    const productId = state.newAd.id;
+    const state = store.getState()
+    const productId = state.newAd.id
 
     const newProduct = {
       uid: state.auth.uid,
@@ -23,15 +23,15 @@ export const addProduct = () => {
       adEndDate: state.newAd.adEndDate,
       imgLink1: state.newAd.imgLink1,
       removed: state.newAd.removed,
-    };
+    }
     for (let i = 2; i < 6; i++) {
-      const field = `imgLink${i}`;
+      const field = `imgLink${i}`
       if (
         state.newAd.hasOwnProperty(field) &&
         state.newAd[field] != null &&
         state.newAd[field]
       )
-        newProduct[field] = state.newAd[field];
+        newProduct[field] = state.newAd[field]
     }
 
     if (productId) {
@@ -39,37 +39,28 @@ export const addProduct = () => {
         db.collection('sellingProducts')
           .doc(productId)
           .update(newProduct)
-          .then(() => toast.success('Item successfully updated'));
+          .then(() => toast.success('Item successfully updated'))
       } catch {
-        toast.error('Oops!! Something went wrong');
+        toast.error('Oops!! Something went wrong')
       }
     } else {
       db.collection('sellingProducts')
         .add(newProduct)
         .then((docRef) => {
-          toast.success('Ad successfully added');
-          resolve(docRef.id);
+          toast.success('Ad successfully added')
+          resolve(docRef.id)
         })
         .catch((error) => {
-          toast.error('Oops!! Something went wrong');
-          console.error('Error adding document: ', error);
-          reject();
-        });
+          toast.error('Oops!! Something went wrong')
+          console.error('Error adding document: ', error)
+          reject()
+        })
     }
-  });
-};
+  })
+}
 
 export const getProduct = async (id) => {
-  let snapshot = await db.collection('sellingProducts').doc(id).get();
-  let data = await snapshot.data();
-  return data;
-};
-
-// export const addCategories = async() => {
-// data.forEach(async(item) => {
-//   await db.collection("categories").add({name: item.toLowerCase()})
-// })
-
-// }
-
-// addCategories()
+  let snapshot = await db.collection('sellingProducts').doc(id).get()
+  let data = await snapshot.data()
+  return data
+}

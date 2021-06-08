@@ -1,16 +1,22 @@
 import firebase from "firebase";
-import styled,{keyframes} from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { auth } from "services/firebase";
-import menuIcon from "assets/icons/menu.svg";
-import userIcon from "assets/icons/user.svg";
+import menuDark from "assets/icons/menu-dark.svg";
+import menuLight from "assets/icons/menu-light.svg";
+import userLight from "assets/icons/user-light.svg";
+import userDark from "assets/icons/user-dark.svg";
 import { useHistory } from "react-router-dom";
 import googleIcon from "assets/icons/google-icon.svg";
 import facebookIcon from "assets/icons/facebook-icon.svg";
 import exclamationIcon from "assets/icons/exclamation.svg";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { checkIfRegistered } from "features/auth/authSlice";
 import { useSelector } from "react-redux";
-import {useDispatch} from 'react-redux'
+import { useDispatch } from "react-redux";
+import CategoryMenu from "components/CategoryMenu";
+import searchDark from 'assets/icons/search-dark.svg'
+import searchLight from 'assets/icons/search-light.svg'
+import ToggleSwitch from 'components/ToggleSwitch'
 
 const SignInButton = styled.button`
   display: flex;
@@ -30,57 +36,6 @@ const SignInButton = styled.button`
   }
 `;
 
-const MainMenu = styled.div`
-  display: flex;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-  top: 64px;
-  padding: 2em 1em;
-  left: 0;
-  width: 70%;
-  min-height: calc(100vh - 64px);
-  background-color: white;
-  position: absolute;
-  transition: transform 0.2s ease-in-out;
-  transform: translateX(-100%);
-  z-index: 999;
-
-  .input-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    input {
-      outline: none;
-      border: 1px solid lightgrey;
-      padding: 1em;
-      width: 100%;
-      height: 3em;
-      font-family: ${(props) => props.theme.font.body};
-    }
-    :focus {
-      border: 1px solid darkgray;
-    }
-  }
-
-  .menu-search-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    p {
-      margin-bottom: 0.5em;
-    }
-  }
-
-  &.sliding-left {
-    transform: translateX(0%);
-  }
-`;
-
 const UsrMenu = styled.div`
   display: flex;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
@@ -95,7 +50,7 @@ const UsrMenu = styled.div`
   max-width: 20em;
   min-width: 18em;
   min-height: calc(100vh - 64px);
-  background-color: white;
+  background-color: ${({theme}) => theme.background};
   position: absolute;
   transition: transform 0.2s ease-in-out;
   transform: translateX(100%);
@@ -103,6 +58,10 @@ const UsrMenu = styled.div`
 
   &.sliding {
     transform: translateX(0%);
+  }
+
+  .greeting {
+    margin-bottom:1.5em;
   }
 
   .error-container {
@@ -131,7 +90,6 @@ const UsrMenu = styled.div`
     margin: 1em 0;
 
     button {
-      font-family: ${(props) => props.theme.font.body};
       outline: none;
       border: none;
       height: 3em;
@@ -145,16 +103,12 @@ const UsrMenu = styled.div`
       padding: 1em;
       width: 100%;
       height: 3em;
-      font-family: ${(props) => props.theme.font.body};
     }
     :focus {
       border: 1px solid darkgray;
     }
   }
 `;
-
-
-
 
 const fadeIn = keyframes`
   from {
@@ -168,7 +122,7 @@ const fadeIn = keyframes`
 
 const fadeOut = keyframes`
   from {
-    background-color: white;
+    background-color: ${({theme}) => theme.background};
   }
 
   to {
@@ -176,45 +130,33 @@ const fadeOut = keyframes`
   }
 `;
 
-
-
-
 const StyledInput = styled.input`
-  border: 3px solid ${(props) => props.theme.color.main};
+ 
   min-width: 20em;
   outline: none;
   height: 3em;
   padding-left: 0.5em;
-  font-family: ${(props) => props.theme.font.body};
-  color: ${(props) => props.theme.color.body};
+
 
   ::placeholder {
-    font-family: ${(props) => props.theme.font.body};
-    color: ${(props) => props.theme.color.body};
 
   }
-
 
   @media (max-width: 500px) {
-    border:none;
+    border: none;
   }
-    
 `;
 
-
 const Wrapper = styled.div`
-
-.no-nav {
+  .no-nav {
     animation: ${fadeOut} 300ms;
     background-color: none;
   }
 
-
   .show-nav {
-    animation: ${fadeIn} 300ms ;
-    background-color:#F7F7F2;
+    animation: ${fadeIn} 300ms;
+    background-color: ${({theme}) => theme.background};
   }
-
 
   height: 64px;
   width: 100%;
@@ -231,13 +173,13 @@ const Nav = styled.nav`
   padding: 0 1em;
 
   .menu-icon {
-    margin-right:1em;
+    margin-right: 1em;
     height: 20px;
   }
 
   .logo {
-    display:flex;
-    align-items:center;
+    display: flex;
+    align-items: center;
   }
 
   h1 {
@@ -259,77 +201,114 @@ const Nav = styled.nav`
   }
 
   .menu {
-    justify-self: flex-end;
+    display:flex;
+    justify-content:flex-end;
+    align-items: center;
+    gap:1em;
     grid-area: nav;
 
     img {
       height: 30px;
-  }
+    }
+
+    .search-icon {
+      display:none;
+
+      @media (max-width:700px) {
+      display:block;
+    }
+
+    }
+
+
+    
   }
 
   @media (max-width: 700px) {
+    height: auto;
+    background-color: "";
+    padding: .91em;
 
-height:auto;
-background-color:"";
-padding:1em;
 
-grid-template-areas:
-  "logo logo nav"
-  "search search search";
+    grid-template-areas:
+      "logo logo nav"
+      "search search search";
 
-.search-container {
-  width: 100%;
-  display: grid;
-  padding:.5em 0;
+    .search-container {
+      width: 100%;
+      display: grid;
+      padding: 0.5em 0;
 
-  select {
-    width: auto;
-    padding-left: .5em;
-    border:none;
-    margin-bottom:.5em;
+      select {
+        width: auto;
+        padding-left: 0.5em;
+        border: none;
+        margin-bottom: 0.5em;
+      }
+    }
+
+    .hide {
+      display:none;
+    }
   }
-}
-}
 `;
 
-
-
 const NavbarMobile = () => {
-
-  const {categories} = useSelector(state => state.categories);
-  const isVisible = useSelector(state => state.nav.isVisible);
-  const dispatch = useDispatch()
-  const history = useHistory()
+  const [toggleSearchBar,setToggleSearchBar] = useState(false)
+  const menu = useRef()
+  const accountMenu = useRef()
+  const catMenu = useRef()
+  const { categories } = useSelector((state) => state.categories);
+  const isVisible = useSelector((state) => state.nav.isVisible);
+  const dispatch = useDispatch();
+  const history = useHistory();
   const [valid, setValid] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [toggleVisibleSearch, setToggleVisibleSearch] = useState(false);
   const [toggleUserMenu, setToggleUserMenu] = useState(false);
-  const [toggleMenu, setToggleMenu] = useState(false);
+  const [toggleCatMenu, setToggleCatMenu] = useState(false);
+  const {themeMode} = useSelector(state => state.theme)
 
   useEffect(() => {
+    document.addEventListener("mousedown", handleClick);
     if (!email || password.length <= 0) {
       setValid(false);
     } else {
       setValid(true);
     }
-    return () => {};
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
   }, [email, password]);
 
-
- 
   const toggleAccountMenu = () => {
     if (toggleVisibleSearch) {
       setToggleVisibleSearch(!toggleVisibleSearch);
     }
 
-    setToggleUserMenu(!toggleUserMenu);
+    // setToggleUserMenu(!toggleUserMenu);
   };
 
-  const toggleMainMenu = () => {
-    setToggleMenu(!toggleMenu);
+
+  const handleClick = e => {
+    console.log(e.target)
+    console.log(accountMenu.current)
+    if(accountMenu.current === e.target) {
+      setToggleUserMenu((toggleUserMenu) => 
+        !toggleUserMenu
+      )
+    }
+    else if (menu.current.contains(e.target)) {
+      console.log("UTANFÖR!!!")
+      // inside click
+      return;
+    } else  {
+      setToggleUserMenu(false)
+    }
   };
+
 
   const login = async () => {
     try {
@@ -374,18 +353,19 @@ const NavbarMobile = () => {
     setPassword(e.target.value);
   };
 
+  const handleSearchBar = () => {
+    setToggleSearchBar(!toggleSearchBar)
+    console.log(toggleSearchBar)
+  }
+  
+
+
+
   return (
     <Wrapper>
-      <MainMenu className={toggleMenu ? `sliding-left` : ""}>
-        <div className="menu-search-container">
-          <p>All Categories</p>
-          <div className="input-container">
-            <input type="text" placeholder="Search all categories" />
-          </div>
-        </div>
-      </MainMenu>
-      <UsrMenu className={toggleUserMenu ? `sliding` : ""}>
-        <p>Welcome</p>
+      <UsrMenu ref={menu} className={toggleUserMenu ? `sliding` : ""}>
+        <p className="greeting">Welcome</p>
+        <ToggleSwitch/>
         <div className="provider-container">
           <SignInButton
             className="pulsing"
@@ -427,34 +407,48 @@ const NavbarMobile = () => {
         )}
       </UsrMenu>
 
-      <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`} >
-      <Nav >
-        <div className="logo">
-          <img onClick={toggleMainMenu} className="menu-icon" src={menuIcon} alt="" />
-          <h1 onClick={() => history.push('/')}>TradingBazaar</h1>
-        </div>
-        {!isVisible ? (
-          <div className="search-container">
-            <select name="category" id="category">
-              <option>All Categories</option>
-              {categories.map((category) => {
-                return (
-                  <option key={category.name} value={category.name}>
-                    {category.name}
-                  </option>
-                );
-              })}
-            </select>
-            <StyledInput placeholder="What are you looking for today?" />
+      <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
+        <Nav>
+          <div className="logo">
+            <img
+            ref={catMenu}
+              // onClick={handleCatMenu}
+              className="menu-icon"
+              src={themeMode === 'light' ? menuDark : menuLight}
+              alt=""
+            />
+            <h3 className="logo-title" onClick={() => history.push("/")}>TradingBazaar</h3>
           </div>
-        ) : (
-          ""
-        )}
-        <div className="menu">
-          <img onClick={toggleAccountMenu} className="nav" src={userIcon} alt="" />
-        </div>
-      </Nav>
+          {!isVisible ? (
+            <div className={`search-container ${toggleCatMenu || toggleUserMenu || toggleSearchBar ? "hide" : ""}`}>
+              <select name="category" id="category">
+                <option>All Categories</option>
+                {categories.map((category) => {
+                  return (
+                    <option key={category.name} value={category.name}>
+                      {category.name}
+                    </option>
+                  );
+                })}
+              </select>
+              <StyledInput placeholder="What are you looking for today?" />
+            </div>
+          ) : (
+            ""
+          )}
+          <div className="menu">
+           {!isVisible ?  <img className="search-icon" onClick={handleSearchBar} src={themeMode === 'light' ? searchDark : searchLight} alt="" /> : ""}
+            <img
+            ref={accountMenu}
+              onClick={(toggleAccountMenu)}
+              className="nav"
+              src={themeMode === 'light' ? userDark : userLight}
+              alt=""
+            />
+          </div>
+        </Nav>
       </div>
+      <CategoryMenu toggleCatMenu={toggleCatMenu} setToggleCatMenu={setToggleCatMenu} catMenu={catMenu} />
     </Wrapper>
   );
 };

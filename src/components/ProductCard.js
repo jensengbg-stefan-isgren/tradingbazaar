@@ -1,22 +1,23 @@
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import image from 'assets/images/img-placeholder.svg';
-import FavoriteFill from 'assets/icons/favorite_fill.svg';
-import FavoriteOutline from 'assets/icons/favorite_outline.svg';
-import { useSelector, useDispatch } from 'react-redux';
-import { authToggleFavorite } from 'features/auth/authSlice';
-import TimeLeftFunc from 'functions/timeLeft';
-import TimeLeftParagraph from 'components/TimeLeftParagraph';
-import { toast } from 'react-toastify';
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
+import image from 'assets/images/img-placeholder.svg'
+import FavoriteFill from 'assets/icons/heart-fill.svg'
+import darkFavIcon from 'assets/icons/heart-dark.svg'
+import lightFavIcon from 'assets/icons/heart-light.svg'
+import { useSelector, useDispatch } from 'react-redux'
+import { authToggleFavorite } from 'features/auth/authSlice'
+import TimeLeftFunc from 'functions/timeLeft'
+import TimeLeftParagraph from 'components/TimeLeftParagraph'
 
-import React from 'react';
+import React from 'react'
 
 const ProductCard = ({ ad }) => {
-  const { user } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
+  const { themeMode } = useSelector((state) => state.theme)
 
   function toggleFavorite() {
-    dispatch(authToggleFavorite(ad.id));
+    dispatch(authToggleFavorite(ad.id))
   }
 
   return (
@@ -38,7 +39,11 @@ const ProductCard = ({ ad }) => {
             onClick={toggleFavorite}
             // disabled={!isAuthenticated}
             bck={
-              user?.favorites?.includes(ad.id) ? FavoriteFill : FavoriteOutline
+              user?.favorites?.includes(ad.id)
+                ? FavoriteFill
+                : themeMode === 'light'
+                ? darkFavIcon
+                : lightFavIcon
             }
           ></BtnFavorite>
 
@@ -50,18 +55,19 @@ const ProductCard = ({ ad }) => {
         </div>
       </div>
     </StyledProduct>
-  );
-};
+  )
+}
 
 // https://cdn.pixabay.com/photo/2020/08/23/08/54/slippers-5510231_960_720.jpg
 // https://images.unsplash.com/photo-1599947820870-247640d0bfeb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80
 
 const StyledProduct = styled.div`
-  background-color: white;
+  background-color: ${({ theme }) => theme.productCard.background};
   padding: 0.6em;
   /* storleken på Bilden och width här nedan styr storleken på hela kortet */
   /* ändra även  */
   width: 19.2em;
+  color: ${({ theme }) => theme.font.color.main};
   .wrapper {
     display: flex;
     flex-direction: column;
@@ -76,7 +82,7 @@ const StyledProduct = styled.div`
   .img-cont {
     width: 18em;
     height: 18em;
-    background-color: ${(props) => props.theme.color.main};
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -84,8 +90,9 @@ const StyledProduct = styled.div`
 
     img {
       background-color: white;
-      max-width: 100%;
-      max-height: 100%;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       transform: scale(1.4);
       transition: transform 0.3s ease;
     }
@@ -95,12 +102,10 @@ const StyledProduct = styled.div`
   }
 
   .title-cont {
-    background-color: ${(props) => props.theme.button.bckDark};
     width: 100%;
     p {
       padding: 0.3em;
       text-align: center;
-      color: ${(props) => props.theme.button.color};
     }
   }
   .bottom-cont {
@@ -109,7 +114,7 @@ const StyledProduct = styled.div`
     justify-content: space-between;
     align-items: center;
   }
-`;
+`
 
 const BtnFavorite = styled.button(
   ({ bck = '' }) => `
@@ -125,6 +130,6 @@ const BtnFavorite = styled.button(
   cursor: pointer;
 
 `
-);
+)
 
-export default ProductCard;
+export default ProductCard
