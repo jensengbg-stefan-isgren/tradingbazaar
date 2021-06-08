@@ -1,19 +1,19 @@
-import SellingProducts from '../pages/SellingProducts';
-import ResetCredentials from '../components/ResetCredentials';
-import AddAd from '../pages/AddAd';
-import Login from '../pages/Login';
-import Profile from '../pages/Profile';
-import Register from '../pages/Register';
-import MainNav from '../pages/MainNav';
-import ActiveItems from 'pages/ActiveItems';
-import Settings from 'components/Settings/Settings';
-import ProfileSettings from 'components/Settings/ProfileSettings';
-import ActiveAds from 'components/ActiveAds';
-import WishList from 'pages/WishList';
-import ProductDetailsCard from 'components/ProductDetailsCard';
-import FilteredProducts from 'components/FilteredProducts';
-import Footer from 'components/Footer';
-import Page404 from 'pages/404';
+import SellingProducts from '../pages/SellingProducts'
+import ResetCredentials from '../components/ResetCredentials'
+import AddAd from '../pages/AddAd'
+import Login from '../pages/Login'
+import Profile from '../pages/Profile'
+import Register from '../pages/Register'
+import MainNav from '../pages/MainNav'
+import ActiveItems from 'pages/ActiveItems'
+import Settings from 'components/Settings/Settings'
+import ProfileSettings from 'components/Settings/ProfileSettings'
+import ActiveAds from 'pages/ActiveAds'
+import WishList from 'pages/WishList'
+import ProductDetailsCard from 'components/ProductDetailsCard'
+import FilteredProducts from 'components/FilteredProducts'
+import Footer from 'components/Footer'
+import Page404 from 'pages/404'
 
 export const routes = [
   {
@@ -116,6 +116,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['ad'],
     redirect: '/404',
+    footer: () => '',
   },
   {
     path: '*',
@@ -128,7 +129,8 @@ export const routes = [
   {
     path: '/filteredproducts/:category',
     main: () => <FilteredProducts />,
+    beforeRoute: [],
     navbar: () => <MainNav />,
     footer: () => <Footer />,
   },
-];
+]
