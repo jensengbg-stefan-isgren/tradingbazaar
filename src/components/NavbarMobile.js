@@ -10,7 +10,6 @@ import facebookIcon from "assets/icons/facebook-icon.svg";
 import exclamationIcon from "assets/icons/exclamation.svg";
 import React, { useState, useEffect,useRef } from "react";
 import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import CategoryMenu from "components/CategoryMenu";
 import searchDark from 'assets/icons/search-dark.svg'
 import searchLight from 'assets/icons/search-light.svg'
