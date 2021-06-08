@@ -175,20 +175,20 @@ p:first-child {
     }
   `;
 
-const StyledInput = styled.input`
-  background-color: ${({theme}) => theme.input.background};
-  height: 40px;
-  width: 70%;
-  padding-left: 0.5em;
-  border: 1px solid ${({theme}) => theme.input.borderColor};
-  color: ${({theme}) => theme.input.textColor};
+// const StyledInput = styled.input`
+//   background-color: ${({theme}) => theme.input.background};
+//   height: 40px;
+//   width: 70%;
+//   padding-left: 0.5em;
+//   border: 1px solid ${({theme}) => theme.input.borderColor};
+//   color: ${({theme}) => theme.input.textColor};
   
 
-  ::placeholder {
-    color: ${({theme}) => theme.input.textColor};
+//   ::placeholder {
+//     color: ${({theme}) => theme.input.textColor};
     
-  }
-`;
+//   }
+// `;
 
 const Navbar = () => {
   // const { searchResults, category, setCategory } = useSearch()
