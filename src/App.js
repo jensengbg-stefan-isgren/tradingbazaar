@@ -107,13 +107,13 @@ const ProtectedRoute = ({
         let isValid = true;
         if (routeCheck.includes('auth')) {
           isValid = await checkAuth();
-          if (!isValid) toast('Please Login to access the Page');
+          if (!isValid) toast.info('Please Login to access the Page');
         }
 
         if (isValid && routeCheck.includes('ad')) {
           const id = rest?.computedMatch?.params?.id;
           if (id) isValid = await checkAd(id);
-          if (!isValid) toast('The selected item does not exist');
+          if (!isValid) toast.info('The selected item does not exist');
         }
         setState(isValid ? 1 : -1);
       } catch {

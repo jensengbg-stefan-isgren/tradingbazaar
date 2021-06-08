@@ -1,48 +1,69 @@
-import { db } from '../services/firebase'
-import store from 'store/store'
-import { toast } from 'react-toastify'
-
+import { db } from '../services/firebase';
+import store from 'store/store';
+import { toast } from 'react-toastify';
 // import data from 'data/categories'
-export const addProduct = async () => {
-  const state = store.getState()
 
-  const newProduct = {
-    uid: state.auth.uid,
-    title: state.newAd.title,
-    description: state.newAd.description,
-    startPrice: state.newAd.startPrice,
-    acceptedPrice: state.newAd.acceptedPrice,
-    productConditions: state.newAd.productConditions,
-    adEndDate: state.newAd.adEndDate,
-    imgLink1: state.newAd.imgLink1,
-  }
-  for (let i = 2; i < 6; i++) {
-    const field = `imgLink${i}`
-    if (
-      state.newAd.hasOwnProperty(field) &&
-      state.newAd[field] != null &&
-      state.newAd[field]
-    )
-      newProduct[field] = state.newAd[field]
-  }
+export const addProduct = () => {
+  return new Promise(async (resolve, reject) => {
+    const state = store.getState();
+    const productId = state.newAd.id;
 
-  try {
-    // const docRef = await db.collection('sellingProducts').add(newProduct)
-    await db.collection('sellingProducts').add(newProduct)
-    toast.success('Ad successfully added')
-    // console.log('Document written with ID: ', docRef.id)
-  } catch (error) {
-    toast.error('Oops!! Something went wrong')
+    const newProduct = {
+      uid: state.auth.uid,
+      title: state.newAd.title,
+      description: state.newAd.description,
+      searchDescr:
+        state.newAd.title.toLowerCase() +
+        ' ' +
+        state.newAd.description.toLowerCase(),
+      category: state.newAd.category,
+      startPrice: state.newAd.startPrice,
+      acceptedPrice: state.newAd.acceptedPrice,
+      productConditions: state.newAd.productConditions,
+      adEndDate: state.newAd.adEndDate,
+      imgLink1: state.newAd.imgLink1,
+      removed: state.newAd.removed,
+    };
+    for (let i = 2; i < 6; i++) {
+      const field = `imgLink${i}`;
+      if (
+        state.newAd.hasOwnProperty(field) &&
+        state.newAd[field] != null &&
+        state.newAd[field]
+      )
+        newProduct[field] = state.newAd[field];
+    }
 
-    console.error('Error adding document: ', error)
-  }
-}
+    if (productId) {
+      try {
+        db.collection('sellingProducts')
+          .doc(productId)
+          .update(newProduct)
+          .then(() => toast.success('Item successfully updated'));
+      } catch {
+        toast.error('Oops!! Something went wrong');
+      }
+    } else {
+      db.collection('sellingProducts')
+        .add(newProduct)
+        .then((docRef) => {
+          toast.success('Ad successfully added');
+          resolve(docRef.id);
+        })
+        .catch((error) => {
+          toast.error('Oops!! Something went wrong');
+          console.error('Error adding document: ', error);
+          reject();
+        });
+    }
+  });
+};
 
 export const getProduct = async (id) => {
-  let snapshot = await db.collection('sellingProducts').doc(id).get()
-  let data = await snapshot.data()
-  return data
-}
+  let snapshot = await db.collection('sellingProducts').doc(id).get();
+  let data = await snapshot.data();
+  return data;
+};
 
 // export const addCategories = async() => {
 // data.forEach(async(item) => {

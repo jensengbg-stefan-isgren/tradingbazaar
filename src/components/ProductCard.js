@@ -1,26 +1,22 @@
-import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-import image from 'assets/images/img-placeholder.svg'
-import FavoriteFill from 'assets/icons/favorite_fill.svg'
-import FavoriteOutline from 'assets/icons/favorite_outline.svg'
-import { useSelector, useDispatch } from 'react-redux'
-import { authToggleFavorite } from 'features/auth/authSlice'
-import TimeLeftFunc from 'functions/timeLeft'
-import TimeLeftParagraph from 'components/TimeLeftParagraph'
-import { toast } from 'react-toastify'
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import image from 'assets/images/img-placeholder.svg';
+import FavoriteFill from 'assets/icons/favorite_fill.svg';
+import FavoriteOutline from 'assets/icons/favorite_outline.svg';
+import { useSelector, useDispatch } from 'react-redux';
+import { authToggleFavorite } from 'features/auth/authSlice';
+import TimeLeftFunc from 'functions/timeLeft';
+import TimeLeftParagraph from 'components/TimeLeftParagraph';
+import { toast } from 'react-toastify';
 
-import React from 'react'
+import React from 'react';
 
 const ProductCard = ({ ad }) => {
-  const { isAuthenticated, user } = useSelector((state) => state.auth)
-  const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
-  async function toggleFavorite(event) {
-    // if (!isAuthenticated) return alert('Please Login to select your Favorites')
-    if (!isAuthenticated)
-      return toast.warn('Please Login to save your favorite items')
-
-    dispatch(authToggleFavorite(ad.id))
+  function toggleFavorite() {
+    dispatch(authToggleFavorite(ad.id));
   }
 
   return (
@@ -36,7 +32,7 @@ const ProductCard = ({ ad }) => {
         </Link>
 
         <div className="bottom-cont">
-          <p>{ad.startPrice} Kr</p>
+          <p>{ad.highestBid ? ad.highestBid : ad.startPrice} Kr</p>
           <p>{!ad.bids ? 0 : ad.bids} Bids</p>
           <BtnFavorite
             onClick={toggleFavorite}
@@ -54,8 +50,8 @@ const ProductCard = ({ ad }) => {
         </div>
       </div>
     </StyledProduct>
-  )
-}
+  );
+};
 
 // https://cdn.pixabay.com/photo/2020/08/23/08/54/slippers-5510231_960_720.jpg
 // https://images.unsplash.com/photo-1599947820870-247640d0bfeb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80
@@ -113,7 +109,7 @@ const StyledProduct = styled.div`
     justify-content: space-between;
     align-items: center;
   }
-`
+`;
 
 const BtnFavorite = styled.button(
   ({ bck = '' }) => `
@@ -129,6 +125,6 @@ const BtnFavorite = styled.button(
   cursor: pointer;
 
 `
-)
+);
 
-export default ProductCard
+export default ProductCard;
