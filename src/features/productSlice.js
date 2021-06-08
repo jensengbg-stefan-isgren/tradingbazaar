@@ -70,7 +70,7 @@ export const productSlice = createSlice({
   },
   extraReducers: {
     [bid.fulfilled]: (state, action) => {
-      productSlice.caseReducers.addDetailedProduct(state, action)
+      // productSlice.caseReducers.addDetailedProduct(state, action)
       state.newBid = 0
     },
     [bid.rejected]: (state, action) => {

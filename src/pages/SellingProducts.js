@@ -32,19 +32,19 @@ const ProductSection = () => {
           {ads.selling ? (
             <CardContainer ads={ads.selling} />
           ) : (
-            <div>
+            <div className="empty-section">
               <h3>No open auctions at the moment</h3>
             </div>
           )}
         </div>
         <div>
           <h2>Expired Auctions</h2>
-          {ads.expired ? (
+          {ads.expired.length ? (
             <CardContainer ads={ads.expired} />
           ) : (
-            <div>
+            <StyledEmptySection>
               <h3>No expired auctions</h3>
-            </div>
+            </StyledEmptySection>
           )}
         </div>
         <div className="image-container">
@@ -67,6 +67,14 @@ const ProductSection = () => {
 // {
 //   /* <ProductCard imgLink="https://cdn.pixabay.com/photo/2020/08/23/08/54/slippers-5510231_960_720.jpg" /> */
 // }
+
+const StyledEmptySection = styled.div`
+  min-height: 20em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+`
 
 const StyledProductWrapper = styled.main`
   .container {
