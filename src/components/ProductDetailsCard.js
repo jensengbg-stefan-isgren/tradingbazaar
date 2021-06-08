@@ -231,7 +231,7 @@ const ProductDetailsCard = () => {
                     // disabled={uid === detailedProduct.uid}
                     onClick={() => dispatch(authToggleFavorite(id))}
                   >
-                    {favorites.includes(id)
+                    {Array.isArray(favorites) && favorites.includes(id)
                       ? 'Remove from Favorites'
                       : 'Add to Favorites'}
                   </button>
