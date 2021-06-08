@@ -1,24 +1,18 @@
-import React, { useEffect, useState, useRef } from 'react';
-import ChangeHighlight from 'react-change-highlight';
-import styled from 'styled-components';
-import { useHistory, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  bid,
-  setNewBid,
-  removeProduct,
-  prodAmend,
-} from 'features/productSlice';
-import timeLeftFunc from 'functions/timeLeftInterval';
-import TimeLeftParagraph from './TimeLeftParagraph';
-import { authToggleFavorite } from 'features/auth/authSlice';
+import React, { useEffect, useState, useRef } from 'react'
+import ChangeHighlight from 'react-change-highlight'
+import styled from 'styled-components'
+import { useHistory, useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { bid, setNewBid, removeProduct, prodAmend } from 'features/productSlice'
+import timeLeftFunc from 'functions/timeLeftInterval'
+import TimeLeftParagraph from './TimeLeftParagraph'
+import { authToggleFavorite } from 'features/auth/authSlice'
 
-import { toast } from 'react-toastify';
-import UseGetAd from 'services/useGetAd';
+import UseGetAd from 'services/useGetAd'
 
 const ProductDetailsCard = () => {
-  const { id } = useParams();
-  const history = useHistory();
+  const { id } = useParams()
+  const history = useHistory()
   // const {
   //   detailedProduct,
   //   seller,
@@ -27,58 +21,57 @@ const ProductDetailsCard = () => {
   //   endDate,
   // } = useSelector((state) => state.product)
 
-  const detailedProduct = useSelector((state) => state.product.detailedProduct);
-  const seller = useSelector((state) => state.product.seller);
-  const adStatus = useSelector((state) => state.product.adStatus);
-  const endDate = useSelector((state) => state.product.endDate);
+  const detailedProduct = useSelector((state) => state.product.detailedProduct)
+  const seller = useSelector((state) => state.product.seller)
+  const adStatus = useSelector((state) => state.product.adStatus)
+  const endDate = useSelector((state) => state.product.endDate)
 
-  const { uid, isAuthenticated } = useSelector((state) => state.auth);
-  const favorites = useSelector((state) => state.auth.user.favorites);
+  const { uid, isAuthenticated } = useSelector((state) => state.auth)
+  const favorites = useSelector((state) => state.auth.user.favorites)
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const [mainImage, setMainImage] = useState(null);
-  // const [myBid, setMyBid] = useState('')
+  const [mainImage, setMainImage] = useState(null)
 
-  const highestBidRef = useRef(null);
-  const bidsRef = useRef(null);
-  const leadingBidderRef = useRef(null);
+  const highestBidRef = useRef(null)
+  const bidsRef = useRef(null)
+  const leadingBidderRef = useRef(null)
 
   const bidderText = () => {
     switch (adStatus) {
       case 0: {
-        if (detailedProduct.bids) return 'Last bid by - ';
-        else return 'No bids yet';
+        if (detailedProduct.bids) return 'Last bid by - '
+        else return 'No bids yet'
       }
       case 1:
-        return 'Auction won by - ';
+        return 'Auction won by - '
       case 2:
-        return 'Bought directly by - ';
+        return 'Bought directly by - '
       case 3:
-        return 'No bids - Time expired';
+        return 'No bids - Time expired'
       default:
     }
-  };
+  }
 
   const resell = async () => {
-    const res = await dispatch(prodAmend({ id, amend: false }));
-    if (!res.error) history.push('/addad');
-  };
+    const res = await dispatch(prodAmend({ id, amend: false }))
+    if (!res.error) history.push('/addad')
+  }
 
   const amend = async () => {
-    const res = await dispatch(prodAmend({ id, amend: true }));
-    if (!res.error) history.push('/addad');
-  };
+    const res = await dispatch(prodAmend({ id, amend: true }))
+    if (!res.error) history.push('/addad')
+  }
 
   const addBid = () => {
-    dispatch(bid());
-  };
+    dispatch(bid())
+  }
 
-  UseGetAd(id);
+  UseGetAd(id)
 
   const handleImage = (e) => {
-    setMainImage(e.target.src);
-  };
+    setMainImage(e.target.src)
+  }
 
   return (
     <Wrapper>
@@ -283,16 +276,16 @@ const ProductDetailsCard = () => {
         ''
       )}
     </Wrapper>
-  );
-};
+  )
+}
 
 const GridElement = React.memo(({ className, children }) => {
-  return <div className={className}>{children}</div>;
-});
+  return <div className={className}>{children}</div>
+})
 
 const BidInput = () => {
-  const dispatch = useDispatch();
-  const newBid = useSelector((state) => state.product.newBid);
+  const dispatch = useDispatch()
+  const newBid = useSelector((state) => state.product.newBid)
   return (
     <>
       <input
@@ -303,42 +296,42 @@ const BidInput = () => {
         onChange={(e) => dispatch(setNewBid(e.target.value))}
       />
     </>
-  );
-};
+  )
+}
 
 const TimerComponent = () => {
-  const detailedProduct = useSelector((state) => state.product.detailedProduct);
+  const detailedProduct = useSelector((state) => state.product.detailedProduct)
 
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
-  });
+  })
   const timerCallback = (timeObj) => {
-    setTimeLeft({ ...timeObj });
-  };
+    setTimeLeft({ ...timeObj })
+  }
   useEffect(() => {
-    let interval = timeLeftFunc(detailedProduct.adEndDate || 0, timerCallback);
+    let interval = timeLeftFunc(detailedProduct.adEndDate || 0, timerCallback)
     return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [detailedProduct]);
+      if (interval) clearInterval(interval)
+    }
+  }, [detailedProduct])
 
   return (
     <>
       <TimeLeftParagraph timeLeft={timeLeft} />
     </>
-  );
-};
+  )
+}
 
 const Wrapper = styled.div`
-padding-top: 5em;
+  padding-top: 5em;
   height: auto;
   width: auto;
   display: grid;
   justify-content: center;
-`;
+`
 
 const Container = styled.div`
   margin-top: 1em;
@@ -490,7 +483,6 @@ const Container = styled.div`
       transition: all 0.2s ease;
     }
     .highlightClass {
-
       font-weight: bold;
     }
   }
@@ -521,6 +513,6 @@ const Container = styled.div`
       padding-left: 0;
     }
   }
-`;
+`
 
-export default ProductDetailsCard;
+export default ProductDetailsCard

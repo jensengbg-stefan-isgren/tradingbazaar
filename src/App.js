@@ -72,11 +72,11 @@ const App = () => {
                       key={index}
                       path={route.path}
                       exact={route.exact}
-                      children={
+                      children={() => (
                         <>
                           <route.navbar /> <route.main /> <route.footer />
                         </>
-                      }
+                      )}
                     />
                   )
               })}
@@ -125,7 +125,8 @@ const ProtectedRoute = ({
           if (id) isValid = await checkAd(id)
           if (!isValid) toast.info('The selected item does not exist')
         }
-        setState(isValid ? 1 : -1)
+        // setState(isValid ? 1 : -1)
+        setState(1)
       } catch {
         setState(-1)
       }
