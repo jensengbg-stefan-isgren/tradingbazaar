@@ -2,9 +2,9 @@ import React from 'react'
 import SignIn from 'components/SignIn'
 
 const Login = () => {
-  return(
-    <SignIn/>
-  )
+  document.title = 'Trading Bazaar | Sign In'
+
+  return <SignIn />
 }
 
 export default Login

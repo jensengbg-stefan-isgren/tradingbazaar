@@ -6,6 +6,8 @@ import CardContainer from 'components/CardContainer'
 import getProdsByArrOfId from 'functions/getProdsByArrOfId'
 
 const WishList = () => {
+  document.title = 'Trading Bazaar | Whish list'
+
   const wishedProdArr = useSelector((state) => state.auth.user?.favorites)
   const [ads, setAds] = useState([])
 

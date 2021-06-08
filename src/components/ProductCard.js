@@ -8,20 +8,15 @@ import { useSelector, useDispatch } from 'react-redux'
 import { authToggleFavorite } from 'features/auth/authSlice'
 import TimeLeftFunc from 'functions/timeLeft'
 import TimeLeftParagraph from 'components/TimeLeftParagraph'
-import { toast } from 'react-toastify'
 
 import React from 'react'
 
 const ProductCard = ({ ad }) => {
-  const { isAuthenticated, user } = useSelector((state) => state.auth)
-  const {themeMode} = useSelector(state => state.theme)
+  const { user } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
+  const { themeMode } = useSelector((state) => state.theme)
 
-  async function toggleFavorite(event) {
-    // if (!isAuthenticated) return alert('Please Login to select your Favorites')
-    if (!isAuthenticated)
-      return toast.warn('Please Login to save your favorite items')
-
+  function toggleFavorite() {
     dispatch(authToggleFavorite(ad.id))
   }
 
@@ -38,13 +33,17 @@ const ProductCard = ({ ad }) => {
         </Link>
 
         <div className="bottom-cont">
-          <p>{ad.startPrice} Kr</p>
+          <p>{ad.highestBid ? ad.highestBid : ad.startPrice} Kr</p>
           <p>{!ad.bids ? 0 : ad.bids} Bids</p>
           <BtnFavorite
             onClick={toggleFavorite}
             // disabled={!isAuthenticated}
             bck={
-              user?.favorites?.includes(ad.id) ? FavoriteFill : themeMode === 'light' ? darkFavIcon : lightFavIcon
+              user?.favorites?.includes(ad.id)
+                ? FavoriteFill
+                : themeMode === 'light'
+                ? darkFavIcon
+                : lightFavIcon
             }
           ></BtnFavorite>
 
@@ -63,12 +62,12 @@ const ProductCard = ({ ad }) => {
 // https://images.unsplash.com/photo-1599947820870-247640d0bfeb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80
 
 const StyledProduct = styled.div`
-  background-color: ${({theme}) => theme.productCard.background};
+  background-color: ${({ theme }) => theme.productCard.background};
   padding: 0.6em;
   /* storleken på Bilden och width här nedan styr storleken på hela kortet */
   /* ändra även  */
   width: 19.2em;
-  color: ${({theme}) => theme.font.color.main};
+  color: ${({ theme }) => theme.font.color.main};
   .wrapper {
     display: flex;
     flex-direction: column;
@@ -91,8 +90,8 @@ const StyledProduct = styled.div`
 
     img {
       background-color: white;
-      width:100%;
-      height:100%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       transform: scale(1.4);
       transition: transform 0.3s ease;
@@ -103,12 +102,10 @@ const StyledProduct = styled.div`
   }
 
   .title-cont {
-
     width: 100%;
     p {
       padding: 0.3em;
       text-align: center;
-  
     }
   }
   .bottom-cont {

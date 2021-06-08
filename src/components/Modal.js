@@ -1,24 +1,15 @@
-import { createPortal } from 'react-dom'
-import styled from 'styled-components'
-const modalRoot = document.getElementById('modal')
+import { createPortal } from 'react-dom';
+import styled from 'styled-components';
+const modalRoot = document.getElementById('modal');
 
 const Modal = (props) => {
-  //   const element = document.createElement('div')
-  //   element.classList.add('my-modal')
-  //   useEffect(() => {
-  // modalRoot.appendChild(element)
-  // console.log('ModalEffect', modalRoot, element)
-  // return () => modalRoot.removeChild(element)
-  //   }, [element])
-
-  //   return createPortal(props.children, element)
   return createPortal(
     <StyledModal>
       <section>{props.children}</section>
     </StyledModal>,
     modalRoot
-  )
-}
+  );
+};
 
 const StyledModal = styled.div`
   position: absolute;
@@ -41,6 +32,6 @@ const StyledModal = styled.div`
     background: ${(props) => props.theme.color.lightBckGround};
     padding: 2em;
   }
-`
+`;
 
-export default Modal
+export default Modal;
