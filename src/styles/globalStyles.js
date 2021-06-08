@@ -70,6 +70,7 @@ a {
 }
 
 label, p {
+  color: ${({theme}) => theme.font.color.main};
   font-family: ${({theme}) => theme.font.body}
 }  
 
