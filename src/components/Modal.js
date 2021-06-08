@@ -29,7 +29,6 @@ const StyledModal = styled.div`
   justify-content: center;
 
   section {
-    background: ${(props) => props.theme.color.lightBckGround};
     padding: 2em;
   }
 `;

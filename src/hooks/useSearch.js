@@ -27,7 +27,7 @@ const searchResults = async(searchValue,category) => {
     if(category === 0) {
       let adList = []
       let querySnapshot = await db.collection('sellingProducts')
-      .where('title', '==', `${searchValue}`).get()
+      .where('searchDescr', '==', `${searchValue}`).get()
       
       
       if(querySnapshot.docs.length === 0) {
@@ -48,7 +48,7 @@ const searchResults = async(searchValue,category) => {
       let adList = []
       let querySnapshot = await db.collection('sellingProducts')
       .where('category','==', `${category}`)
-      .where('title', '==', `${searchValue}`).get()
+      .where('searchDescr', '==', `${searchValue}`).get()
       if(querySnapshot.docs.length === 0) {
         return
       } else {
