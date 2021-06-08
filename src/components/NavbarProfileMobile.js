@@ -173,6 +173,7 @@ const Wrapper = styled.div`
 
 const NavbarMobileProfile = () => {
 
+  const location = useLocation()
 
   useEffect(() => {
     if(location.pathname.includes('/item')) {
@@ -181,10 +182,10 @@ const NavbarMobileProfile = () => {
     return () => {
     
     }
-  }, [])
+  }, [location.pathname])
 
 
-  const location = useLocation()
+
   const {searchResults,category,setCategory} = useSearch()
   const catMenu = useRef()
   const accountMenu = useRef()

@@ -1,22 +1,21 @@
-import firebase from "firebase";
+
 import styled, { keyframes } from "styled-components";
 import { auth } from "services/firebase";
 import menuDark from "assets/icons/menu-dark.svg";
 import menuLight from "assets/icons/menu-light.svg";
 import userLight from "assets/icons/user-light.svg";
 import userDark from "assets/icons/user-dark.svg";
-import { useHistory } from "react-router-dom";
 import googleIcon from "assets/icons/google-icon.svg";
 import facebookIcon from "assets/icons/facebook-icon.svg";
 import exclamationIcon from "assets/icons/exclamation.svg";
 import React, { useState, useEffect,useRef } from "react";
-import { checkIfRegistered } from "features/auth/authSlice";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import CategoryMenu from "components/CategoryMenu";
 import searchDark from 'assets/icons/search-dark.svg'
 import searchLight from 'assets/icons/search-light.svg'
 import ToggleSwitch from 'components/ToggleSwitch'
+import useSignin from "hooks/useSignin";
 
 const SignInButton = styled.button`
   display: flex;
@@ -34,6 +33,9 @@ const SignInButton = styled.button`
   img {
     height: 30px;
   }
+
+
+
 `;
 
 const UsrMenu = styled.div`
@@ -254,14 +256,20 @@ const Nav = styled.nav`
 `;
 
 const NavbarMobile = () => {
+
+
+
+  const {
+    registerAccount,
+    history,
+  } = useSignin();
+
   const [toggleSearchBar,setToggleSearchBar] = useState(false)
   const menu = useRef()
   const accountMenu = useRef()
   const catMenu = useRef()
   const { categories } = useSelector((state) => state.categories);
   const isVisible = useSelector((state) => state.nav.isVisible);
-  const dispatch = useDispatch();
-  const history = useHistory();
   const [valid, setValid] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -293,15 +301,14 @@ const NavbarMobile = () => {
 
 
   const handleClick = e => {
-    console.log(e.target)
-    console.log(accountMenu.current)
+
     if(accountMenu.current === e.target) {
       setToggleUserMenu((toggleUserMenu) => 
         !toggleUserMenu
       )
     }
     else if (menu.current.contains(e.target)) {
-      console.log("UTANFÖR!!!")
+
       // inside click
       return;
     } else  {
@@ -313,37 +320,13 @@ const NavbarMobile = () => {
   const login = async () => {
     try {
       await auth.signInWithEmailAndPassword(email, password);
-      history.push("/profile/overview");
+      history.push("/");
     } catch (error) {
       setErrorMessage(error.message);
     }
   };
 
-  const registerAccount = async (provider) => {
-    let authProvider;
-
-    switch (provider) {
-      case "google":
-        authProvider = new firebase.auth.GoogleAuthProvider();
-        break;
-      case "facebook":
-        authProvider = new firebase.auth.FacebookAuthProvider();
-        break;
-      default:
-    }
-
-    try {
-      await firebase.auth().signInWithPopup(authProvider);
-
-      history.push("/profile/overview");
-      dispatch(checkIfRegistered({ status: null, message: null }));
-    } catch ({ code, message }) {
-      if (code === "auth/account-exists-with-different-credential") {
-        await dispatch(checkIfRegistered({ status: true, message: message }));
-        history.push("/login");
-      }
-    }
-  };
+  
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -355,7 +338,7 @@ const NavbarMobile = () => {
 
   const handleSearchBar = () => {
     setToggleSearchBar(!toggleSearchBar)
-    console.log(toggleSearchBar)
+
   }
   
 

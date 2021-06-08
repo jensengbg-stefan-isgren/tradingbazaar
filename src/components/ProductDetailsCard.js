@@ -313,7 +313,7 @@ const Container = styled.div`
   margin-top: 1em;
   height: auto;
   width: auto;
-  background-color: white;
+  background-color: ${({theme}) => theme.productCard.background};
   display: grid;
   grid-template-columns: 30em 12em;
   padding: 1em;
@@ -357,6 +357,8 @@ const Container = styled.div`
     justify-content: center;
     flex-direction: column;
     gap: 1em;
+    
+
 
     button {
       padding: 0.5em;
@@ -379,6 +381,10 @@ const Container = styled.div`
     padding: 1em;
     background-color: #f7f7f2;
     /* margin-bottom: 1em; */
+    
+    p {
+      color: ${({theme}) => theme.productCard.textColor};
+    }
   }
 
   .thumbnail-container {

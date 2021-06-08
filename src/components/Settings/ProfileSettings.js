@@ -6,12 +6,13 @@ import firebase, { auth } from "services/firebase";
 import {addUser} from 'features/auth/authSlice'
 
 const Wrapper = styled.div`
+  margin-top:5em;
   width: 100vw;
-  height: 100vh;
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  background-color: white;
+  background-color: ${({theme}) => theme.background};
 `;
 
 const PersonalInfo = styled.div`
@@ -57,12 +58,13 @@ button {
   }
 
   .form-container {
-    margin-top: 2em;
+    margin-top:1em;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 
     div {
+      margin-bottom:.5em;
       display:grid;
       grid-template-columns: repeat(2,1fr);
       place-content: center;
@@ -72,6 +74,11 @@ button {
   }
 
   input {
+    font-size:.8em;
+    border:1px solid ${({theme}) => theme.input.borderColor};
+    padding:.5em;
+    background-color: ${({theme}) => theme.background};
+    color: ${({theme}) => theme.font.color.main};
     &.not-edit {
       border: none;
       outline: none;
