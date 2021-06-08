@@ -148,11 +148,11 @@ const SignIn = () => {
                 With email and password, click
                 <span onClick={handleSignInMethod}> here</span>
               </p>
-              <SignInButton onClick={() => registerAccount("google")}>
+              <SignInButton className="auth-button" onClick={() => registerAccount("google")}>
                 <img src={googleIcon} alt="" />
                 <p>Sign in with Google account</p>
               </SignInButton>
-              <SignInButton
+              <SignInButton className="auth-button"
                 onClick={() => registerAccount("facebook")}
                 disabled={errorMessage}
               >

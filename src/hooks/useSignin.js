@@ -36,7 +36,7 @@ const useSignin = () => {
 
     try {
       let response = await firebase.auth().signInWithPopup(authProvider)
-     
+      dispatch(authUser())
       const {
         additionalUserInfo,
         user: { uid },
@@ -48,7 +48,7 @@ const useSignin = () => {
         dispatch(authUser())
  
         dispatch(checkIfRegistered({ status: false, message: null }))
-        history.push('/profile/overview')
+        history.push('/')
       } else {
         let profileData = {
           name: null,
@@ -80,10 +80,9 @@ const useSignin = () => {
         }
 
         await db.collection('users').doc(uid).set(profileData)
-
         dispatch(addUser(profileData))
         dispatch(checkIfRegistered({ status: false, message: null }))
-        history.push('/profile/overview')
+        history.push('/')
       }
     } catch ({ code, message }) {
       if (code === 'auth/account-exists-with-different-credential') {

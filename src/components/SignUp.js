@@ -120,11 +120,11 @@ const SignUp = () => {
               With email and password, Click
               <span onClick={() => handleSignInMethod()}> here</span>
             </p>
-            <RegisterButton onClick={() => registerAccount("google")}>
+            <RegisterButton className="auth-button" onClick={() => registerAccount("google")}>
               <img src={googleIcon} alt="google icon" />
               <p>Register with Google account</p>
             </RegisterButton>
-            <RegisterButton onClick={() => registerAccount("facebook")}>
+            <RegisterButton className="auth-button" onClick={() => registerAccount("facebook")}>
               <img src={facebookIcon} alt="facebook icon" />
               <p>Register with Facebook account</p>
             </RegisterButton>

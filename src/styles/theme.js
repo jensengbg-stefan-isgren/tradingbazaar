@@ -24,8 +24,9 @@
 export const lightTheme = {
   body: '#FFF',
   text: '#363537',
+  buttonText: '#040A10',
   toggleBorder: '#FFF',
-  background: '#fffafa',
+  background: '#FFFFFF',
  font: {
   title: '"Passion One", cursive;',
   body: '"Open Sans", sans-serif;',
@@ -48,7 +49,8 @@ export const lightTheme = {
   textColor: '#040A10'
  },
  productCard: {
-  background: '#F9E9EC'
+  background: '#F9E9EC',
+  textColor: '#040610'
 },
 menu : {
   hoverColor: '#FFFFFF',
@@ -61,12 +63,16 @@ profileMenu: {
   hover: '#040A10',
   background: '#FFFFFF',
   textColor: '#040A10'
+},
+footer: {
+  background:'#F9E9EC' 
 }
 }
 
 export const darkTheme = {
   body: '#363537',
   text: '#FAFAFA',
+  buttonText: '#040A10',
   toggleBorder: '#6B8096',
   background: '#040A10',
  font: {
@@ -82,7 +88,7 @@ export const darkTheme = {
  },
  input: {
   background: '#FFFFFF',
-  borderColor:'#040A10',
+  borderColor:'#FFFFFF',
   textColor: '#040A10'
  },
  select: {
@@ -91,7 +97,8 @@ export const darkTheme = {
   textColor: '#040A10'
  },
  productCard: {
-  background: ' rgba(15, 0, 41, 0.2)'
+  background: '#040610',
+  textColor: '#040610'
  },
  menu : {
   hoverColor: '#040A10',
@@ -104,5 +111,8 @@ export const darkTheme = {
   hover: '#FFFFFF',
    background: '#040A10',
    textColor: '#FFFFFF'
- }
+ },
+ footer: {
+  background:'#040610' 
+ },
 }
