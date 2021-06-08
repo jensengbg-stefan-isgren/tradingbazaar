@@ -34,6 +34,7 @@ const fadeOut = keyframes`
 
 const StyledInput = styled.input`
   min-width: 20em;
+  border:  1px solid ${({theme}) => theme.select.borderColor};
   outline: none;
   height: 3em;
   padding-left: 0.5em;
@@ -47,7 +48,7 @@ const StyledInput = styled.input`
   }
 
   @media (max-width: 500px) {
-    border: none;
+    border:  1px solid ${({theme}) => theme.select.borderColor};
   }
 `
 
@@ -128,7 +129,7 @@ const Wrapper = styled.div`
 
     select {
       padding: 0 1em;
-      border: none;
+      border:  1px solid ${({theme}) => theme.select.borderColor};
       height: 3em;
       width: 100%;
     }

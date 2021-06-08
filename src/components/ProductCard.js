@@ -62,6 +62,7 @@ const ProductCard = ({ ad }) => {
 // https://images.unsplash.com/photo-1599947820870-247640d0bfeb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80
 
 const StyledProduct = styled.div`
+box-shadow:${({theme}) => theme.productCard.shadow};
   background-color: ${({ theme }) => theme.productCard.background};
   padding: 0.6em;
   /* storleken på Bilden och width här nedan styr storleken på hela kortet */
