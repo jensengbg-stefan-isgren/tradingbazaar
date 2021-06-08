@@ -66,6 +66,10 @@ profileMenu: {
 },
 footer: {
   background:'#F9E9EC' 
+},
+addBtn: {
+  backgroundColor:'#040610',
+  textColor: '#FFFFFF'
 }
 }
 
@@ -115,4 +119,8 @@ export const darkTheme = {
  footer: {
   background:'#040610' 
  },
+ addBtn: {
+   backgroundColor:'#FFFFFF',
+   textColor: '#040610'
+ }
 }

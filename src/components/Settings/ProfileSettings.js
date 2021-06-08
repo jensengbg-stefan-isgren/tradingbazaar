@@ -22,8 +22,19 @@ const PersonalInfo = styled.div`
   padding: 1em;
 
 button {
+    border:none;
+    outline:none;
     margin: .3em 0;
     padding: .5em;
+
+
+    &.active {
+      background-color:#20BF55;
+    }
+
+    &.not-active {
+      background-color: #E52724;
+    }
   }
 
   label {
@@ -48,6 +59,7 @@ button {
     .user-creds-container {
       display: flex;
       flex-direction: column;
+      gap:.5em;
     }
   }
 
@@ -264,8 +276,8 @@ console.log(verifyPassword)
                 {google ? (
                   <div>
                   
-                    <button onClick={removeGoogle}>
-                      Remove Google as signin method
+                    <button className={google ? 'active' : 'not-active'} onClick={removeGoogle}>
+                      Remove Google
                     </button>
                   </div>
                 ) : (
@@ -274,8 +286,8 @@ console.log(verifyPassword)
                 {facebook ? (
                   <div>
                
-                    <button onClick={removeFacebook}>
-                      Remove Facebook as signin method
+                    <button className={facebook ? 'active' : 'not-active'} onClick={removeFacebook}>
+                      Remove Facebook
                     </button>
                   </div>
                 ) : (
@@ -284,8 +296,8 @@ console.log(verifyPassword)
                 {password ? (
                   <div>
                  
-                    <button onClick={removeEmail}>
-                      Remove Password as signin method
+                    <button className={password ? 'active' : 'not-active'} onClick={removeEmail}>
+                      Remove Password
                     </button>
                   </div>
                 ) : (
@@ -294,18 +306,18 @@ console.log(verifyPassword)
               </div>
               <div className="inactive-providers-container">
                 <p>Inactive providers</p>
-                {!google ? <button onClick={connectGoogle}>Add Google as signin method</button> : ""}
+                {!google ? <button className={!google ? 'not-active' : ""} onClick={connectGoogle}>Add Google</button> : ""}
                 {!facebook ? (
-                  <button onClick={connectFacebook}>Add Facebook as signin method</button>
+                  <button className={!facebook ? 'not-active' : ""} onClick={connectFacebook}>Add Facebook</button>
                 ) : (
                   ""
                 )}
                 {!password ? (
                   <div>
-                    <button
+                    <button className={!password ? 'not-active' : ""}
                       onClick={() => setToggleCredentials(!toggleCredentials)}
                     >
-                      Add email and password as signin method
+                      Add email and password
                     </button>
                   </div>
                 ) : (
@@ -313,7 +325,7 @@ console.log(verifyPassword)
                 )}
                 {toggleCredentials ? (
                   <div className="user-creds-container">
-                    <p>Enter your your email create a password1</p>
+                    <p>Enter your your email create a password</p>
                     <input
                       onChange={handleUserEmail}
                       type="text"

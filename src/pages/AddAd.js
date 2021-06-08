@@ -500,7 +500,8 @@ const InputContainer = styled.div`
 
       label {
         flex-grow: 1;
-      
+        background-color: ${({theme}) => theme.addBtn.backgroundColor};
+        color:${({theme}) => theme.addBtn.textColor};
         min-width: 6em;
         padding: 0.3em 0.5em;
         text-align: center;
@@ -517,7 +518,7 @@ const InputContainer = styled.div`
         /* height: 100%; */
 
         &:checked + label {
-   
+          background-color:#20BF55
         }
 
         &:focus + label {
@@ -583,6 +584,7 @@ const StyledAddProduct = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top:5em;
 
   h1,
   h2,
@@ -634,15 +636,22 @@ const StyledAddProduct = styled.section`
 
     .btn-group {
       padding: 1em 0.5em;
-      background: white;
+      background: ${({theme}) => theme.background};
       position: fixed;
       bottom: 2em;
       right: 1em;
       width: 8em;
+      display:flex;
+      flex-direction:column;
+      gap:.5em;
 
       & > * {
         width: 100%;
       }
+    }
+
+    button,input {
+      padding:1em;
     }
   }
 

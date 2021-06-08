@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import menuLight from 'assets/icons/menu-light.svg'
@@ -9,6 +9,7 @@ import CategoryMenu from 'components/CategoryMenu'
 import { useState, useRef } from 'react'
 import useSearch from 'hooks/useSearch'
 import ToggleSwitch from 'components/ToggleSwitch'
+import InputSearch from './InputSearch'
 
 const fadeIn = keyframes`
   from {
@@ -129,21 +130,9 @@ const StyledLink = styled(Link)`
   }
 `
 
-const StyledInput = styled.input`
-  background-color: ${({ theme }) => theme.input.background};
-  height: 40px;
-  width: 18em;
-  padding-left: 0.5em;
-  border: 1px solid ${({ theme }) => theme.input.borderColor};
-  color: ${({ theme }) => theme.input.textColor};
-
-  ::placeholder {
-    color: ${({ theme }) => theme.input.textColor};
-  }
-`
-
 const Navbar = () => {
-  const { searchResults, category, setCategory } = useSearch()
+  // const { searchResults, category, setCategory } = useSearch()
+  const { setCategory } = useSearch()
   const catMenu = useRef()
   const history = useHistory()
   const [toggleCatMenu, setToggleCatMenu] = useState(false)
@@ -229,54 +218,6 @@ const Navbar = () => {
         catMenu={catMenu}
       />
     </Navigation>
-  )
-}
-
-const InputSearch = () => {
-  // const { searchResults, category, setCategory } = useSearch()
-  const { searchResults } = useSearch()
-
-  const [searchString, setSearchString] = useState('')
-
-  // const clearTimer = useCallback(() => {
-  //   if (timer) {
-  //     clearTimeout(timer)
-  //     setTimer(0)
-  //   }
-  // }, [timer])
-
-  useEffect(() => {
-    let timer = 0
-    function clearTimer() {
-      if (timer) {
-        clearTimeout(timer)
-        timer = 0
-      }
-    }
-
-    console.log('InputSearch')
-    clearTimer()
-
-    if (searchString) {
-      timer = setTimeout(() => {
-        console.log('Inside timer')
-        searchResults(searchString)
-      }, 800)
-    } else searchResults(searchString)
-
-    return () => {
-      clearTimer()
-    }
-  }, [searchString, searchResults])
-
-  // searchResults(e.target.value,category)
-
-  return (
-    <StyledInput
-      value={searchString}
-      onChange={(e) => setSearchString(e.target.value)}
-      placeholder="What are you looking for today?"
-    />
   )
 }
 

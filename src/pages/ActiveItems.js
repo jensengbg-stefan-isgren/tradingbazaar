@@ -30,7 +30,7 @@ const ActiveItems = () => {
 }
 
 const Wrapper = styled.div`
-  margin-top: 2em;
+  margin-top: 5em;
   width: 100vw;
   height: 100vh;
   display: flex;

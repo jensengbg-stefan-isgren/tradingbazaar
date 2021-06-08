@@ -23,7 +23,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: [],
     redirect: '/',
-    footer: () => <Footer />,
+    footer: () => <Footer/>,
   },
   {
     path: '/profile/active-items',
@@ -32,7 +32,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['auth'],
     redirect: '/',
-    footer: () => <Footer />,
+    footer: () =>  "",
   },
   {
     path: '/profile/wish-list',
@@ -41,7 +41,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['auth'],
     redirect: '/',
-    footer: () => <Footer />,
+    footer: () => "",
   },
   {
     path: '/profile/active',
@@ -50,7 +50,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['auth'],
     redirect: '/',
-    footer: () => <Footer />,
+    footer: () =>  "",
   },
   {
     path: '/profile/settings',
@@ -59,7 +59,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['auth'],
     redirect: '/',
-    footer: () => <Footer />,
+    footer: () => "",
   },
   {
     path: '/profile/settings/account',
@@ -68,7 +68,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['auth'],
     redirect: '/',
-    footer: () => <Footer />,
+    footer: () =>  "",
   },
   {
     path: '/login',
@@ -92,7 +92,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['auth'],
     redirect: '/',
-    footer: () => <Footer />,
+    footer: () =>  "",
   },
   {
     path: '/profile/overview',
@@ -100,7 +100,7 @@ export const routes = [
     navbar: () => <MainNav />,
     beforeRoute: ['auth'],
     redirect: '/',
-    footer: () => <Footer />,
+    footer: () =>  "",
   },
   {
     path: '/resetcredentials',
@@ -124,13 +124,13 @@ export const routes = [
     navbar: () => '',
     beforeRoute: [],
     redirect: '/',
-    footer: () => <Footer />,
+    footer: () => "",
   },
   {
     path: '/filteredproducts/:category',
     main: () => <FilteredProducts />,
     beforeRoute: [],
     navbar: () => <MainNav />,
-    footer: () => <Footer />,
+    footer: () =>  "",
   },
 ]
