@@ -22,7 +22,7 @@ const fadeIn = keyframes`
 
 const fadeOut = keyframes`
   from {
-    background-color: white;
+    background-color: ${({theme}) => theme.background};
   }
 
   to {
@@ -45,7 +45,7 @@ left:0;
 
   .show-nav {
     animation: ${fadeIn} 300ms ;
-    background-color:#F7F7F2;
+    background-color:${({theme}) => theme.background};
   }
 
   .container {

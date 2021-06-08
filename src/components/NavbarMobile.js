@@ -208,6 +208,18 @@ const Nav = styled.nav`
     img {
       height: 30px;
     }
+
+    .search-icon {
+      display:none;
+
+      @media (max-width:700px) {
+      display:block;
+    }
+
+    }
+
+
+    
   }
 
   @media (max-width: 700px) {
@@ -423,7 +435,7 @@ const NavbarMobile = () => {
             ""
           )}
           <div className="menu">
-           {!isVisible ?  <img onClick={handleSearchBar} src={themeMode === 'light' ? searchDark : searchLight} alt="" /> : ""}
+           {!isVisible ?  <img className="search-icon" onClick={handleSearchBar} src={themeMode === 'light' ? searchDark : searchLight} alt="" /> : ""}
             <img
             ref={accountMenu}
               onClick={(toggleAccountMenu)}
