@@ -1,88 +1,70 @@
-import {db} from 'services/firebase'
-import {useState} from 'react'
-import {useDispatch} from 'react-redux'
-import {fillAdList} from 'features/adsSlice'
+import { db } from 'services/firebase'
+import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { fillAdList } from 'features/adsSlice'
+import { trigram } from 'n-gram'
 
 const useSearch = () => {
-
-
-
-  const [category,setCategory] = useState(0)
+  const [category, setCategory] = useState(0)
 
   const dispatch = useDispatch()
-const searchResults = async(searchValue,category) => {
-  
-  console.log(searchValue)
-  
-  if(searchValue.length === 0) {
-  
-    const snapshot = await db.collection('sellingProducts').get()
-    let adList = []
-    snapshot.forEach((snap) => {
-      adList = [...adList, { ...snap.data(), id: snap.id }]
-    })
-
-    dispatch(fillAdList({ adList }))
-
-  } else {
-    if(category === 0) {
+  const searchResults = async (searchValue, category) => {
+    if (searchValue.length === 0) {
+      const snapshot = await db.collection('sellingProducts').get()
       let adList = []
-      let querySnapshot = await db.collection('sellingProducts')
-      .where('title', '==', `${searchValue}`).get()
-      
-      
-      if(querySnapshot.docs.length === 0) {
-        return
-      } else {
-        querySnapshot.forEach(doc => {
-          adList = [...adList,{ ...doc.data(), id: doc.id }]
-        });
-        dispatch(fillAdList({adList}))
-        let element = document.getElementById('products')
-        element.scrollIntoView({behavior: "smooth"});
-        
-        
+      snapshot.forEach((snap) => {
+        adList = [...adList, { ...snap.data(), id: snap.id }]
+      })
 
-
-      }
+      dispatch(fillAdList({ adList }))
     } else {
-      let adList = []
-      let querySnapshot = await db.collection('sellingProducts')
-      .where('category','==', `${category}`)
-      .where('title', '==', `${searchValue}`).get()
-      if(querySnapshot.docs.length === 0) {
-        return
+      if (category === 0) {
+        let adList = []
+        let querySnapshot = await db
+          .collection('sellingProducts')
+          .where('title', '==', `${searchValue}`)
+          .get()
+
+        if (querySnapshot.docs.length === 0) {
+          return
+        } else {
+          querySnapshot.forEach((doc) => {
+            adList = [...adList, { ...doc.data(), id: doc.id }]
+          })
+          dispatch(fillAdList({ adList }))
+          let element = document.getElementById('products')
+          element.scrollIntoView({ behavior: 'smooth' })
+        }
       } else {
-        querySnapshot.forEach(doc => {
-          adList = [...adList,{ ...doc.data(), id: doc.id }]
-          
-        });
-        dispatch(fillAdList({adList}))
-        let element = document.getElementById('products')
-        element.scrollIntoView({behavior: "smooth"});
+        const triString = trigram(searchValue.toLowerCase())
+        console.log('searchValue', searchValue, triString)
+        let adList = []
+        let query = db.collection('sellingProducts')
+        if (category) query = query.where('category', '==', `${category}`)
+        triString.forEach(
+          (tri) => (query = query.where(`trigram.${tri}`, '==', true))
+        )
+        const querySnapshot = await query.get()
+        if (querySnapshot.docs.length === 0) {
+          adList = []
+          return
+        } else {
+          querySnapshot.forEach((doc) => {
+            adList = [...adList, { ...doc.data(), id: doc.id }]
+          })
+          dispatch(fillAdList({ adList }))
+          let element = document.getElementById('products')
+          element.scrollIntoView({ behavior: 'smooth' })
+        }
       }
     }
-  
   }
 
-
-
-
-
-
-
-
-}
-
-
-
-return {
-  searchResults,
-  category,
-  setCategory
-}
-
-
+  return {
+    searchResults,
+    category,
+    setCategory,
+  }
 }
 
 export default useSearch
