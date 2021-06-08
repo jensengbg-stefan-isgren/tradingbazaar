@@ -1,5 +1,5 @@
-import React, { useState,useRef } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState,useRef,useEffect } from "react";
+import { useHistory,useLocation } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import userLight from "assets/icons/user-light.svg";
 import userDark from "assets/icons/user-dark.svg";
@@ -169,8 +169,22 @@ const Wrapper = styled.div`
   }
 `;
 
+
+
 const NavbarMobileProfile = () => {
 
+
+  useEffect(() => {
+    if(location.pathname.includes('/item')) {
+      setToggleSearchBar(true)
+    }
+    return () => {
+    
+    }
+  }, [])
+
+
+  const location = useLocation()
   const {searchResults,category,setCategory} = useSearch()
   const catMenu = useRef()
   const accountMenu = useRef()
@@ -206,7 +220,7 @@ const handleSearchBar = () => {
         {!isVisible ? (
           <div
             className={`search-container ${
-              toggleCatMenu || toggleMenu || toggleSearchBar   ? "hide" : ""
+              toggleCatMenu || toggleMenu || toggleSearchBar  ? "hide" : ""
             }`}
           >
             <select name="category" id="category">
