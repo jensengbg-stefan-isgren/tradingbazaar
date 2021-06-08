@@ -1,13 +1,10 @@
-import React from "react";
-import SignUp  from 'components/SignUp'
-
+import React from 'react'
+import SignUp from 'components/SignUp'
 
 const Register = () => {
-  
-  return(
-      <SignUp/>
-  )
+  document.title = 'Trading Bazaar | Register'
 
-};
+  return <SignUp />
+}
 
-export default Register;
+export default Register

@@ -9,9 +9,7 @@ const UseGetAd = (id) => {
     const unSubscribe = db
       .collection('sellingProducts')
       .doc(id)
-      .onSnapshot((doc) => {
-        dispatch(getProduct({ id, ad: doc.data() }))
-      })
+      .onSnapshot((doc) => dispatch(getProduct({ id, ad: doc.data() })))
 
     return () => {
       unSubscribe()

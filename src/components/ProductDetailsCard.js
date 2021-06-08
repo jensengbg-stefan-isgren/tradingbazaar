@@ -1,17 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react'
 import ChangeHighlight from 'react-change-highlight'
 import styled from 'styled-components'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { bid, setNewBid } from 'features/productSlice'
+import { bid, setNewBid, removeProduct, prodAmend } from 'features/productSlice'
 import timeLeftFunc from 'functions/timeLeftInterval'
 import TimeLeftParagraph from './TimeLeftParagraph'
-import { toast } from 'react-toastify'
+import { authToggleFavorite } from 'features/auth/authSlice'
+
 import UseGetAd from 'services/useGetAd'
 
 const ProductDetailsCard = () => {
   const { id } = useParams()
-
+  const history = useHistory()
   // const {
   //   detailedProduct,
   //   seller,
@@ -23,15 +24,14 @@ const ProductDetailsCard = () => {
   const detailedProduct = useSelector((state) => state.product.detailedProduct)
   const seller = useSelector((state) => state.product.seller)
   const adStatus = useSelector((state) => state.product.adStatus)
-  const isFavorite = useSelector((state) => state.product.isFavorite)
   const endDate = useSelector((state) => state.product.endDate)
 
   const { uid, isAuthenticated } = useSelector((state) => state.auth)
+  const favorites = useSelector((state) => state.auth.user.favorites)
 
   const dispatch = useDispatch()
 
   const [mainImage, setMainImage] = useState(null)
-  // const [myBid, setMyBid] = useState('')
 
   const highestBidRef = useRef(null)
   const bidsRef = useRef(null)
@@ -53,14 +53,17 @@ const ProductDetailsCard = () => {
     }
   }
 
+  const resell = async () => {
+    const res = await dispatch(prodAmend({ id, amend: false }))
+    if (!res.error) history.push('/addad')
+  }
+
+  const amend = async () => {
+    const res = await dispatch(prodAmend({ id, amend: true }))
+    if (!res.error) history.push('/addad')
+  }
+
   const addBid = () => {
-    if (!isAuthenticated) return toast.warn('Please Login to make your bid')
-    // setMyBid(Number(myBid))
-    // const value = Number(myBid)
-    // if (!value || value <= 0)
-    //   return toast.warn('Please write your bid in the field')
-    // dispatch(bid(value))
-    // setMyBid('')
     dispatch(bid())
   }
 
@@ -139,16 +142,17 @@ const ProductDetailsCard = () => {
                 ) : (
                   <p>Utropspris</p>
                 )}
+
                 <ChangeHighlight
                   containerClassName="highlightCont"
                   highlightClassName="highlightClass"
                   hideAfter="800"
                 >
-                  <p ref={highestBidRef}>{detailedProduct.highestBid}kr</p>
+                  <p ref={highestBidRef}>
+                    {detailedProduct.shownPrice}
+                    kr
+                  </p>
                 </ChangeHighlight>
-                {/* <>
-                    <p>{detailedProduct.startPrice}kr</p>
-                  </> */}
               </div>
               <div className="time-container">
                 <p>End date</p>
@@ -225,15 +229,35 @@ const ProductDetailsCard = () => {
                   <button
                     className="button save"
                     // disabled={uid === detailedProduct.uid}
+                    onClick={() => dispatch(authToggleFavorite(id))}
                   >
-                    Save {isFavorite ? 'true' : 'false'}
+                    {favorites.includes(id)
+                      ? 'Remove from Favorites'
+                      : 'Add to Favorites'}
                   </button>
                 </div>
               ) : null
             ) : (
-              <div className="seller-section">
-                <button className="button remove">Remove Product</button>
-              </div>
+              <>
+                <div className="seller-section">
+                  <button
+                    onClick={() => dispatch(removeProduct(id))}
+                    className="button remove"
+                  >
+                    {detailedProduct.removed ? 'Remove Auction' : 'Add Auction'}
+                  </button>
+                </div>
+                <div className="seller-section">
+                  <button onClick={amend} className="button">
+                    Amend
+                  </button>
+                </div>
+                <div className="seller-section">
+                  <button onClick={resell} className="button">
+                    New Auction
+                  </button>
+                </div>
+              </>
             )}
             {seller && uid !== detailedProduct.uid ? (
               <div className="seller-title-container">
@@ -302,7 +326,7 @@ const TimerComponent = () => {
 }
 
 const Wrapper = styled.div`
-padding-top: 5em;
+  padding-top: 5em;
   height: auto;
   width: auto;
   display: grid;
@@ -465,7 +489,6 @@ const Container = styled.div`
       transition: all 0.2s ease;
     }
     .highlightClass {
-
       font-weight: bold;
     }
   }

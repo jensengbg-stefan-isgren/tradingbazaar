@@ -1,13 +1,13 @@
-import React, { useState,useRef,useEffect } from "react";
-import { useHistory,useLocation } from "react-router-dom";
-import styled, { keyframes } from "styled-components";
-import userLight from "assets/icons/user-light.svg";
-import userDark from "assets/icons/user-dark.svg";
-import menuDark from 'assets/icons/menu-dark.svg';
-import menuLight from 'assets/icons/menu-light.svg';
-import { useSelector } from "react-redux";
-import ProfileMenu from "components/ProfileMenu";
-import CategoryMenu from "components/CategoryMenu";
+import React, { useState, useRef, useEffect } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
+import styled, { keyframes } from 'styled-components'
+import userLight from 'assets/icons/user-light.svg'
+import userDark from 'assets/icons/user-dark.svg'
+import menuDark from 'assets/icons/menu-dark.svg'
+import menuLight from 'assets/icons/menu-light.svg'
+import { useSelector } from 'react-redux'
+import ProfileMenu from 'components/ProfileMenu'
+import CategoryMenu from 'components/CategoryMenu'
 import useSearch from 'hooks/useSearch'
 import searchLight from 'assets/icons/search-light.svg'
 import searchDark from 'assets/icons/search-dark.svg'
@@ -20,7 +20,7 @@ const fadeIn = keyframes`
   to {
     opacity:1;
   }
-`;
+`
 
 const fadeOut = keyframes`
   from {
@@ -30,18 +30,15 @@ const fadeOut = keyframes`
   to {
     background-color: none;
   }
-`;
+`
 
 const StyledInput = styled.input`
-
   min-width: 20em;
   outline: none;
   height: 3em;
   padding-left: 0.5em;
 
-
   ::placeholder {
-
   }
 
   @media (max-width: 700px) {
@@ -52,12 +49,12 @@ const StyledInput = styled.input`
   @media (max-width: 500px) {
     border: none;
   }
-`;
+`
 
 const Nav = styled.nav`
   display: grid;
   align-items: center;
-  grid-template-areas: "logo search nav";
+  grid-template-areas: 'logo search nav';
   height: 64px;
   padding: 0 1em;
 
@@ -75,10 +72,10 @@ const Nav = styled.nav`
   }
 
   .menu {
-    display:flex;
-    justify-content:flex-end;
+    display: flex;
+    justify-content: flex-end;
     align-items: center;
-    gap:1em;
+    gap: 1em;
     grid-area: nav;
 
     img {
@@ -88,12 +85,12 @@ const Nav = styled.nav`
 
   @media (max-width: 700px) {
     height: 64px;
-    background-color: "";
+    background-color: '';
     padding: 1em;
 
     grid-template-areas:
-      "logo logo nav"
-      "search search search";
+      'logo logo nav'
+      'search search search';
 
     .search-container {
       width: 100%;
@@ -107,7 +104,7 @@ const Nav = styled.nav`
       }
     }
   }
-`;
+`
 
 const Wrapper = styled.div`
   .container {
@@ -148,7 +145,7 @@ const Wrapper = styled.div`
 
   .show-nav {
     animation: ${fadeIn} 300ms;
-    background-color: ${({theme}) => theme.background};
+    background-color: ${({ theme }) => theme.background};
   }
 
   height: 64px;
@@ -167,83 +164,106 @@ const Wrapper = styled.div`
       }
     }
   }
-`;
-
-
+`
 
 const NavbarMobileProfile = () => {
-
   const location = useLocation()
-
   useEffect(() => {
-    if(location.pathname.includes('/item')) {
+    if (location.pathname.includes('/item')) {
       setToggleSearchBar(true)
     }
-    return () => {
-    
-    }
+    return () => {}
   }, [location.pathname])
 
-
-
-  const {searchResults,category,setCategory} = useSearch()
+  const { searchResults, category, setCategory } = useSearch()
   const catMenu = useRef()
   const accountMenu = useRef()
-  const [toggleCatMenu, setToggleCatMenu] = useState(false);
+  const [toggleCatMenu, setToggleCatMenu] = useState(false)
   // const showMobileNav = useMediaQuery("(max-width:1000px)");
-  const [toggleMenu, setToggleMenu] = useState(false);
-  const { categories } = useSelector((state) => state.categories);
-  const isVisible = useSelector((state) => state.nav.isVisible);
-  const {themeMode} = useSelector(state => state.theme)
-  const history = useHistory();
+  const [toggleMenu, setToggleMenu] = useState(false)
+  const { categories } = useSelector((state) => state.categories)
+  const isVisible = useSelector((state) => state.nav.isVisible)
+  const { themeMode } = useSelector((state) => state.theme)
+  const history = useHistory()
 
-  const [toggleSearchBar,setToggleSearchBar] = useState(false)
+  const [toggleSearchBar, setToggleSearchBar] = useState(false)
 
-const handleSearchBar = () => {
-  setToggleSearchBar(!toggleSearchBar)
-  console.log(toggleSearchBar)
-}
+  const handleSearchBar = () => {
+    setToggleSearchBar(!toggleSearchBar)
+    console.log(toggleSearchBar)
+  }
 
   return (
     <Wrapper>
-      <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
+      <div className={`container ${!isVisible ? 'show-nav' : 'no-nav'}`}>
         <Nav>
           <div className="logo">
-            {themeMode === 'light' ? <img ref={catMenu} src={menuDark} alt="" /> : <img ref={catMenu} src={menuLight} alt="" />}
-            <h3 className="logo-title" onClick={() => history.push("/")}>TradingBazaar</h3>
+            {themeMode === 'light' ? (
+              <img ref={catMenu} src={menuDark} alt="" />
+            ) : (
+              <img ref={catMenu} src={menuLight} alt="" />
+            )}
+            <h3 className="logo-title" onClick={() => history.push('/')}>
+              TradingBazaar
+            </h3>
           </div>
 
           <div className="menu">
-            {!isVisible ? <img onClick={handleSearchBar}  src={themeMode === 'light' ? searchDark : searchLight} alt="" /> : ""}
-            {themeMode === 'light' ? <img ref={accountMenu} className="nav" src={userDark} alt="" /> : <img ref={accountMenu} className="nav" src={userLight} alt="" />}
+            {!isVisible ? (
+              <img
+                onClick={handleSearchBar}
+                src={themeMode === 'light' ? searchDark : searchLight}
+                alt=""
+              />
+            ) : (
+              ''
+            )}
+            {themeMode === 'light' ? (
+              <img ref={accountMenu} className="nav" src={userDark} alt="" />
+            ) : (
+              <img ref={accountMenu} className="nav" src={userLight} alt="" />
+            )}
           </div>
         </Nav>
         {!isVisible ? (
           <div
             className={`search-container ${
-              toggleCatMenu || toggleMenu || toggleSearchBar  ? "hide" : ""
+              toggleCatMenu || toggleMenu || toggleSearchBar ? 'hide' : ''
             }`}
           >
             <select name="category" id="category">
-              <option onChange={(e) => setCategory(e.target.value)} value={0}>All Categories</option>
+              <option onChange={(e) => setCategory(e.target.value)} value={0}>
+                All Categories
+              </option>
               {categories.map((category) => {
                 return (
                   <option key={category.name} value={category.name}>
                     {category.name}
                   </option>
-                );
+                )
               })}
             </select>
-            <StyledInput onChange={(e) => searchResults(e.target.value,category)} placeholder="What are you looking for today?" />
+            <StyledInput
+              onChange={(e) => searchResults(e.target.value, category)}
+              placeholder="What are you looking for today?"
+            />
           </div>
         ) : (
-          ""
+          ''
         )}
       </div>
-      <ProfileMenu setToggleMenu={setToggleMenu} toggleMenu={toggleMenu} accountMenu={accountMenu} />
-      <CategoryMenu setToggleCatMenu={setToggleCatMenu} toggleCatMenu={toggleCatMenu} catMenu={catMenu} />
+      <ProfileMenu
+        setToggleMenu={setToggleMenu}
+        toggleMenu={toggleMenu}
+        accountMenu={accountMenu}
+      />
+      <CategoryMenu
+        setToggleCatMenu={setToggleCatMenu}
+        toggleCatMenu={toggleCatMenu}
+        catMenu={catMenu}
+      />
     </Wrapper>
-  );
-};
+  )
+}
 
-export default NavbarMobileProfile;
+export default NavbarMobileProfile

@@ -8,11 +8,12 @@ import MainNav from '../pages/MainNav'
 import ActiveItems from 'pages/ActiveItems'
 import Settings from 'components/Settings/Settings'
 import ProfileSettings from 'components/Settings/ProfileSettings'
-import ActiveAds from 'components/ActiveAds'
+import ActiveAds from 'pages/ActiveAds'
 import WishList from 'pages/WishList'
 import ProductDetailsCard from 'components/ProductDetailsCard'
 import FilteredProducts from 'components/FilteredProducts'
 import Footer from 'components/Footer'
+import Page404 from 'pages/404'
 
 export const routes = [
   {
@@ -20,84 +21,136 @@ export const routes = [
     exact: true,
     main: () => <SellingProducts />,
     navbar: () => <MainNav />,
-    footer: () => <Footer/>,
+    beforeRoute: [],
+    redirect: '/',
+    footer: () => <Footer />,
   },
   {
     path: '/profile/active-items',
     exact: true,
     main: () => <ActiveItems />,
     navbar: () => <MainNav />,
+<<<<<<< HEAD
     footer: () => "",
+=======
+    beforeRoute: ['auth'],
+    redirect: '/',
+    footer: () => <Footer />,
+>>>>>>> dev
   },
   {
     path: '/profile/wish-list',
     exact: true,
     main: () => <WishList />,
     navbar: () => <MainNav />,
+<<<<<<< HEAD
     footer: () => "",
+=======
+    beforeRoute: ['auth'],
+    redirect: '/',
+    footer: () => <Footer />,
+>>>>>>> dev
   },
   {
     path: '/profile/active',
     exact: true,
     main: () => <ActiveAds />,
     navbar: () => <MainNav />,
+<<<<<<< HEAD
     footer: () => "",
+=======
+    beforeRoute: ['auth'],
+    redirect: '/',
+    footer: () => <Footer />,
+>>>>>>> dev
   },
   {
     path: '/profile/settings',
     exact: true,
     main: () => <Settings />,
     navbar: () => <MainNav />,
+<<<<<<< HEAD
     footer: () => "",
+=======
+    beforeRoute: ['auth'],
+    redirect: '/',
+    footer: () => <Footer />,
+>>>>>>> dev
   },
   {
     path: '/profile/settings/account',
     exact: true,
     main: () => <ProfileSettings />,
     navbar: () => <MainNav />,
+<<<<<<< HEAD
     footer: () => "",
+=======
+    beforeRoute: ['auth'],
+    redirect: '/',
+    footer: () => <Footer />,
+>>>>>>> dev
   },
   {
     path: '/login',
     main: () => <Login />,
     navbar: () => '',
+    beforeRoute: [],
+    redirect: '/',
     footer: () => '',
   },
   {
     path: '/register',
     main: () => <Register />,
     navbar: () => '',
+    beforeRoute: [],
+    redirect: '/',
     footer: () => '',
   },
   {
     path: '/addad',
-
     main: () => <AddAd />,
     navbar: () => <MainNav />,
-    footer: () => "",
+    beforeRoute: ['auth'],
+    redirect: '/',
+    footer: () => <Footer />,
   },
   {
     path: '/profile/overview',
     main: () => <Profile />,
     navbar: () => <MainNav />,
-    footer: () => "",
+    beforeRoute: ['auth'],
+    redirect: '/',
+    footer: () => <Footer />,
   },
   {
     path: '/resetcredentials',
     main: () => <ResetCredentials />,
     navbar: () => '',
+    beforeRoute: [],
+    redirect: '/',
     footer: () => '',
   },
   {
     path: '/item/:id',
     main: () => <ProductDetailsCard />,
     navbar: () => <MainNav />,
-    footer: () => "",
+    beforeRoute: ['ad'],
+    redirect: '/404',
+    footer: () => '',
+  },
+  {
+    path: '*',
+    main: () => <Page404 />,
+    navbar: () => '',
+    beforeRoute: [],
+    redirect: '/',
+    footer: () => <Footer />,
   },
   {
     path: '/filteredproducts/:category',
     main: () => <FilteredProducts />,
+    beforeRoute: [],
     navbar: () => <MainNav />,
-    footer: () => "",
+    footer: () => <Footer />,
   },
 ]

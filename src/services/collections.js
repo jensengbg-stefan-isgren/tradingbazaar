@@ -1,59 +1,66 @@
 import { db } from '../services/firebase'
 import store from 'store/store'
+import { toast } from 'react-toastify'
 // import data from 'data/categories'
-export const addProduct = async () => {
-  const state = store.getState()
 
+export const addProduct = () => {
+  return new Promise(async (resolve, reject) => {
+    const state = store.getState()
+    const productId = state.newAd.id
 
+    const newProduct = {
+      uid: state.auth.uid,
+      title: state.newAd.title,
+      description: state.newAd.description,
+      searchDescr:
+        state.newAd.title.toLowerCase() +
+        ' ' +
+        state.newAd.description.toLowerCase(),
+      category: state.newAd.category,
+      startPrice: state.newAd.startPrice,
+      acceptedPrice: state.newAd.acceptedPrice,
+      productConditions: state.newAd.productConditions,
+      adEndDate: state.newAd.adEndDate,
+      imgLink1: state.newAd.imgLink1,
+      removed: state.newAd.removed,
+    }
+    for (let i = 2; i < 6; i++) {
+      const field = `imgLink${i}`
+      if (
+        state.newAd.hasOwnProperty(field) &&
+        state.newAd[field] != null &&
+        state.newAd[field]
+      )
+        newProduct[field] = state.newAd[field]
+    }
 
-  const newProduct = {
-    category: state.newAd.category,
-    uid: state.auth.uid,
-    title: state.newAd.title,
-    description: state.newAd.description,
-    startPrice: state.newAd.startPrice,
-    acceptedPrice: state.newAd.acceptedPrice,
-    productConditions: state.newAd.productConditions,
-    adEndDate: state.newAd.adEndDate,
-    imgLink1: state.newAd.imgLink1,
-  }
-  for (let i = 2; i < 6; i++) {
-    const field = `imgLink${i}`
-    // console.log('Has own property', props.hasOwnProperty(`imgLink${i}`))
-    if (
-      state.newAd.hasOwnProperty(field) &&
-      state.newAd[field] != null &&
-      state.newAd[field]
-    )
-      newProduct[field] = state.newAd[field]
-  }
-
-  try {
-    console.log('Try submitting: ', newProduct)
-
-    const docRef = await db.collection('sellingProducts').add(newProduct)
-    console.log('Document written with ID: ', docRef.id)
-  } catch (error) {
-    console.error('Error adding document: ', error)
-  }
+    if (productId) {
+      try {
+        db.collection('sellingProducts')
+          .doc(productId)
+          .update(newProduct)
+          .then(() => toast.success('Item successfully updated'))
+      } catch {
+        toast.error('Oops!! Something went wrong')
+      }
+    } else {
+      db.collection('sellingProducts')
+        .add(newProduct)
+        .then((docRef) => {
+          toast.success('Ad successfully added')
+          resolve(docRef.id)
+        })
+        .catch((error) => {
+          toast.error('Oops!! Something went wrong')
+          console.error('Error adding document: ', error)
+          reject()
+        })
+    }
+  })
 }
 
-
-
-export const getProduct = async(id) => {
+export const getProduct = async (id) => {
   let snapshot = await db.collection('sellingProducts').doc(id).get()
   let data = await snapshot.data()
   return data
 }
-
-
-
-
-// export const addCategories = async() => {
-// data.forEach(async(item) => {
-//   await db.collection("categories").add({name: item.toLowerCase()})
-// })
-
-// }
-
-// addCategories()

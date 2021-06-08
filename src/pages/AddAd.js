@@ -1,24 +1,38 @@
-import styled from 'styled-components'
-import { addProduct } from '../services/collections'
-import { useDispatch, useSelector } from 'react-redux'
-import { adInputEdit, checkImages } from 'features/newAdSlice'
-import { useRef, useState } from 'react'
-import Modal from 'components/Modal'
-import placeholder from 'assets/images/img-placeholder.svg'
+import styled from 'styled-components';
+import { addProduct } from '../services/collections';
+import { useDispatch, useSelector } from 'react-redux';
+import { adInputEdit, checkImages, clearAd } from 'features/newAdSlice';
+import { useRef, useState } from 'react';
+import Modal from 'components/Modal';
+import placeholder from 'assets/images/img-placeholder.svg';
+import useProtectedRoute from 'functions/useProtectedRoute';
+import { toast } from 'react-toastify';
+import { useHistory } from 'react-router';
 
 const AddAd = () => {
-  const addAd1 = useRef(null)
-  const addAd2 = useRef(null)
+  const history = useHistory();
+  useProtectedRoute();
 
-  const [showModal, setShowModal] = useState(false)
+  document.title = 'Trading Bazaar | Add Ad';
+
+  const addAd1 = useRef(null);
+  const addAd2 = useRef(null);
+  const stepBtnRef = useRef(null);
+
+  const [showModal, setShowModal] = useState(false);
 
   const handleNextStep = (e) => {
-    e.preventDefault()
-    addAd1.current.classList.toggle('slide')
-    addAd2.current.classList.toggle('slide')
-  }
+    e.preventDefault();
+    addAd1.current.classList.toggle('slide');
+    addAd2.current.classList.toggle('slide');
+    stepBtnRef.current.innerText = stepBtnRef.current.innerText
+      .toLowerCase()
+      .includes('next')
+      ? 'Previous Step'
+      : 'Next Step';
+  };
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const {
     title,
     description,
@@ -32,28 +46,28 @@ const AddAd = () => {
     imgLink3,
     imgLink4,
     imgLink5,
-  } = useSelector((state) => state.newAd)
+  } = useSelector((state) => state.newAd);
 
-  const {categories} = useSelector((state) => state.categories)
+  const { categories } = useSelector((state) => state.categories);
   const getImgRef = (field) => {
     switch (field) {
       case 'imgLink1':
-        return imgLink1
+        return imgLink1;
       case 'imgLink2':
-        return imgLink2
+        return imgLink2;
       case 'imgLink3':
-        return imgLink3
+        return imgLink3;
       case 'imgLink4':
-        return imgLink4
+        return imgLink4;
       case 'imgLink5':
-        return imgLink5
+        return imgLink5;
       default:
     }
-  }
-  const [currentImg, setCurrentImg] = useState('imgLink1')
+  };
+  const [currentImg, setCurrentImg] = useState('imgLink1');
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     if (
       !title ||
       !description ||
@@ -64,11 +78,12 @@ const AddAd = () => {
       !adEndDate ||
       !imgLink1
     )
-      return alert('Fill all the fields in the Form')
-    console.log('checkimg', checkImages)
-    dispatch(checkImages())
-    addProduct()
-  }
+      return toast.info('Please fill all the fields in the Form');
+    dispatch(checkImages());
+    const docRef = await addProduct();
+    dispatch(clearAd());
+    history.push(`/item/${docRef}`);
+  };
 
   return (
     <>
@@ -85,6 +100,7 @@ const AddAd = () => {
                   Title
                 </label>
                 <input
+                  className="input-content"
                   type="text"
                   id="inputName"
                   value={title}
@@ -102,6 +118,7 @@ const AddAd = () => {
                   Description
                 </label>
                 <textarea
+                  className="input-content"
                   id="inputDescription"
                   maxLength={500}
                   onChange={(e) =>
@@ -122,23 +139,43 @@ const AddAd = () => {
                 <label className="std-label" htmlFor="inputCategory">
                   Category
                 </label>
-                    {categories ?  <select onChange={(e) => dispatch(
-                      adInputEdit({ field: 'category', value: e.target.value })
-                    ) } name="category" id="category">
-                  {categories.map((category) => {
-                    return <option key={category.name} value={category.name}>{category.name}</option>
-                  })}
-                </select> : ""}
+                {categories ? (
+                  <select
+                    className="input-content"
+                    value={category}
+                    onChange={(e) =>
+                      dispatch(
+                        adInputEdit({
+                          field: 'category',
+                          value: e.target.value,
+                        })
+                      )
+                    }
+                    name="category"
+                    id="category"
+                  >
+                    {categories.map((category) => {
+                      return (
+                        <option key={category.name} value={category.name}>
+                          {category.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                ) : (
+                  ''
+                )}
               </InputContainer>
               <InputContainer>
                 <p className="std-label">Product Conditions</p>
-                <div className="radiogroup-wrap">
-                  <div className="input-radio-cont">
+                <div className="input-content radiogroup-wrap">
+                  <div className=" input-radio-cont">
                     <input
                       type="radio"
                       name="conditions"
                       value="New"
                       id="chk-new"
+                      checked={productConditions === 'New'}
                       onChange={(e) =>
                         dispatch(
                           adInputEdit({
@@ -158,6 +195,7 @@ const AddAd = () => {
                       name="conditions"
                       value="As New"
                       id="chk-asnew"
+                      checked={productConditions === 'As New'}
                       onChange={(e) =>
                         dispatch(
                           adInputEdit({
@@ -177,6 +215,7 @@ const AddAd = () => {
                       name="conditions"
                       value="Used"
                       id="chk-used"
+                      checked={productConditions === 'Used'}
                       onChange={(e) =>
                         dispatch(
                           adInputEdit({
@@ -192,114 +231,100 @@ const AddAd = () => {
                   </div>
                 </div>
               </InputContainer>
-              {/* <div className="input-container">
-              <label className="std-label" htmlFor="selectCondition">
-                Product Conditions
-              </label>
-              <select
-                id="selectCondition"
-                value={productConditions}
-                onChange={(e) =>
-                  dispatch(
-                    adInputEdit({
-                      field: 'productConditions',
-                      value: e.target.value,
-                    })
-                  )
-                }
-              >
-                <option value="" disabled>
-                  Select Option
-                </option>
-                <option value="New">New</option>
-                <option value="As New">As New</option>
-                <option value="Used">Used</option>
-              </select>
-            </div> */}
               <InputContainer>
                 <p className="std-label">Pictures</p>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setCurrentImg('imgLink1')
-                    setShowModal(!showModal)
-                  }}
-                >
-                  <img src={imgLink1 || placeholder} alt="placeholder"></img>
-                </button>
+                <div className="input-content">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentImg('imgLink1');
+                      setShowModal(!showModal);
+                    }}
+                  >
+                    <img src={imgLink1 || placeholder} alt="placeholder"></img>
+                  </button>
 
-                <button
-                  className={`${
-                    (imgLink1 == null || !imgLink1) & !imgLink2 ? 'hidden' : ''
-                  }`}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setCurrentImg('imgLink2')
-                    setShowModal(!showModal)
-                  }}
-                >
-                  <img src={imgLink2 || placeholder} alt="placeholder"></img>
-                </button>
+                  <button
+                    className={`${
+                      (imgLink1 == null || !imgLink1) & !imgLink2
+                        ? 'hidden'
+                        : ''
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentImg('imgLink2');
+                      setShowModal(!showModal);
+                    }}
+                  >
+                    <img src={imgLink2 || placeholder} alt="placeholder"></img>
+                  </button>
 
-                <button
-                  className={`${
-                    (imgLink2 == null || !imgLink2) & !imgLink3 ? 'hidden' : ''
-                  }`}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setCurrentImg('imgLink3')
-                    setShowModal(!showModal)
-                  }}
-                >
-                  <img src={imgLink3 || placeholder} alt="placeholder"></img>
-                </button>
+                  <button
+                    className={`${
+                      (imgLink2 == null || !imgLink2) & !imgLink3
+                        ? 'hidden'
+                        : ''
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentImg('imgLink3');
+                      setShowModal(!showModal);
+                    }}
+                  >
+                    <img src={imgLink3 || placeholder} alt="placeholder"></img>
+                  </button>
 
-                <button
-                  className={`${
-                    (imgLink3 == null || !imgLink3) & !imgLink4 ? 'hidden' : ''
-                  }`}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setCurrentImg('imgLink4')
-                    setShowModal(!showModal)
-                  }}
-                >
-                  <img src={imgLink4 || placeholder} alt="placeholder"></img>
-                </button>
+                  <button
+                    className={`${
+                      (imgLink3 == null || !imgLink3) & !imgLink4
+                        ? 'hidden'
+                        : ''
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentImg('imgLink4');
+                      setShowModal(!showModal);
+                    }}
+                  >
+                    <img src={imgLink4 || placeholder} alt="placeholder"></img>
+                  </button>
 
-                <button
-                  className={`${
-                    (imgLink4 == null || !imgLink4) & !imgLink5 ? 'hidden' : ''
-                  }`}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setCurrentImg('imgLink5')
-                    setShowModal(!showModal)
-                  }}
-                >
-                  <img src={imgLink5 || placeholder} alt="placeholder"></img>
-                </button>
+                  <button
+                    className={`${
+                      (imgLink4 == null || !imgLink4) & !imgLink5
+                        ? 'hidden'
+                        : ''
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setCurrentImg('imgLink5');
+                      setShowModal(!showModal);
+                    }}
+                  >
+                    <img src={imgLink5 || placeholder} alt="placeholder"></img>
+                  </button>
 
-                {showModal ? (
-                  <ModalContainer
-                    imgRef={getImgRef(currentImg)}
-                    imgName={currentImg}
-                    onClick={() => setShowModal(!showModal)}
-                    onChange={(e) =>
-                      dispatch(
-                        adInputEdit({
-                          field: currentImg,
-                          value: e.target.value,
-                        })
-                      )
-                    }
-                  />
-                ) : null}
-                {/* {imgLink1 ? (
+                  {showModal ? (
+                    <ModalContainer
+                      imgRef={getImgRef(currentImg)}
+                      imgName={currentImg}
+                      onClick={() => setShowModal(!showModal)}
+                      onChange={(value) =>
+                        dispatch(
+                          adInputEdit({
+                            field: currentImg,
+                            value: value,
+                          })
+                        )
+                      }
+                    />
+                  ) : null}
+                  {/* {imgLink1 ? (
                   <div className="image-container">
                     <img src={imgLink1} alt={`${title} - image_1`}></img>
                   </div>
                 ) : null} */}
+                </div>
               </InputContainer>
             </section>
             <section ref={addAd2} id="addAd2" className="slide">
@@ -310,21 +335,22 @@ const AddAd = () => {
                   Start Price
                 </label>
                 <input
+                  className="input-content"
                   type="number"
                   id="inputStartPrice"
                   value={startPrice}
                   placeholder="100"
                   onChange={(e) => {
                     if (Number(e.target.value) === 0 || !e.target.value) {
-                      e.target.value = 0
-                      e.target.select()
+                      e.target.value = 0;
+                      e.target.select();
                     }
                     dispatch(
                       adInputEdit({
                         field: 'startPrice',
                         value: Number(e.target.value),
                       })
-                    )
+                    );
                   }}
                 />
                 <span className="valuta-text">Kr</span>
@@ -334,20 +360,21 @@ const AddAd = () => {
                   Accepted Price
                 </label>
                 <input
+                  className="input-content"
                   type="number"
                   id="inputAcceptedPrice"
                   value={acceptedPrice}
                   onChange={(e) => {
                     if (Number(e.target.value) === 0 || !e.target.value) {
-                      e.target.value = 0
-                      e.target.select()
+                      e.target.value = 0;
+                      e.target.select();
                     }
                     dispatch(
                       adInputEdit({
                         field: 'acceptedPrice',
                         value: Number(e.target.value),
                       })
-                    )
+                    );
                   }}
                 />
                 <span className="valuta-text">Kr</span>
@@ -361,31 +388,48 @@ const AddAd = () => {
                   type="datetime-local"
                   id="inputEndDate"
                   value={adEndDate}
+                  className="input-content"
                   onChange={(e) => {
-                    if (!e.target['validity'].valid) return
-                    const dt = e.target['value']
+                    if (!e.target['validity'].valid) return;
+                    const dt = e.target['value'];
                     dispatch(
                       adInputEdit({
                         field: 'adEndDate',
                         value: dt,
                       })
-                    )
+                    );
                   }}
                 />
               </InputContainer>
             </section>
             <div className="btn-group">
-              <button onClick={handleNextStep}>Previous Step</button>
-              <input type="submit" value="Add Product" />
+              <button ref={stepBtnRef} onClick={handleNextStep}>
+                Next Step
+              </button>
+              <input
+                type="submit"
+                value="Add Product"
+                disabled={
+                  !title ||
+                  !description ||
+                  !category ||
+                  !startPrice ||
+                  !acceptedPrice ||
+                  !productConditions ||
+                  !adEndDate ||
+                  !imgLink1
+                }
+              />
             </div>
           </form>
         </main>
       </StyledAddProduct>
     </>
-  )
-}
+  );
+};
 
 const ModalContainer = ({ imgRef, imgName, onClick, onChange }) => {
+  const inputRef = useRef(null);
   return (
     <Modal>
       <InputContainer>
@@ -393,19 +437,27 @@ const ModalContainer = ({ imgRef, imgName, onClick, onChange }) => {
           Image Url
         </label>
         <input
+          className="input-content"
+          ref={inputRef}
           type="url"
           id={`${imgName}`}
           value={imgRef}
-          onChange={onChange}
+          onChange={(e) => onChange(e.target.value)}
         />
 
-        <button onClick={onClick}>Close</button>
+        <button className="modal-btn" onClick={() => onChange('')}>
+          Clear
+        </button>
+        <button className="modal-btn" onClick={onClick}>
+          Close
+        </button>
       </InputContainer>
     </Modal>
-  )
-}
+  );
+};
 
 const InputContainer = styled.div`
+  font-size: 0.8em;
   width: 95vw;
   max-width: 30em;
   padding: 0.2em;
@@ -475,17 +527,19 @@ const InputContainer = styled.div`
       }
     }
   }
-  input:not([type='checkbox']):not([type='radio']):not([type='submit']),
-  textarea,
-  select {
+
+  .input-content {
     padding: 0.2em 0.2em;
-    /* font-size: 0.8em; */
     font-size: 1em;
-    border: 0.2rem solid #424242;
-    /* width: 70%; */
     width: 100%;
     flex-grow: 1;
     margin: 0;
+  }
+
+  input:not([type='checkbox']):not([type='radio']):not([type='submit']),
+  textarea,
+  select {
+    border: 0.2rem solid #424242;
 
     &:focus,
     &:active {
@@ -506,7 +560,8 @@ const InputContainer = styled.div`
   }
 
   img {
-    max-width: 10em;
+    /* max-width: 10em; */
+    width: 5em;
   }
   .image-container {
   }
@@ -516,7 +571,12 @@ const InputContainer = styled.div`
   &.hidden {
     display: none;
   }
-`
+
+  .modal-btn {
+    padding: 0.2em 0.7em;
+    margin: 0.4em;
+  }
+`;
 
 const StyledAddProduct = styled.section`
   display: flex;
@@ -588,6 +648,6 @@ const StyledAddProduct = styled.section`
 
   @media (min-width: 768px) {
   }
-`
+`;
 
-export default AddAd
+export default AddAd;
