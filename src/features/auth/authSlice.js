@@ -34,6 +34,7 @@ export const authSlice = createSlice({
     addUser: (state, action) => {
       // console.log('addUser', action.payload)
       state.user = action.payload
+      if (!state.user.favorites) state.user.favorites = []
     },
     // addFavoritesToUser: (state, action) => {
     //   state.favorites = [...action.payload]
