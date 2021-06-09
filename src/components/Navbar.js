@@ -7,9 +7,12 @@ import menuLight from 'assets/icons/menu-light.svg'
 import menuDark from 'assets/icons/menu-dark.svg'
 import CategoryMenu from 'components/CategoryMenu'
 import { useState, useRef } from 'react'
-import useSearch from 'hooks/useSearch'
+// import useSearch from 'hooks/useSearch'
 import ToggleSwitch from 'components/ToggleSwitch'
-import InputSearch from './InputSearch'
+// import InputSearch from './InputSearch'
+import React from 'react'
+import SearchContainer from './SearchContainer'
+// import useSearch from 'hooks/useSearch'
 
 const fadeIn = keyframes`
   from {
@@ -19,7 +22,7 @@ const fadeIn = keyframes`
   to {
     opacity:1;
   }
-`;
+`
 
 const fadeOut = keyframes`
   from {
@@ -29,14 +32,14 @@ const fadeOut = keyframes`
   to {
     background-color: none;
   }
-`;
+`
 
 const StyledLink = styled(Link)`
   text-decoration: none;
 
   font-size: 1.4em;
   padding: 0.5em;
-`;
+`
 
 const Navigation = styled.nav`
 
@@ -75,18 +78,21 @@ p:first-child {
 }
 
 .no-nav {
-    animation: ${fadeOut} 300ms;
+    /* animation: ${fadeOut} 300ms; */
+    transition: all 0.5s ease;
     background-color: none;
   }
 
 
   .show-nav {
-    animation: ${fadeIn} 300ms ;
-    background-color:${({theme}) => theme.background};
+    transition: all 0.5s ease;
+
+    /* animation: ${fadeIn} 300ms ; */
+    background-color:${({ theme }) => theme.background};
   }
 
 
-  background-color: "";
+  /* background-color: ""; */
 
     .container {
     height: 4em;
@@ -97,27 +103,58 @@ p:first-child {
     top:0;
     width:100%;
     font-size: 16px;
+    
+    /* @media screen and (max-width: 1244px) { */
+    @media screen and (max-width: 1180px) {
+    height:64px;
+    grid-template-areas: 'logo nav'
+    'search search';
 
-    @media screen and (max-width: 1244px) {
-      height:64px;
-        grid-template-areas: 'logo nav'
-        'search search';
     }
     
 
     .search-container {
-      width:100%;
-          display: flex;
-          align-items: center;
-          place-content:center;
-          grid-area: search;
-          background-color: ${({theme}) => theme.background};
+      /* width:100%; */
+      display: flex;
+      /* justify-content: center; */
+      /* align-items: center; */
+      place-content:center;
+      grid-area: search;
+      /* background-color: ${({ theme }) => theme.background}; */
+      select {
+        background-color: ${({ theme }) => theme.input.background};
+        border: 1px solid ${({ theme }) => theme.input.borderColor};
+        height: 3em;
+        border-right:none;
 
+        color: ${({ theme }) => theme.select.textColor};
+        outline: none;
+        width:30%;
 
-          @media (max-width:1244px) {
-            padding:0 .5em 1em .5em;
+        font-weight: 600;
+        font-size: 0.8em;
+        padding-left: .5em;
+      }
+
+      input {
+        font-size: 0.8em;
+
+         background-color: ${({ theme }) => theme.input.background};
+          height: 3em;
+          width: 70%;
+          padding-left: 0.5em;
+          border: 1px solid ${({ theme }) => theme.input.borderColor};
+          color: ${({ theme }) => theme.input.textColor};
+
+          ::placeholder {
+              color: ${({ theme }) => theme.input.textColor};
           }
-        }
+      }
+
+      @media (max-width:1180px) {
+        padding:0 .5em 1em .5em;
+      }
+    }
 
      .nav-links {
        height:64px;
@@ -143,37 +180,19 @@ p:first-child {
             height:1em;
           }
         }
-
-
       }       
-     }
+      
+    p {
 
-      select {
-        background-color: ${({theme}) => theme.input.background};
-        border: 1px solid ${({theme}) => theme.input.borderColor};
-        height: 40px;
-        border-right:none;
-
-        color: ${({theme}) => theme.select.textColor};
-        outline: none;
-        width:30%;
-
-        font-weight: 600;
-        font-size: 0.8em;
-        padding-left: .5em;
-      }
-
-      p {
-
-        font-size: 2em;
-      }
+      font-size: 2em;
     }
-
+    }
+ 
     a {
       margin: 0 0em;
       text-decoration: none;
     }
-  `;
+  `
 
 // const StyledInput = styled.input`
 //   background-color: ${({theme}) => theme.input.background};
@@ -182,21 +201,20 @@ p:first-child {
 //   padding-left: 0.5em;
 //   border: 1px solid ${({theme}) => theme.input.borderColor};
 //   color: ${({theme}) => theme.input.textColor};
-  
 
 //   ::placeholder {
 //     color: ${({theme}) => theme.input.textColor};
-    
+
 //   }
 // `;
 
 const Navbar = () => {
   // const { searchResults, category, setCategory } = useSearch()
-  const { setCategory } = useSearch()
+  // const { setCategory } = useSearch()
   const catMenu = useRef()
   const history = useHistory()
   const [toggleCatMenu, setToggleCatMenu] = useState(false)
-  const { categories } = useSelector((state) => state.categories)
+  // const { categories } = useSelector((state) => state.categories)
   const isVisible = useSelector((state) => state.nav.isVisible)
   const { themeMode } = useSelector((state) => state.theme)
 
@@ -227,7 +245,7 @@ const Navbar = () => {
     //   setToggleUserMenu(false)
     // }
   }
-
+  console.log('ISVISIBLE', typeof isVisible, isVisible)
   return (
     <Navigation>
       <div className={`container ${!isVisible ? 'show-nav' : 'no-nav'}`}>
@@ -243,6 +261,13 @@ const Navbar = () => {
         </div>
         {!isVisible ? (
           <div className="search-container">
+            <SearchContainer />
+          </div>
+        ) : (
+          ''
+        )}
+        {/* {!isVisible ? (
+          <div className="search-container">
             <select
               onChange={(e) => setCategory(e.target.value)}
               name="category"
@@ -257,15 +282,11 @@ const Navbar = () => {
                 )
               })}
             </select>
-            {/* <StyledInput
-              onChange={(e) => searchResults(e.target.value, category)}
-              placeholder="What are you looking for today?"
-            /> */}
             <InputSearch />
           </div>
         ) : (
           ''
-        )}
+        )} */}
         <div className="nav-links">
           <ToggleSwitch />
           <StyledLink to="/login">Login</StyledLink>
@@ -281,4 +302,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default React.memo(Navbar)

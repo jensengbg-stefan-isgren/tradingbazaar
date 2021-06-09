@@ -1,20 +1,20 @@
-
-import styled, { keyframes } from "styled-components";
-import { auth } from "services/firebase";
-import menuDark from "assets/icons/menu-dark.svg";
-import menuLight from "assets/icons/menu-light.svg";
-import userLight from "assets/icons/user-light.svg";
-import userDark from "assets/icons/user-dark.svg";
-import googleIcon from "assets/icons/google-icon.svg";
-import facebookIcon from "assets/icons/facebook-icon.svg";
-import exclamationIcon from "assets/icons/exclamation.svg";
-import React, { useState, useEffect,useRef } from "react";
-import { useSelector } from "react-redux";
-import CategoryMenu from "components/CategoryMenu";
+import styled, { keyframes } from 'styled-components'
+import { auth } from 'services/firebase'
+import menuDark from 'assets/icons/menu-dark.svg'
+import menuLight from 'assets/icons/menu-light.svg'
+import userLight from 'assets/icons/user-light.svg'
+import userDark from 'assets/icons/user-dark.svg'
+import googleIcon from 'assets/icons/google-icon.svg'
+import facebookIcon from 'assets/icons/facebook-icon.svg'
+import exclamationIcon from 'assets/icons/exclamation.svg'
+import React, { useState, useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
+import CategoryMenu from 'components/CategoryMenu'
 import searchDark from 'assets/icons/search-dark.svg'
 import searchLight from 'assets/icons/search-light.svg'
 import ToggleSwitch from 'components/ToggleSwitch'
-import useSignin from "hooks/useSignin";
+import useSignin from 'hooks/useSignin'
+import SearchContainer from './SearchContainer'
 
 const SignInButton = styled.button`
   display: flex;
@@ -32,10 +32,7 @@ const SignInButton = styled.button`
   img {
     height: 30px;
   }
-
-
-
-`;
+`
 
 const UsrMenu = styled.div`
   display: flex;
@@ -51,7 +48,7 @@ const UsrMenu = styled.div`
   max-width: 20em;
   min-width: 18em;
   min-height: calc(100vh - 64px);
-  background-color: ${({theme}) => theme.background};
+  background-color: ${({ theme }) => theme.background};
   position: absolute;
   transition: transform 0.2s ease-in-out;
   transform: translateX(100%);
@@ -62,7 +59,7 @@ const UsrMenu = styled.div`
   }
 
   .greeting {
-    margin-bottom:1.5em;
+    margin-bottom: 1.5em;
   }
 
   .error-container {
@@ -109,7 +106,7 @@ const UsrMenu = styled.div`
       border: 1px solid darkgray;
     }
   }
-`;
+`
 
 const fadeIn = keyframes`
   from {
@@ -119,44 +116,45 @@ const fadeIn = keyframes`
   to {
     opacity:1;
   }
-`;
+`
 
 const fadeOut = keyframes`
   from {
-    background-color: ${({theme}) => theme.background};
+    background-color: ${({ theme }) => theme.background};
   }
 
   to {
     background-color: none;
   }
-`;
+`
 
-const StyledInput = styled.input`
- 
-  min-width: 20em;
-  outline: none;
-  height: 3em;
-  padding-left: 0.5em;
+// const StyledInput = styled.input`
+//   min-width: 20em;
+//   outline: none;
+//   height: 3em;
+//   padding-left: 0.5em;
 
+//   ::placeholder {
+//   }
 
-  ::placeholder {
-
-  }
-
-  @media (max-width: 500px) {
-    border: none;
-  }
-`;
+//   @media (max-width: 500px) {
+//     border: none;
+//   }
+// `
 
 const Wrapper = styled.div`
   .no-nav {
-    animation: ${fadeOut} 300ms;
+    transition: all 0.5s ease;
+
+    /* animation: ${fadeOut} 300ms; */
     background-color: none;
   }
 
   .show-nav {
-    animation: ${fadeIn} 300ms;
-    background-color: ${({theme}) => theme.background};
+    /* animation: ${fadeIn} 300ms; */
+    transition: all 0.5s ease;
+
+    background-color: ${({ theme }) => theme.background};
   }
 
   height: 64px;
@@ -164,12 +162,54 @@ const Wrapper = styled.div`
   position: fixed;
   top: 0;
   z-index: 999;
-`;
+
+  .search-container {
+    width: 100%;
+    display: grid;
+    gap: 0.5em;
+    grid-area: search;
+    padding-top: 0;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 1em;
+
+    select {
+      padding: 0 1em;
+      border: 1px solid ${({ theme }) => theme.select.borderColor};
+      height: 3em;
+      /* width: 100%; */
+    }
+
+    input {
+      min-width: 20em;
+      border: 1px solid ${({ theme }) => theme.select.borderColor};
+      outline: none;
+      height: 3em;
+      padding-left: 0.5em;
+
+      ::placeholder {
+      }
+
+      @media (max-width: 700px) {
+        width: 100%;
+        padding: 0 1em;
+      }
+
+      @media (max-width: 500px) {
+        border: 1px solid ${({ theme }) => theme.select.borderColor};
+      }
+    }
+
+    .logo {
+      grid-area: logo;
+    }
+  }
+`
 
 const Nav = styled.nav`
   display: grid;
   align-items: center;
-  grid-template-areas: "logo search nav";
+  grid-template-areas: 'logo search nav';
   height: 64px;
   padding: 0 1em;
 
@@ -202,10 +242,10 @@ const Nav = styled.nav`
   }
 
   .menu {
-    display:flex;
-    justify-content:flex-end;
+    display: flex;
+    justify-content: flex-end;
     align-items: center;
-    gap:1em;
+    gap: 1em;
     grid-area: nav;
 
     img {
@@ -213,27 +253,22 @@ const Nav = styled.nav`
     }
 
     .search-icon {
-      display:none;
+      display: none;
 
-      @media (max-width:700px) {
-      display:block;
+      @media (max-width: 700px) {
+        display: block;
+      }
     }
-
-    }
-
-
-    
   }
 
   @media (max-width: 700px) {
     height: auto;
-    background-color: "";
-    padding: .91em;
-
+    background-color: '';
+    padding: 0.91em;
 
     grid-template-areas:
-      "logo logo nav"
-      "search search search";
+      'logo logo nav'
+      'search search search';
 
     .search-container {
       width: 100%;
@@ -249,114 +284,95 @@ const Nav = styled.nav`
     }
 
     .hide {
-      display:none;
+      display: none;
     }
   }
-`;
+`
 
 const NavbarMobile = () => {
+  const { registerAccount, history } = useSignin()
 
-
-
-  const {
-    registerAccount,
-    history,
-  } = useSignin();
-
-  const [toggleSearchBar,setToggleSearchBar] = useState(false)
+  const [toggleSearchBar, setToggleSearchBar] = useState(false)
   const menu = useRef()
   const accountMenu = useRef()
   const catMenu = useRef()
-  const { categories } = useSelector((state) => state.categories);
-  const isVisible = useSelector((state) => state.nav.isVisible);
-  const [valid, setValid] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [toggleVisibleSearch, setToggleVisibleSearch] = useState(false);
-  const [toggleUserMenu, setToggleUserMenu] = useState(false);
-  const [toggleCatMenu, setToggleCatMenu] = useState(false);
-  const {themeMode} = useSelector(state => state.theme)
+  // const { categories } = useSelector((state) => state.categories)
+  const isVisible = useSelector((state) => state.nav.isVisible)
+  const [valid, setValid] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [toggleVisibleSearch, setToggleVisibleSearch] = useState(false)
+  const [toggleUserMenu, setToggleUserMenu] = useState(false)
+  const [toggleCatMenu, setToggleCatMenu] = useState(false)
+  const { themeMode } = useSelector((state) => state.theme)
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClick);
+    document.addEventListener('mousedown', handleClick)
     if (!email || password.length <= 0) {
-      setValid(false);
+      setValid(false)
     } else {
-      setValid(true);
+      setValid(true)
     }
     return () => {
-      document.removeEventListener("mousedown", handleClick);
-    };
-  }, [email, password]);
+      document.removeEventListener('mousedown', handleClick)
+    }
+  }, [email, password])
 
   const toggleAccountMenu = () => {
     if (toggleVisibleSearch) {
-      setToggleVisibleSearch(!toggleVisibleSearch);
+      setToggleVisibleSearch(!toggleVisibleSearch)
     }
 
     // setToggleUserMenu(!toggleUserMenu);
-  };
+  }
 
-
-  const handleClick = e => {
-
-    if(accountMenu.current === e.target) {
-      setToggleUserMenu((toggleUserMenu) => 
-        !toggleUserMenu
-      )
-    }
-    else if (menu.current.contains(e.target)) {
-
+  const handleClick = (e) => {
+    if (accountMenu.current === e.target) {
+      setToggleUserMenu((toggleUserMenu) => !toggleUserMenu)
+    } else if (menu.current.contains(e.target)) {
       // inside click
-      return;
-    } else  {
+      return
+    } else {
       setToggleUserMenu(false)
     }
-  };
-
+  }
 
   const login = async () => {
     try {
-      await auth.signInWithEmailAndPassword(email, password);
-      history.push("/");
+      await auth.signInWithEmailAndPassword(email, password)
+      history.push('/')
     } catch (error) {
-      setErrorMessage(error.message);
+      setErrorMessage(error.message)
     }
-  };
-
-  
+  }
 
   const handleEmail = (e) => {
-    setEmail(e.target.value);
-  };
+    setEmail(e.target.value)
+  }
 
   const handlePassword = (e) => {
-    setPassword(e.target.value);
-  };
+    setPassword(e.target.value)
+  }
 
   const handleSearchBar = () => {
     setToggleSearchBar(!toggleSearchBar)
-
   }
-  
-
-
 
   return (
     <Wrapper>
-      <UsrMenu ref={menu} className={toggleUserMenu ? `sliding` : ""}>
+      <UsrMenu ref={menu} className={toggleUserMenu ? `sliding` : ''}>
         <p className="greeting">Welcome</p>
-        <ToggleSwitch/>
+        <ToggleSwitch />
         <div className="provider-container">
           <SignInButton
             className="pulsing"
-            onClick={() => registerAccount("google")}
+            onClick={() => registerAccount('google')}
           >
             <img src={googleIcon} alt="" />
             <p>Sign in with Google</p>
           </SignInButton>
-          <SignInButton onClick={() => registerAccount("facebook")}>
+          <SignInButton onClick={() => registerAccount('facebook')}>
             <img src={facebookIcon} alt="" />
             <p>Sign in with Facebook</p>
           </SignInButton>
@@ -377,7 +393,7 @@ const NavbarMobile = () => {
         <div className="member-container">
           <p>Sign up</p>
 
-          <button onClick={() => history.push("/register")}>Sign up</button>
+          <button onClick={() => history.push('/register')}>Sign up</button>
         </div>
         {errorMessage ? (
           <div className="error-container">
@@ -389,40 +405,57 @@ const NavbarMobile = () => {
         )}
       </UsrMenu>
 
-      <div className={`container ${!isVisible ? "show-nav" : "no-nav"}`}>
+      <div className={`container ${!isVisible ? 'show-nav' : 'no-nav'}`}>
         <Nav>
           <div className="logo">
             <img
-            ref={catMenu}
+              ref={catMenu}
               // onClick={handleCatMenu}
               className="menu-icon"
               src={themeMode === 'light' ? menuDark : menuLight}
               alt=""
             />
-            <h3 className="logo-title" onClick={() => history.push("/")}>TradingBazaar</h3>
+            <h3 className="logo-title" onClick={() => history.push('/')}>
+              TradingBazaar
+            </h3>
           </div>
           {!isVisible ? (
-            <div className={`search-container ${toggleCatMenu || toggleUserMenu || toggleSearchBar ? "hide" : ""}`}>
-              <select name="category" id="category">
+            <div
+              className={`search-container ${
+                toggleCatMenu || toggleUserMenu || toggleSearchBar ? 'hide' : ''
+              }`}
+            >
+              <SearchContainer />
+
+              {/* <select name="category" id="category">
                 <option>All Categories</option>
                 {categories.map((category) => {
                   return (
                     <option key={category.name} value={category.name}>
                       {category.name}
                     </option>
-                  );
+                  )
                 })}
               </select>
-              <StyledInput placeholder="What are you looking for today?" />
+              <StyledInput placeholder="What are you looking for today?" /> */}
             </div>
           ) : (
-            ""
+            ''
           )}
           <div className="menu">
-           {!isVisible ?  <img className="search-icon" onClick={handleSearchBar} src={themeMode === 'light' ? searchDark : searchLight} alt="" /> : ""}
+            {!isVisible ? (
+              <img
+                className="search-icon"
+                onClick={handleSearchBar}
+                src={themeMode === 'light' ? searchDark : searchLight}
+                alt=""
+              />
+            ) : (
+              ''
+            )}
             <img
-            ref={accountMenu}
-              onClick={(toggleAccountMenu)}
+              ref={accountMenu}
+              onClick={toggleAccountMenu}
               className="nav"
               src={themeMode === 'light' ? userDark : userLight}
               alt=""
@@ -430,9 +463,13 @@ const NavbarMobile = () => {
           </div>
         </Nav>
       </div>
-      <CategoryMenu toggleCatMenu={toggleCatMenu} setToggleCatMenu={setToggleCatMenu} catMenu={catMenu} />
+      <CategoryMenu
+        toggleCatMenu={toggleCatMenu}
+        setToggleCatMenu={setToggleCatMenu}
+        catMenu={catMenu}
+      />
     </Wrapper>
-  );
-};
+  )
+}
 
-export default NavbarMobile;
+export default React.memo(NavbarMobile)

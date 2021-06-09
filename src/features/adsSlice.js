@@ -2,7 +2,11 @@ import { createSlice } from '@reduxjs/toolkit'
 
 export const ads = createSlice({
   name: 'ads',
-  initialState: { selling: [], expired: [] },
+  initialState: {
+    selling: [],
+    expired: [],
+    searchText: '',
+  },
 
   reducers: {
     fillAdList: (state, action) => {
@@ -23,8 +27,11 @@ export const ads = createSlice({
       state = { selling: [...selling], expired: [...expired] }
       return state
     },
+    setSearchText: (state, action) => {
+      state.searchText = action.payload
+    },
   },
 })
 
-export const { fillAdList } = ads.actions
+export const { fillAdList, setSearchText } = ads.actions
 export default ads.reducer

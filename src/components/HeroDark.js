@@ -6,7 +6,6 @@ import { setIsVisible } from 'features/navSlice'
 import useSearch from 'hooks/useSearch'
 import Arrow from 'components/ArrowLight'
 
-
 const Wrapper = styled.section`
   position: relative;
   height: 100vh;
@@ -43,9 +42,9 @@ const Wrapper = styled.section`
 `
 
 const SearchContainer = styled.div`
-  width:100%;
-  padding:0 1em;
-  display:flex;
+  width: 100%;
+  padding: 0 1em;
+  display: flex;
   justify-content: center;
   flex-direction: row;
 
@@ -72,12 +71,12 @@ const SearchContainer = styled.div`
   }
 
   @media (max-width: 768px) {
-  flex-direction: column;
+    flex-direction: column;
 
-  input {
-    min-width:auto;
+    input {
+      min-width: auto;
+    }
   }
-}
 `
 
 const Container = styled.div`
@@ -92,22 +91,15 @@ const Container = styled.div`
   h1 {
     margin-bottom: 1em;
     font-size: clamp(40px, 5vw, 70px);
-
-
   }
 
   .title-container {
-    padding:0em 1em;
+    padding: 0em 1em;
   }
-
-
-
 `
 
 const Hero = () => {
-
-
-  const {searchResults,category,setCategory} = useSearch()
+  const { searchResults, category, setCategory } = useSearch()
 
   // const [searchValue, setSearchValue] = useState('')
   const { categories } = useSelector((state) => state.categories)
@@ -123,9 +115,11 @@ const Hero = () => {
     }
   }, [dispatch])
 
-
   useEffect(() => {
-    dispatch(setIsVisible(true))
+    const isInViewport =
+      document.getElementById('search').getBoundingClientRect().top >= 0
+    dispatch(setIsVisible(isInViewport))
+
     window.addEventListener('scroll', handleScroll)
     return () => {
       window.removeEventListener('scroll', handleScroll)
@@ -134,17 +128,15 @@ const Hero = () => {
 
   const scroll = () => {
     let element = document.getElementById('products')
-    element.scrollIntoView({behavior: "smooth"});
+    element.scrollIntoView({ behavior: 'smooth' })
   }
-  
-
 
   return (
     <Wrapper>
       <Container>
         <div className="title-container">
-          <Arrow onClick={scroll}/>
-        <h1>We make trading products easy for everyone</h1>
+          <Arrow onClick={scroll} />
+          <h1>We make trading products easy for everyone</h1>
         </div>
         <SearchContainer id="search">
           {categories ? (
@@ -166,7 +158,7 @@ const Hero = () => {
             ''
           )}
           <input
-            onChange={(e) => searchResults(e.target.value,category)}
+            onChange={(e) => searchResults(e.target.value, category)}
             placeholder="What are you looking for today?"
             type="text"
           />

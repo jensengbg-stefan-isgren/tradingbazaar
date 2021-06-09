@@ -1,38 +1,38 @@
-import styled from 'styled-components';
-import { addProduct } from '../services/collections';
-import { useDispatch, useSelector } from 'react-redux';
-import { adInputEdit, checkImages, clearAd } from 'features/newAdSlice';
-import { useRef, useState } from 'react';
-import Modal from 'components/Modal';
-import placeholder from 'assets/images/img-placeholder.svg';
-import useProtectedRoute from 'functions/useProtectedRoute';
-import { toast } from 'react-toastify';
-import { useHistory } from 'react-router';
+import styled from 'styled-components'
+import { addProduct } from '../services/collections'
+import { useDispatch, useSelector } from 'react-redux'
+import { adInputEdit, checkImages, clearAd } from 'features/newAdSlice'
+import { useEffect, useRef, useState } from 'react'
+import Modal from 'components/Modal'
+import placeholder from 'assets/images/img-placeholder.svg'
+import useProtectedRoute from 'functions/useProtectedRoute'
+import { toast } from 'react-toastify'
+import { useHistory } from 'react-router'
 
 const AddAd = () => {
-  const history = useHistory();
-  useProtectedRoute();
+  const history = useHistory()
+  useProtectedRoute()
 
-  document.title = 'Trading Bazaar | Add Ad';
+  document.title = 'Trading Bazaar | Add Ad'
 
-  const addAd1 = useRef(null);
-  const addAd2 = useRef(null);
-  const stepBtnRef = useRef(null);
+  const addAd1 = useRef(null)
+  const addAd2 = useRef(null)
+  const stepBtnRef = useRef(null)
 
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false)
 
   const handleNextStep = (e) => {
-    e.preventDefault();
-    addAd1.current.classList.toggle('slide');
-    addAd2.current.classList.toggle('slide');
+    e.preventDefault()
+    addAd1.current.classList.toggle('slide')
+    addAd2.current.classList.toggle('slide')
     stepBtnRef.current.innerText = stepBtnRef.current.innerText
       .toLowerCase()
       .includes('next')
       ? 'Previous Step'
-      : 'Next Step';
-  };
+      : 'Next Step'
+  }
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const {
     title,
     description,
@@ -46,28 +46,28 @@ const AddAd = () => {
     imgLink3,
     imgLink4,
     imgLink5,
-  } = useSelector((state) => state.newAd);
+  } = useSelector((state) => state.newAd)
 
-  const { categories } = useSelector((state) => state.categories);
+  const { categories } = useSelector((state) => state.categories)
   const getImgRef = (field) => {
     switch (field) {
       case 'imgLink1':
-        return imgLink1;
+        return imgLink1
       case 'imgLink2':
-        return imgLink2;
+        return imgLink2
       case 'imgLink3':
-        return imgLink3;
+        return imgLink3
       case 'imgLink4':
-        return imgLink4;
+        return imgLink4
       case 'imgLink5':
-        return imgLink5;
+        return imgLink5
       default:
     }
-  };
-  const [currentImg, setCurrentImg] = useState('imgLink1');
+  }
+  const [currentImg, setCurrentImg] = useState('imgLink1')
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     if (
       !title ||
       !description ||
@@ -78,12 +78,15 @@ const AddAd = () => {
       !adEndDate ||
       !imgLink1
     )
-      return toast.info('Please fill all the fields in the Form');
-    dispatch(checkImages());
-    const docRef = await addProduct();
-    dispatch(clearAd());
-    history.push(`/item/${docRef}`);
-  };
+      return toast.info('Please fill all the fields in the Form')
+    dispatch(checkImages())
+    const docRef = await addProduct()
+    history.push(`/item/${docRef}`)
+  }
+
+  useEffect(() => {
+    return () => dispatch(clearAd())
+  }, [dispatch])
 
   return (
     <>
@@ -159,7 +162,7 @@ const AddAd = () => {
                         <option key={category.name} value={category.name}>
                           {category.name}
                         </option>
-                      );
+                      )
                     })}
                   </select>
                 ) : (
@@ -236,9 +239,9 @@ const AddAd = () => {
                 <div className="input-content">
                   <button
                     onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentImg('imgLink1');
-                      setShowModal(!showModal);
+                      e.preventDefault()
+                      setCurrentImg('imgLink1')
+                      setShowModal(!showModal)
                     }}
                   >
                     <img src={imgLink1 || placeholder} alt="placeholder"></img>
@@ -251,9 +254,9 @@ const AddAd = () => {
                         : ''
                     }`}
                     onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentImg('imgLink2');
-                      setShowModal(!showModal);
+                      e.preventDefault()
+                      setCurrentImg('imgLink2')
+                      setShowModal(!showModal)
                     }}
                   >
                     <img src={imgLink2 || placeholder} alt="placeholder"></img>
@@ -266,9 +269,9 @@ const AddAd = () => {
                         : ''
                     }`}
                     onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentImg('imgLink3');
-                      setShowModal(!showModal);
+                      e.preventDefault()
+                      setCurrentImg('imgLink3')
+                      setShowModal(!showModal)
                     }}
                   >
                     <img src={imgLink3 || placeholder} alt="placeholder"></img>
@@ -281,9 +284,9 @@ const AddAd = () => {
                         : ''
                     }`}
                     onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentImg('imgLink4');
-                      setShowModal(!showModal);
+                      e.preventDefault()
+                      setCurrentImg('imgLink4')
+                      setShowModal(!showModal)
                     }}
                   >
                     <img src={imgLink4 || placeholder} alt="placeholder"></img>
@@ -296,9 +299,9 @@ const AddAd = () => {
                         : ''
                     }`}
                     onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentImg('imgLink5');
-                      setShowModal(!showModal);
+                      e.preventDefault()
+                      setCurrentImg('imgLink5')
+                      setShowModal(!showModal)
                     }}
                   >
                     <img src={imgLink5 || placeholder} alt="placeholder"></img>
@@ -342,15 +345,15 @@ const AddAd = () => {
                   placeholder="100"
                   onChange={(e) => {
                     if (Number(e.target.value) === 0 || !e.target.value) {
-                      e.target.value = 0;
-                      e.target.select();
+                      e.target.value = 0
+                      e.target.select()
                     }
                     dispatch(
                       adInputEdit({
                         field: 'startPrice',
                         value: Number(e.target.value),
                       })
-                    );
+                    )
                   }}
                 />
                 <span className="valuta-text">Kr</span>
@@ -366,15 +369,15 @@ const AddAd = () => {
                   value={acceptedPrice}
                   onChange={(e) => {
                     if (Number(e.target.value) === 0 || !e.target.value) {
-                      e.target.value = 0;
-                      e.target.select();
+                      e.target.value = 0
+                      e.target.select()
                     }
                     dispatch(
                       adInputEdit({
                         field: 'acceptedPrice',
                         value: Number(e.target.value),
                       })
-                    );
+                    )
                   }}
                 />
                 <span className="valuta-text">Kr</span>
@@ -390,14 +393,14 @@ const AddAd = () => {
                   value={adEndDate}
                   className="input-content"
                   onChange={(e) => {
-                    if (!e.target['validity'].valid) return;
-                    const dt = e.target['value'];
+                    if (!e.target['validity'].valid) return
+                    const dt = e.target['value']
                     dispatch(
                       adInputEdit({
                         field: 'adEndDate',
                         value: dt,
                       })
-                    );
+                    )
                   }}
                 />
               </InputContainer>
@@ -425,11 +428,11 @@ const AddAd = () => {
         </main>
       </StyledAddProduct>
     </>
-  );
-};
+  )
+}
 
 const ModalContainer = ({ imgRef, imgName, onClick, onChange }) => {
-  const inputRef = useRef(null);
+  const inputRef = useRef(null)
   return (
     <Modal>
       <InputContainer>
@@ -453,8 +456,8 @@ const ModalContainer = ({ imgRef, imgName, onClick, onChange }) => {
         </button>
       </InputContainer>
     </Modal>
-  );
-};
+  )
+}
 
 const InputContainer = styled.div`
   font-size: 0.8em;
@@ -500,8 +503,8 @@ const InputContainer = styled.div`
 
       label {
         flex-grow: 1;
-        background-color: ${({theme}) => theme.addBtn.backgroundColor};
-        color:${({theme}) => theme.addBtn.textColor};
+        background-color: ${({ theme }) => theme.addBtn.backgroundColor};
+        color: ${({ theme }) => theme.addBtn.textColor};
         min-width: 6em;
         padding: 0.3em 0.5em;
         text-align: center;
@@ -518,11 +521,10 @@ const InputContainer = styled.div`
         /* height: 100%; */
 
         &:checked + label {
-          background-color:#20BF55
+          background-color: #20bf55;
         }
 
         &:focus + label {
-     
           padding: 0.2em 0.4em;
         }
       }
@@ -577,14 +579,14 @@ const InputContainer = styled.div`
     padding: 0.2em 0.7em;
     margin: 0.4em;
   }
-`;
+`
 
 const StyledAddProduct = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top:5em;
+  margin-top: 5em;
 
   h1,
   h2,
@@ -636,27 +638,28 @@ const StyledAddProduct = styled.section`
 
     .btn-group {
       padding: 1em 0.5em;
-      background: ${({theme}) => theme.background};
+      background: ${({ theme }) => theme.background};
       position: fixed;
       bottom: 2em;
       right: 1em;
       width: 8em;
-      display:flex;
-      flex-direction:column;
-      gap:.5em;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
 
       & > * {
         width: 100%;
       }
     }
 
-    button,input {
-      padding:1em;
+    button,
+    input {
+      padding: 1em;
     }
   }
 
   @media (min-width: 768px) {
   }
-`;
+`
 
-export default AddAd;
+export default AddAd

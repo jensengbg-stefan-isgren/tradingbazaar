@@ -12,7 +12,6 @@ const ProductSection = () => {
   document.title = 'Trading Bazaar'
 
   const { isVisible } = useSelector((state) => state.nav)
-
   const { themeMode } = useSelector((state) => state.theme)
 
   const scrollToTop = () => {
@@ -20,7 +19,8 @@ const ProductSection = () => {
     element.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const ads = useSelector((state) => state.ads)
+  const adsSelling = useSelector((state) => state.ads.selling)
+  const adsExpired = useSelector((state) => state.ads.expired)
   // UseGetAds();
   console.log('rendering')
   return (
@@ -29,8 +29,8 @@ const ProductSection = () => {
         {themeMode === 'light' ? <Hero /> : <HeroDark />}
         <div id="products">
           <h2>Open Auctions</h2>
-          {ads.selling ? (
-            <CardContainer ads={ads.selling} />
+          {adsSelling ? (
+            <CardContainer ads={adsSelling} />
           ) : (
             <div className="empty-section">
               <h3>No open auctions at the moment</h3>
@@ -39,8 +39,8 @@ const ProductSection = () => {
         </div>
         <div>
           <h2>Expired Auctions</h2>
-          {ads.expired.length ? (
-            <CardContainer ads={ads.expired} />
+          {adsExpired.length ? (
+            <CardContainer ads={adsExpired} />
           ) : (
             <StyledEmptySection>
               <h3>No expired auctions</h3>
