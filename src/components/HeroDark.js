@@ -1,11 +1,11 @@
 import React, { useEffect, useCallback } from 'react'
 import styled from 'styled-components'
 import heroImg from 'assets/images/mario.jpeg'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setIsVisible } from 'features/navSlice'
-import useSearch from 'hooks/useSearch'
+// import useSearch from 'hooks/useSearch'
 import Arrow from 'components/ArrowLight'
-
+import SearchContainer from './SearchContainer'
 
 const Wrapper = styled.section`
   position: relative;
@@ -42,43 +42,43 @@ const Wrapper = styled.section`
   }
 `
 
-const SearchContainer = styled.div`
-  width:100%;
-  padding:0 1em;
-  display:flex;
-  justify-content: center;
-  flex-direction: row;
+// const SearchContainer = styled.div`
+//   width: 100%;
+//   padding: 0 1em;
+//   display: flex;
+//   justify-content: center;
+//   flex-direction: row;
 
-  select,
-  input {
-    min-height: 3.5em;
-    padding: 0.5em;
-    border: none;
-    outline: none;
-  }
+//   select,
+//   input {
+//     min-height: 3.5em;
+//     padding: 0.5em;
+//     border: none;
+//     outline: none;
+//   }
 
-  input {
-    min-width: 25em;
-    padding-left: 1em;
-  }
+//   input {
+//     min-width: 25em;
+//     padding-left: 1em;
+//   }
 
-  select {
-    color: black;
-    background-color: #f7f7f2;
-  }
+//   select {
+//     color: black;
+//     background-color: #f7f7f2;
+//   }
 
-  option {
-    background-color: #f7f7f2;
-  }
+//   option {
+//     background-color: #f7f7f2;
+//   }
 
-  @media (max-width: 768px) {
-  flex-direction: column;
+//   @media (max-width: 768px) {
+//     flex-direction: column;
 
-  input {
-    min-width:auto;
-  }
-}
-`
+//     input {
+//       min-width: auto;
+//     }
+//   }
+// `
 
 const Container = styled.div`
   height: 100vh;
@@ -92,25 +92,18 @@ const Container = styled.div`
   h1 {
     margin-bottom: 1em;
     font-size: clamp(40px, 5vw, 70px);
-
-
   }
 
   .title-container {
-    padding:0em 1em;
+    padding: 0em 1em;
   }
-
-
-
 `
 
 const Hero = () => {
-
-
-  const {searchResults,category,setCategory} = useSearch()
+  // const { searchResults, category, setCategory } = useSearch()
 
   // const [searchValue, setSearchValue] = useState('')
-  const { categories } = useSelector((state) => state.categories)
+  // const { categories } = useSelector((state) => state.categories)
   const dispatch = useDispatch()
   const handleScroll = useCallback(async () => {
     const element = document.getElementById('search')
@@ -123,9 +116,11 @@ const Hero = () => {
     }
   }, [dispatch])
 
-
   useEffect(() => {
-    dispatch(setIsVisible(true))
+    const isInViewport =
+      document.getElementById('search').getBoundingClientRect().top >= 0
+    dispatch(setIsVisible(isInViewport))
+
     window.addEventListener('scroll', handleScroll)
     return () => {
       window.removeEventListener('scroll', handleScroll)
@@ -134,19 +129,20 @@ const Hero = () => {
 
   const scroll = () => {
     let element = document.getElementById('products')
-    element.scrollIntoView({behavior: "smooth"});
+    element.scrollIntoView({ behavior: 'smooth' })
   }
-  
-
 
   return (
     <Wrapper>
       <Container>
         <div className="title-container">
-          <Arrow onClick={scroll}/>
-        <h1>We make trading products easy for everyone</h1>
+          <Arrow onClick={scroll} />
+          <h1>We make trading products easy for everyone</h1>
         </div>
-        <SearchContainer id="search">
+        <div id="search">
+          <SearchContainer />
+        </div>
+        {/* <SearchContainer id="search">
           {categories ? (
             <select
               onChange={(e) => setCategory(e.target.value)}
@@ -166,11 +162,11 @@ const Hero = () => {
             ''
           )}
           <input
-            onChange={(e) => searchResults(e.target.value,category)}
+            onChange={(e) => searchResults(e.target.value, category)}
             placeholder="What are you looking for today?"
             type="text"
           />
-        </SearchContainer>
+        </SearchContainer> */}
       </Container>
     </Wrapper>
   )

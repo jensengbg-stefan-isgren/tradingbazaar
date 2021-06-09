@@ -8,9 +8,10 @@ import menuLight from 'assets/icons/menu-light.svg'
 import { useSelector } from 'react-redux'
 import ProfileMenu from 'components/ProfileMenu'
 import CategoryMenu from 'components/CategoryMenu'
-import useSearch from 'hooks/useSearch'
+// import useSearch from 'hooks/useSearch'
 import searchLight from 'assets/icons/search-light.svg'
 import searchDark from 'assets/icons/search-dark.svg'
+import SearchContainer from './SearchContainer'
 
 const fadeIn = keyframes`
   from {
@@ -32,25 +33,25 @@ const fadeOut = keyframes`
   }
 `
 
-const StyledInput = styled.input`
-  min-width: 20em;
-  border:  1px solid ${({theme}) => theme.select.borderColor};
-  outline: none;
-  height: 3em;
-  padding-left: 0.5em;
+// const StyledInput = styled.input`
+//   min-width: 20em;
+//   border: 1px solid ${({ theme }) => theme.select.borderColor};
+//   outline: none;
+//   height: 3em;
+//   padding-left: 0.5em;
 
-  ::placeholder {
-  }
+//   ::placeholder {
+//   }
 
-  @media (max-width: 700px) {
-    width: 100%;
-    padding: 0 1em;
-  }
+//   @media (max-width: 700px) {
+//     width: 100%;
+//     padding: 0 1em;
+//   }
 
-  @media (max-width: 500px) {
-    border:  1px solid ${({theme}) => theme.select.borderColor};
-  }
-`
+//   @media (max-width: 500px) {
+//     border: 1px solid ${({ theme }) => theme.select.borderColor};
+//   }
+// `
 
 const Nav = styled.nav`
   display: grid;
@@ -129,9 +130,29 @@ const Wrapper = styled.div`
 
     select {
       padding: 0 1em;
-      border:  1px solid ${({theme}) => theme.select.borderColor};
+      border: 1px solid ${({ theme }) => theme.select.borderColor};
       height: 3em;
-      width: 100%;
+      /* width: 100%; */
+    }
+
+    input {
+      min-width: 20em;
+      border: 1px solid ${({ theme }) => theme.select.borderColor};
+      outline: none;
+      height: 3em;
+      padding-left: 0.5em;
+
+      ::placeholder {
+      }
+
+      @media (max-width: 700px) {
+        width: 100%;
+        padding: 0 1em;
+      }
+
+      @media (max-width: 500px) {
+        border: 1px solid ${({ theme }) => theme.select.borderColor};
+      }
     }
 
     .logo {
@@ -140,12 +161,16 @@ const Wrapper = styled.div`
   }
 
   .no-nav {
-    animation: ${fadeOut} 300ms;
+    /* animation: ${fadeOut} 300ms; */
+    transition: all 0.5s ease;
+
     background-color: none;
   }
 
   .show-nav {
-    animation: ${fadeIn} 300ms;
+    /* animation: ${fadeIn} 300ms; */
+    transition: all 0.5s ease;
+
     background-color: ${({ theme }) => theme.background};
   }
 
@@ -176,13 +201,13 @@ const NavbarMobileProfile = () => {
     return () => {}
   }, [location.pathname])
 
-  const { searchResults, category, setCategory } = useSearch()
+  // const { searchResults, category, setCategory } = useSearch()
   const catMenu = useRef()
   const accountMenu = useRef()
   const [toggleCatMenu, setToggleCatMenu] = useState(false)
   // const showMobileNav = useMediaQuery("(max-width:1000px)");
   const [toggleMenu, setToggleMenu] = useState(false)
-  const { categories } = useSelector((state) => state.categories)
+  // const { categories } = useSelector((state) => state.categories)
   const isVisible = useSelector((state) => state.nav.isVisible)
   const { themeMode } = useSelector((state) => state.theme)
   const history = useHistory()
@@ -191,7 +216,6 @@ const NavbarMobileProfile = () => {
 
   const handleSearchBar = () => {
     setToggleSearchBar(!toggleSearchBar)
-    console.log(toggleSearchBar)
   }
 
   return (
@@ -232,7 +256,9 @@ const NavbarMobileProfile = () => {
               toggleCatMenu || toggleMenu || toggleSearchBar ? 'hide' : ''
             }`}
           >
-            <select name="category" id="category">
+            <SearchContainer />
+
+            {/* <select name="category" id="category">
               <option onChange={(e) => setCategory(e.target.value)} value={0}>
                 All Categories
               </option>
@@ -247,7 +273,7 @@ const NavbarMobileProfile = () => {
             <StyledInput
               onChange={(e) => searchResults(e.target.value, category)}
               placeholder="What are you looking for today?"
-            />
+            /> */}
           </div>
         ) : (
           ''
@@ -267,4 +293,4 @@ const NavbarMobileProfile = () => {
   )
 }
 
-export default NavbarMobileProfile
+export default React.memo(NavbarMobileProfile)

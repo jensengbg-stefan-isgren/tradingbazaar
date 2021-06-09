@@ -23,10 +23,12 @@ const App = () => {
 
   const getCategories = useCallback(async () => {
     let snapshot = await db.collection('categories').get()
+    let categories = []
     snapshot.forEach((doc) => {
-      const data = doc.data()
-      dispatch(addCategories(data))
+      // const data = doc.data()
+      categories = [...categories, doc.data()]
     })
+    dispatch(addCategories(categories))
   }, [dispatch])
 
   const { themeMode } = useSelector((state) => state.theme)
@@ -42,12 +44,14 @@ const App = () => {
     getCategories()
     dispatch(authUser())
   }, [dispatch, getCategories])
+  // <route.navbar /> <route.main /> <route.footer />
 
   return (
     <React.Fragment>
-      <Router>
-        <ThemeProvider theme={themeMode === 'light' ? lightTheme : darkTheme}>
+      <ThemeProvider theme={themeMode === 'light' ? lightTheme : darkTheme}>
+        <Router>
           <GlobalStyle />
+          {/* <MainNav /> */}
           <div className="App">
             <Switch>
               {routes.map((route, index) => {
@@ -59,6 +63,7 @@ const App = () => {
                       exact={route.exact}
                       redirectto={route.redirect}
                       routeCheck={route.beforeRoute}
+                      ChildNav={route.navbar}
                       children={() => (
                         <>
                           <route.navbar /> <route.main /> <route.footer />
@@ -82,8 +87,8 @@ const App = () => {
               })}
             </Switch>
           </div>
-        </ThemeProvider>
-      </Router>
+        </Router>
+      </ThemeProvider>
     </React.Fragment>
   )
 }
@@ -108,6 +113,7 @@ const ProtectedRoute = ({
   path,
   routeCheck,
   redirectto,
+  ChildNav,
   ...rest
 }) => {
   const [state, setState] = useState(0)
@@ -125,8 +131,7 @@ const ProtectedRoute = ({
           if (id) isValid = await checkAd(id)
           if (!isValid) toast.info('The selected item does not exist')
         }
-        // setState(isValid ? 1 : -1)
-        setState(1)
+        setState(isValid ? 1 : -1)
       } catch {
         setState(-1)
       }
@@ -134,7 +139,12 @@ const ProtectedRoute = ({
   }, [routeCheck, rest?.computedMatch?.params])
 
   if (state === 0) {
-    return <div>Loading..</div>
+    return (
+      <>
+        {ChildNav ? <ChildNav /> : null}
+        <div>Loading..</div>
+      </>
+    )
   }
 
   return (

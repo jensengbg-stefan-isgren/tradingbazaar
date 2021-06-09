@@ -1,30 +1,31 @@
-import Navbar from "components/Navbar";
-import React from "react";
-import {useSelector} from 'react-redux';
-import NavbarMobile from "components/NavbarMobile";
-import NavbarProfile from "components/NavbarProfile";
-import { useMediaQuery } from "functions/UseMediaQuery";
-import NavbarMobileProfile from "components/NavbarProfileMobile";
+import Navbar from 'components/Navbar'
+import React from 'react'
+import { useSelector } from 'react-redux'
+import NavbarMobile from 'components/NavbarMobile'
+import NavbarProfile from 'components/NavbarProfile'
+import { useMediaQuery } from 'functions/UseMediaQuery'
+import NavbarMobileProfile from 'components/NavbarProfileMobile'
 
 function MainNav() {
-  const showMobileNav = useMediaQuery("(max-width:1000px)");
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const showMobileNav = useMediaQuery('(max-width:1000px)')
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
+
   const showNavigation = () => {
     if (isAuthenticated) {
       if (showMobileNav) {
-        return <NavbarMobileProfile />;
+        return <NavbarMobileProfile />
       } else {
-        return <NavbarProfile />;
+        return <NavbarProfile />
       }
     } else {
       if (showMobileNav) {
-        return <NavbarMobile />;
+        return <NavbarMobile />
       } else {
-        return <Navbar />;
+        return <Navbar />
       }
     }
-  };
+  }
 
-  return <>{showNavigation()}</>;
+  return <>{showNavigation()}</>
 }
-export default MainNav;
+export default React.memo(MainNav)

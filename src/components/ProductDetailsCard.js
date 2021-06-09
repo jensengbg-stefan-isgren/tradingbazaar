@@ -244,7 +244,7 @@ const ProductDetailsCard = () => {
                     onClick={() => dispatch(removeProduct(id))}
                     className="button remove"
                   >
-                    {detailedProduct.removed ? 'Remove Auction' : 'Add Auction'}
+                    {detailedProduct.removed ? 'Add Auction' : 'Remove Auction'}
                   </button>
                 </div>
                 <div className="seller-section">
@@ -338,7 +338,7 @@ const Container = styled.div`
   margin:0 1em;
   height: auto;
   width: auto;
-  background-color: ${({theme}) => theme.productCard.background};
+  background-color: ${({ theme }) => theme.productCard.background};
   display: grid;
   grid-template-columns: 30em 12em;
   padding: 1em;
@@ -382,8 +382,6 @@ const Container = styled.div`
     justify-content: center;
     flex-direction: column;
     gap: 1em;
-    
-
 
     button {
       padding: 0.5em;
@@ -406,9 +404,9 @@ const Container = styled.div`
     padding: 1em;
     background-color: #f7f7f2;
     /* margin-bottom: 1em; */
-    
+
     p {
-      color: ${({theme}) => theme.productCard.textColor};
+      color: ${({ theme }) => theme.productCard.textColor};
     }
   }
 

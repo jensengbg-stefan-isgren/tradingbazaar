@@ -24,7 +24,9 @@ const ActiveItems = () => {
       <div className="title-container">
         <h3>Your Ads</h3>
       </div>
-      <button class="add-btn" onClick={() => history.push('/addad')}>Add a new AD</button>
+      <button className="add-btn" onClick={() => history.push('/addad')}>
+        Add a new AD
+      </button>
       <div>
         <h2>Open Auctions</h2>
         {ads.selling ? (
@@ -65,15 +67,15 @@ const Wrapper = styled.div`
   }
 
   button {
-    border:none;
-    outline:none;
+    border: none;
+    outline: none;
   }
 
   .add-btn {
-    margin: .3em 0;
+    margin: 0.3em 0;
     padding: 1em;
-    background-color: ${({theme}) => theme.addBtn.backgroundColor};
-    color: ${({theme}) => theme.addBtn.textColor};
+    background-color: ${({ theme }) => theme.addBtn.backgroundColor};
+    color: ${({ theme }) => theme.addBtn.textColor};
   }
 `
 

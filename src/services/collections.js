@@ -41,13 +41,10 @@ export const addProduct = () => {
         ' ' +
         newProduct.description.toLowerCase()
     )
-    console.log(triStringArray)
     let triStringObj = {}
     triStringArray.forEach(
       (tri) => (triStringObj = { ...triStringObj, [tri]: true })
     )
-
-    console.log('triobj', triStringObj)
 
     newProduct.trigram = triStringObj
 
@@ -56,7 +53,10 @@ export const addProduct = () => {
         db.collection('sellingProducts')
           .doc(productId)
           .update(newProduct)
-          .then(() => toast.success('Item successfully updated'))
+          .then((docRef) => {
+            toast.success('Item successfully updated')
+            resolve(productId)
+          })
       } catch {
         toast.error('Oops!! Something went wrong')
       }

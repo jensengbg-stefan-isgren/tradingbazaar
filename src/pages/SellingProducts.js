@@ -2,17 +2,17 @@ import styled from 'styled-components'
 import CardContainer from 'components/CardContainer'
 import { useSelector } from 'react-redux'
 // import UseGetAds from 'services/useGetAds';
-import React from 'react'
+import React, { useEffect } from 'react'
 import Hero from 'components/Hero'
 import HeroDark from 'components/HeroDark'
 import UpArrowDark from 'assets/icons/uparrow-dark.svg'
 import UpArrowLight from 'assets/icons/uparrow-light.svg'
+import useSearch from 'hooks/useSearch'
 
 const ProductSection = () => {
   document.title = 'Trading Bazaar'
 
   const { isVisible } = useSelector((state) => state.nav)
-
   const { themeMode } = useSelector((state) => state.theme)
 
   const scrollToTop = () => {
@@ -20,31 +20,57 @@ const ProductSection = () => {
     element.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const ads = useSelector((state) => state.ads)
+  const adsSelling = useSelector((state) => state.ads.selling)
+  const adsExpired = useSelector((state) => state.ads.expired)
   // UseGetAds();
-  console.log('rendering')
+  const searchText = useSelector((state) => state.ads.searchText) || ''
+
+  const { searchResults } = useSearch()
+  //   const [searchString, setSearchString] = useState('')
+
+  useEffect(() => {
+    let timer = 0
+    function clearTimer() {
+      if (timer) {
+        clearTimeout(timer)
+        timer = 0
+      }
+    }
+    clearTimer()
+
+    if (searchText) {
+      timer = setTimeout(() => {
+        searchResults(searchText)
+      }, 800)
+    } else searchResults('')
+
+    return () => {
+      clearTimer()
+    }
+  }, [searchText, searchResults])
+
   return (
     <StyledProductWrapper>
       <div className="container">
         {themeMode === 'light' ? <Hero /> : <HeroDark />}
         <div id="products">
           <h2>Open Auctions</h2>
-          {ads.selling ? (
-            <CardContainer ads={ads.selling} />
+          {adsSelling ? (
+            <CardContainer ads={adsSelling} />
           ) : (
-            <div>
+            <div className="empty-section">
               <h3>No open auctions at the moment</h3>
             </div>
           )}
         </div>
         <div>
           <h2>Expired Auctions</h2>
-          {ads.expired ? (
-            <CardContainer ads={ads.expired} />
+          {adsExpired.length ? (
+            <CardContainer ads={adsExpired} />
           ) : (
-            <div>
+            <StyledEmptySection>
               <h3>No expired auctions</h3>
-            </div>
+            </StyledEmptySection>
           )}
         </div>
         <div className="image-container">
@@ -67,6 +93,14 @@ const ProductSection = () => {
 // {
 //   /* <ProductCard imgLink="https://cdn.pixabay.com/photo/2020/08/23/08/54/slippers-5510231_960_720.jpg" /> */
 // }
+
+const StyledEmptySection = styled.div`
+  min-height: 20em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: #000; */
+`
 
 const StyledProductWrapper = styled.main`
   .container {
