@@ -139,8 +139,6 @@ const ProtectedRoute = ({
   }, [routeCheck, rest?.computedMatch?.params])
 
   if (state === 0) {
-    console.log('restPAR', rest, ChildNav)
-
     return (
       <>
         {ChildNav ? <ChildNav /> : null}

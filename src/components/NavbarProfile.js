@@ -219,7 +219,6 @@ const Navigation = styled.nav`
 // `
 
 const NavbarProfile = () => {
-  console.log('render')
   const location = useLocation()
 
   // const { searchResults, category, setCategory } = useSearch()
@@ -234,7 +233,6 @@ const NavbarProfile = () => {
 
   const isVisible = useSelector((state) => state.nav.isVisible)
   const { themeMode } = useSelector((state) => state.theme)
-  console.log('ISVISIBLE', typeof isVisible, isVisible)
 
   return (
     <Navigation>

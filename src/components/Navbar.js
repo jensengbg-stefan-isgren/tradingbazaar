@@ -245,7 +245,7 @@ const Navbar = () => {
     //   setToggleUserMenu(false)
     // }
   }
-  console.log('ISVISIBLE', typeof isVisible, isVisible)
+
   return (
     <Navigation>
       <div className={`container ${!isVisible ? 'show-nav' : 'no-nav'}`}>

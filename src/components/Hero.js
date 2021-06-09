@@ -109,7 +109,6 @@ const Container = styled.div`
 `
 
 const Hero = () => {
-  console.log('rendering')
   // const { searchResults, category, setCategory } = useSearch()
   // const { searchResults, category } = useSearch()
 
@@ -128,7 +127,6 @@ const Hero = () => {
   }, [dispatch])
 
   useEffect(() => {
-    console.log('useEffect')
     const isInViewport =
       document.getElementById('search').getBoundingClientRect().top >= 0
     dispatch(setIsVisible(isInViewport))

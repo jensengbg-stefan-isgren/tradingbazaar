@@ -2,36 +2,12 @@ import styled from 'styled-components'
 import { setSearchText } from 'features/adsSlice'
 import useSearch from 'hooks/useSearch'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+// import { useEffect } from 'react'
 
 const SearchContainer = () => {
   //   const { searchResults, category } = useSearch()
   const dispatch = useDispatch()
-  const searchText = useSelector((state) => state.ads.searchText)
-
-  const { searchResults } = useSearch()
-  //   const [searchString, setSearchString] = useState('')
-
-  useEffect(() => {
-    let timer = 0
-    function clearTimer() {
-      if (timer) {
-        clearTimeout(timer)
-        timer = 0
-      }
-    }
-    clearTimer()
-
-    if (searchText) {
-      timer = setTimeout(() => {
-        searchResults(searchText)
-      }, 800)
-    } else searchResults('')
-
-    return () => {
-      clearTimer()
-    }
-  }, [searchText, searchResults])
+  const searchText = useSelector((state) => state.ads.searchText) || ''
 
   return (
     <StyledSearchContainer>

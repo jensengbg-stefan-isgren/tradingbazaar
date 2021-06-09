@@ -12,8 +12,6 @@ const useSearch = () => {
     async (searchValue, category) => {
       // if (!searchValue) return
       if (searchValue.length === 0) {
-        console.log('useSearch empty')
-
         const snapshot = await db.collection('sellingProducts').get()
         let adList = []
         snapshot.forEach((snap) => {
@@ -22,8 +20,6 @@ const useSearch = () => {
 
         dispatch(fillAdList({ adList }))
       } else {
-        console.log('useSearch', searchValue)
-
         if (category === 0) {
           let adList = []
           let querySnapshot = await db
@@ -43,7 +39,7 @@ const useSearch = () => {
           }
         } else {
           const triString = trigram(searchValue.toLowerCase())
-          console.log('searchValue', searchValue, triString)
+          // console.log('searchValue', searchValue, triString)
           let adList = []
           let query = db.collection('sellingProducts')
           if (category) query = query.where('category', '==', `${category}`)

@@ -24,7 +24,8 @@ export const ads = createSlice({
       selling = selling.sort((a, b) => {
         return a.endTimeStamp - b.endTimeStamp
       })
-      state = { selling: [...selling], expired: [...expired] }
+      state.selling = [...selling]
+      state.expired = [...expired]
       return state
     },
     setSearchText: (state, action) => {

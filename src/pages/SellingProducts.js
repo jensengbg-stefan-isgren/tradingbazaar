@@ -2,11 +2,12 @@ import styled from 'styled-components'
 import CardContainer from 'components/CardContainer'
 import { useSelector } from 'react-redux'
 // import UseGetAds from 'services/useGetAds';
-import React from 'react'
+import React, { useEffect } from 'react'
 import Hero from 'components/Hero'
 import HeroDark from 'components/HeroDark'
 import UpArrowDark from 'assets/icons/uparrow-dark.svg'
 import UpArrowLight from 'assets/icons/uparrow-light.svg'
+import useSearch from 'hooks/useSearch'
 
 const ProductSection = () => {
   document.title = 'Trading Bazaar'
@@ -22,7 +23,32 @@ const ProductSection = () => {
   const adsSelling = useSelector((state) => state.ads.selling)
   const adsExpired = useSelector((state) => state.ads.expired)
   // UseGetAds();
-  console.log('rendering')
+  const searchText = useSelector((state) => state.ads.searchText) || ''
+
+  const { searchResults } = useSearch()
+  //   const [searchString, setSearchString] = useState('')
+
+  useEffect(() => {
+    let timer = 0
+    function clearTimer() {
+      if (timer) {
+        clearTimeout(timer)
+        timer = 0
+      }
+    }
+    clearTimer()
+
+    if (searchText) {
+      timer = setTimeout(() => {
+        searchResults(searchText)
+      }, 800)
+    } else searchResults('')
+
+    return () => {
+      clearTimer()
+    }
+  }, [searchText, searchResults])
+
   return (
     <StyledProductWrapper>
       <div className="container">
@@ -73,7 +99,7 @@ const StyledEmptySection = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #000;
+  /* background-color: #000; */
 `
 
 const StyledProductWrapper = styled.main`

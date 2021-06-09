@@ -6,7 +6,6 @@ export default async function getUserAds(userId) {
   let expired = []
   const now = new Date().getTime()
 
-  console.log('userAds', userId)
   await db
     .collection('sellingProducts')
     .where('uid', '==', userId)
