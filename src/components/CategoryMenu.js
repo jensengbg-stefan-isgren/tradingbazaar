@@ -1,80 +1,75 @@
-import React, { useRef, useEffect, useCallback } from "react";
-import styled from "styled-components";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { fetchFilteredProducts } from "features/productSlice";
-import {db} from 'services/firebase'
+import React, { useRef, useEffect, useCallback, useState } from 'react'
+import styled from 'styled-components'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 const CategoryMenu = ({ toggleCatMenu, setToggleCatMenu, catMenu }) => {
+  const menu = useRef(null)
+
   const handleClick = useCallback(
     async (e) => {
       if (catMenu.current === e.target) {
-        setToggleCatMenu((toggleCatMenu) => !toggleCatMenu);
+        setToggleCatMenu((toggleCatMenu) => !toggleCatMenu)
       } else if (menu.current.contains(e.target)) {
         // inside click
-        return;
+        return
       } else {
-        setToggleCatMenu(false);
+        setToggleCatMenu(false)
       }
     },
     [catMenu, setToggleCatMenu]
-  );
+  )
 
-  const menu = useRef();
-  const dispatch = useDispatch();
-  const { categories } = useSelector((state) => state.categories);
+  const categories = useSelector((state) => state.categories.categories)
+  const [locCategory, setLocCategory] = useState([...categories])
 
   useEffect(() => {
-    // add when mounted
-    document.addEventListener("mousedown", handleClick);
-    // return function to be called when unmounted
-    return () => {
-      document.removeEventListener("mousedown", handleClick);
-    };
-  }, [handleClick]);
+    document.addEventListener('mousedown', handleClick)
 
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [handleClick])
 
-  const searchCategory = async(e) => {
-    console.log(e)
-    let snapShot = await db.collection('categories').where('name','==', `${e}`).get()
-    snapShot.forEach((doc) => {
-      console.log(doc.data())
-
+  const searchCategory = (val) => {
+    const intCategories = categories.filter((cat) => {
+      if (cat.name.includes(val)) return cat
+      else return null
     })
+    setLocCategory(intCategories)
   }
-  
 
   return (
     <React.Fragment>
-      <MainMenu ref={menu} className={toggleCatMenu ? `sliding` : ""}>
+      <MainMenu ref={menu} className={toggleCatMenu ? `sliding` : ''}>
         <div className="title-container">
           <h3>Categories</h3>
           <div className="search-container">
-            <input onChange={(e) => searchCategory(e.target.value)} type="text" placeholder="Search category" />
+            <input
+              onChange={(e) => searchCategory(e.target.value)}
+              type="text"
+              placeholder="Search category"
+            />
           </div>
         </div>
         {categories ? (
           <ul className="category-list">
-            {categories.map((category) => {
+            {locCategory.map((category) => {
               return (
                 <Link
-                  onClick={() => dispatch(fetchFilteredProducts(category.name))}
                   key={category.name}
                   to={`/filteredproducts/${category.name}`}
                 >
                   <li>{category.name}</li>
                 </Link>
-              );
+              )
             })}
           </ul>
         ) : (
-          ""
+          ''
         )}
       </MainMenu>
     </React.Fragment>
-  );
-};
+  )
+}
 
 const MainMenu = styled.div`
 
@@ -90,7 +85,7 @@ const MainMenu = styled.div`
   left: 0px;
   width: 20em;
   min-height: calc(100vh - 64px);
-  background-color: ${({theme}) => theme.profileMenu.background};
+  background-color: ${({ theme }) => theme.profileMenu.background};
   position: absolute;
   transition: transform 0.2s ease-in-out;
   transform: translateX(-100%);
@@ -120,15 +115,15 @@ const MainMenu = styled.div`
 
         input {
           width:90%;
-          background-color:  ${({theme}) => theme.input.background};
-    color: ${({theme}) => theme.input.textColor};
+          background-color:  ${({ theme }) => theme.input.background};
+    color: ${({ theme }) => theme.input.textColor};
     min-height: 2.5em;
     padding: 0.5em;
-    border: 1px solid ${({theme}) => theme.input.borderColor};
+    border: 1px solid ${({ theme }) => theme.input.borderColor};
     outline: none;
 
     ::placeholder {
-      color: ${({theme}) => theme.input.textColor};
+      color: ${({ theme }) => theme.input.textColor};
     }
     }
       }
@@ -165,12 +160,12 @@ const MainMenu = styled.div`
     text-decoration: none;
     width:100%;
     font-size: 1.2em;
-    color: ${({theme}) => theme.menu.textColor};
+    color: ${({ theme }) => theme.menu.textColor};
 
     &:hover {
       cursor: pointer;
-      background-color: ${({theme}) => theme.menu.hover};
-      color: ${({theme}) => theme.menu.hoverColor};
+      background-color: ${({ theme }) => theme.menu.hover};
+      color: ${({ theme }) => theme.menu.hoverColor};
     }
 
     @media (max-width: 1000px) {
@@ -220,11 +215,11 @@ const MainMenu = styled.div`
  
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: ${({theme}) => theme.background};
+  background-color: ${({ theme }) => theme.background};
 }
  
 ::-webkit-scrollbar-thumb {
-  background-color: ${({theme})=> theme.toggleSwitch.background};
+  background-color: ${({ theme }) => theme.toggleSwitch.background};
   outline: 0px solid slategrey;
 }
 
@@ -232,6 +227,6 @@ const MainMenu = styled.div`
 
 
 
-`;
+`
 
-export default CategoryMenu;
+export default CategoryMenu

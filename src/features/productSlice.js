@@ -14,14 +14,16 @@ export const fetchFilteredProducts = createAsyncThunk(
   'product/fetchFilteredProducts',
   async (category) => {
     let data = []
-    const snapShot = await db
-      .collection('sellingProducts')
-      .where('category', '==', category)
-      .get()
-    snapShot.forEach((doc) => {
-      let docId = doc.id
-      data = [...data, { ...doc.data(), id: docId }]
-    })
+    if (category) {
+      const snapShot = await db
+        .collection('sellingProducts')
+        .where('category', '==', category)
+        .get()
+      snapShot.forEach((doc) => {
+        let docId = doc.id
+        data = [...data, { ...doc.data(), id: docId }]
+      })
+    }
     return data
   }
 )
@@ -94,7 +96,6 @@ export const productSlice = createSlice({
       state.detailedProduct.removed = action.payload.removed
     },
     [fetchFilteredProducts.fulfilled]: (state, action) => {
-      console.log(action.payload)
       state.filteredProducts = action.payload
     },
   },
