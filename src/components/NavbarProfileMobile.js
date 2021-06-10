@@ -132,11 +132,15 @@ const Wrapper = styled.div`
       padding: 0 1em;
       border: 1px solid ${({ theme }) => theme.select.borderColor};
       height: 3em;
-      /* width: 100%; */
+      width: 30%;
+
+      @media (max-width:700px) {
+        width:100%;
+      }
     }
 
     input {
-      min-width: 20em;
+      width:70%;
       border: 1px solid ${({ theme }) => theme.select.borderColor};
       outline: none;
       height: 3em;

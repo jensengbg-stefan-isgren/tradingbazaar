@@ -53,6 +53,7 @@ h1, h2, h3, h4, h5, h6 {
 input {
   outline:none;
   font-family: ${({theme}) => theme.font.body};
+  color: ${({theme}) => theme.input.textColor};
 
   ::placeholder {
     font-family: ${({theme}) => theme.font.body};

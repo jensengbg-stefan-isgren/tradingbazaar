@@ -99,7 +99,7 @@ export const darkTheme = {
   textColor: '#040A10'
  },
  select: {
-  background: '#0C1F31',
+  background: '#FFFFFF',
   borderColor:'#040A10',
   textColor: '#040A10'
  },
