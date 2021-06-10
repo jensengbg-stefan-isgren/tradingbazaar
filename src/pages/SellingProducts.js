@@ -24,6 +24,7 @@ const ProductSection = () => {
   const adsExpired = useSelector((state) => state.ads.expired)
   // UseGetAds();
   const searchText = useSelector((state) => state.ads.searchText) || ''
+  const searchCat = useSelector((state) => state.ads.searchCat) || ''
 
   const { searchResults } = useSearch()
   //   const [searchString, setSearchString] = useState('')
@@ -40,14 +41,14 @@ const ProductSection = () => {
 
     if (searchText) {
       timer = setTimeout(() => {
-        searchResults(searchText)
+        searchResults(searchText, searchCat)
       }, 800)
     } else searchResults('')
 
     return () => {
       clearTimer()
     }
-  }, [searchText, searchResults])
+  }, [searchText, searchCat, searchResults])
 
   return (
     <StyledProductWrapper>
@@ -55,12 +56,12 @@ const ProductSection = () => {
         {themeMode === 'light' ? <Hero /> : <HeroDark />}
         <div id="products">
           <h2>Open Auctions</h2>
-          {adsSelling ? (
+          {adsSelling.length ? (
             <CardContainer ads={adsSelling} />
           ) : (
-            <div className="empty-section">
+            <StyledEmptySection>
               <h3>No open auctions at the moment</h3>
-            </div>
+            </StyledEmptySection>
           )}
         </div>
         <div>
@@ -95,10 +96,12 @@ const ProductSection = () => {
 // }
 
 const StyledEmptySection = styled.div`
-  min-height: 20em;
+  min-height: 10em;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0 1em;
+  border: 1px solid grey;
   /* background-color: #000; */
 `
 

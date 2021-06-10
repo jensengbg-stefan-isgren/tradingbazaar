@@ -120,18 +120,19 @@ export const routes = [
     footer: () => '',
   },
   {
+    path: '/filteredproducts/:category',
+    main: () => <FilteredProducts />,
+    navbar: MainNav,
+    beforeRoute: ['cat'],
+    redirect: '/',
+    footer: () => '',
+  },
+  {
     path: '*',
     main: () => <Page404 />,
     navbar: () => <></>,
     beforeRoute: [],
     redirect: '/',
-    footer: () => '',
-  },
-  {
-    path: '/filteredproducts/:category',
-    main: () => <FilteredProducts />,
-    beforeRoute: [],
-    navbar: MainNav,
     footer: () => '',
   },
 ]

@@ -108,6 +108,17 @@ const checkAd = (id) =>
       .then((doc) => resolve(doc.exists))
   })
 
+const checkCat = (id) =>
+  new Promise((resolve) => {
+    db.collection('categories')
+      .where('name', '==', id)
+      .get()
+      .then((doc) => {
+        resolve(!doc.empty)
+      })
+      .catch((err) => console.log('ERROR Checking Category', err))
+  })
+
 const ProtectedRoute = ({
   children: Comp,
   path,
@@ -117,6 +128,8 @@ const ProtectedRoute = ({
   ...rest
 }) => {
   const [state, setState] = useState(0)
+  const categories = useSelector((state) => state.categories.categories)
+
   useEffect(() => {
     ;(async function () {
       try {
@@ -131,12 +144,21 @@ const ProtectedRoute = ({
           if (id) isValid = await checkAd(id)
           if (!isValid) toast.info('The selected item does not exist')
         }
+
+        if (isValid && routeCheck.includes('cat')) {
+          const category = rest?.computedMatch?.params?.category
+
+          // isValid = categories.findIndex((cat) => cat.name === category) > -1
+          if (category) isValid = await checkCat(category)
+
+          if (!isValid) toast.info('The selected category does not exist')
+        }
         setState(isValid ? 1 : -1)
       } catch {
         setState(-1)
       }
     })()
-  }, [routeCheck, rest?.computedMatch?.params])
+  }, [routeCheck, rest?.computedMatch?.params, categories])
 
   if (state === 0) {
     return (

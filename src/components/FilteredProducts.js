@@ -1,15 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import {useParams} from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import CardContainer from 'components/CardContainer'
-import {useSelector} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchFilteredProducts } from 'features/productSlice'
 
 const StyledProductWrapper = styled.main`
-display:flex;
-flex-direction: column;
-justify-content:center;
-align-items: center;
-padding-top: 5em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5em;
   /* height: 200em; */
   /* margin: auto;
   max-width: 95vw; */
@@ -37,16 +38,21 @@ padding-top: 5em;
   }
 `
 
-
 const FilteredProducts = () => {
+  const dispatch = useDispatch()
+  const { category } = useParams()
+  const filteredProducts = useSelector(
+    (state) => state.product.filteredProducts
+  )
 
-  const {category} = useParams()
-const {filteredProducts} = useSelector(state => state.product)
+  useEffect(() => {
+    dispatch(fetchFilteredProducts(category))
+  }, [dispatch, category])
 
   return (
     <StyledProductWrapper>
       <div className="title-container">
-      <h2>{category}</h2>
+        <h2>{category}</h2>
       </div>
       <CardContainer ads={filteredProducts} />
     </StyledProductWrapper>
