@@ -31,7 +31,7 @@ const CategoryMenu = ({ toggleCatMenu, setToggleCatMenu, catMenu }) => {
 
   const searchCategory = (val) => {
     const intCategories = categories.filter((cat) => {
-      if (cat.name.includes(val)) return cat
+      if (cat.name.toLowerCase().includes(val.toLowerCase())) return cat
       else return null
     })
     setLocCategory(intCategories)
