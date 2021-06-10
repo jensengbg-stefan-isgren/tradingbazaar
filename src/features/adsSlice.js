@@ -6,6 +6,7 @@ export const ads = createSlice({
     selling: [],
     expired: [],
     searchText: '',
+    searchCat: '',
   },
 
   reducers: {
@@ -31,8 +32,11 @@ export const ads = createSlice({
     setSearchText: (state, action) => {
       state.searchText = action.payload
     },
+    setSearchCat: (state, action) => {
+      state.searchCat = action.payload
+    },
   },
 })
 
-export const { fillAdList, setSearchText } = ads.actions
+export const { fillAdList, setSearchText, setSearchCat } = ads.actions
 export default ads.reducer

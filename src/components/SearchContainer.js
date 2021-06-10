@@ -1,62 +1,53 @@
 import styled from 'styled-components'
-import { setSearchText } from 'features/adsSlice'
-import useSearch from 'hooks/useSearch'
+import { setSearchText, setSearchCat } from 'features/adsSlice'
 import { useDispatch, useSelector } from 'react-redux'
-// import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
 
 const SearchContainer = () => {
-  //   const { searchResults, category } = useSearch()
+  const inputRef = useRef(null)
+  const location = useLocation()
+  const history = useHistory()
   const dispatch = useDispatch()
   const searchText = useSelector((state) => state.ads.searchText) || ''
+
+  useEffect(() => {
+    inputRef.current.addEventListener('keyup', function (e) {
+      if (e.key === 'Enter' && searchText && location.pathname !== '/')
+        history.push('/')
+    })
+  }, [searchText, history, location.pathname])
 
   return (
     <StyledSearchContainer>
       <CategoryContainer />
       <input
+        ref={inputRef}
         value={searchText}
         onChange={(e) => {
-          // searchResults(e.target.value, category)
           dispatch(setSearchText(e.target.value))
         }}
-         placeholder="What are you looking for today?"
+        placeholder="What are you looking for today?"
         type="text"
       />
     </StyledSearchContainer>
   )
 }
 
-/* {categories ? (
-              <select
-                onChange={(e) => setCategory(e.target.value)}
-                name="categories"
-                id="categories"
-              >
-                <option value={0}>All Categories</option>
-                {categories.map((category) => {
-                  return (
-                    <option key={category.name} value={category.name}>
-                      {category.name}
-                    </option>
-                  )
-                })}
-              </select>
-            ) : (
-              ''
-            )} */
-
 const CategoryContainer = () => {
-  const { setCategory } = useSearch()
+  const dispatch = useDispatch()
+  const searchCat = useSelector((state) => state.ads.searchCat) || ''
 
-  // const [searchValue, setSearchValue] = useState('')
   const { categories } = useSelector((state) => state.categories)
 
   return (
     <>
       {categories ? (
         <select
-          onChange={(e) => setCategory(e.target.value)}
+          onChange={(e) => dispatch(setSearchCat(e.target.value))}
           name="categories"
           id="categories"
+          value={searchCat}
         >
           <option value={0}>All Categories</option>
           {categories.map((category) => {
