@@ -46,6 +46,13 @@ const SignInContainer = styled.div`
   padding-left: 10%;
   padding-bottom: 10em;
 
+
+  @media (max-width: 400px) {
+    display:flex;
+    justify-content: center;
+  }
+
+
   p {
 
     font-family: "Open Sans", sans-serif;

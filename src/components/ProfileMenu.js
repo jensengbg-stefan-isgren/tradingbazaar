@@ -25,6 +25,13 @@ const StyledLink = styled(Link)`
 `
 
 const Menu = styled.div`
+
+
+
+  .menu-list {
+
+  }
+
   .list {
     width: 100%;
   }
@@ -95,6 +102,8 @@ const Menu = styled.div`
   top: 64px;
   left: 100%;
   width: 15em;
+  height: calc(100vh - 64px);
+    overflow-x: scroll;
 
   position: absolute;
   z-index: 999;
@@ -155,6 +164,9 @@ const ProfileMenu = ({ toggleMenu, setToggleMenu, accountMenu }) => {
           <div className="toggle-container">
             <ToggleSwitch />
           </div>
+          <div className="menu-list">
+            
+          </div>
           <ul>
             <StyledLink to="/profile/active-items">Buy</StyledLink>
             <StyledLink to="/profile/active">Sell</StyledLink>
@@ -164,6 +176,7 @@ const ProfileMenu = ({ toggleMenu, setToggleMenu, accountMenu }) => {
       ) : (
         ''
       )}
+      <div className="menu-list">
       <StyledLink to="/profile/overview">Overview</StyledLink>
       <StyledLink to="/profile/settings">Settings</StyledLink>
       <StyledLink to="">Messages</StyledLink>
@@ -173,6 +186,7 @@ const ProfileMenu = ({ toggleMenu, setToggleMenu, accountMenu }) => {
       <li className="link" onClick={logOut}>
         Log out
       </li>
+      </div>
     </Menu>
   )
 }

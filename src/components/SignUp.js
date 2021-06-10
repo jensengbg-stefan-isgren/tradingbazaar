@@ -43,6 +43,13 @@ const SignUpContainer = styled.div`
   padding-right: 10%;
   padding-left: 10%;
 
+
+  @media (max-width: 400px) {
+    display:flex;
+    justify-content: center;
+  }
+
+
   p {
   
     font-family: "Open Sans", sans-serif;

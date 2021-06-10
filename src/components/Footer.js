@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const FooterWrapper = styled.footer`
   height: 10em;
   margin-top:4em;
-  padding: 1em 0;
+  padding: 1em 1em;
   display:flex;
   align-items: center;
   justify-content:center;

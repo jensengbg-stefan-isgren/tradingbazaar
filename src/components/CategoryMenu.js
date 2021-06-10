@@ -24,10 +24,13 @@ const CategoryMenu = ({ toggleCatMenu, setToggleCatMenu, catMenu }) => {
   const [locCategory, setLocCategory] = useState([...categories])
 
   useEffect(() => {
+    if(categories) {
+      setLocCategory(categories)
+    }
     document.addEventListener('mousedown', handleClick)
 
     return () => document.removeEventListener('mousedown', handleClick)
-  }, [handleClick])
+  }, [categories,handleClick])
 
   const searchCategory = (val) => {
     const intCategories = categories.filter((cat) => {
