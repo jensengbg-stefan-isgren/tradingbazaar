@@ -116,11 +116,11 @@ p:first-child {
     .search-container {
       /* width:100%; */
       display: flex;
-      /* justify-content: center; */
-      /* align-items: center; */
+      justify-content: center;
+      align-items: center;
       place-content:center;
       grid-area: search;
-      /* background-color: ${({ theme }) => theme.background}; */
+      background-color: ${({ theme }) => theme.background};
       select {
         background-color: ${({ theme }) => theme.input.background};
         border: 1px solid ${({ theme }) => theme.input.borderColor};

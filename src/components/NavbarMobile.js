@@ -49,7 +49,7 @@ const UsrMenu = styled.div`
   min-width: 18em;
   min-height: calc(100vh - 64px);
   background-color: ${({ theme }) => theme.background};
-  position: absolute;
+  position: fixed;
   transition: transform 0.2s ease-in-out;
   transform: translateX(100%);
   z-index: 999;
@@ -120,7 +120,7 @@ const fadeIn = keyframes`
 
 const fadeOut = keyframes`
   from {
-    background-color: ${({ theme }) => theme.background};
+    background-color: white;
   }
 
   to {
@@ -130,6 +130,7 @@ const fadeOut = keyframes`
 
 // const StyledInput = styled.input`
 //   min-width: 20em;
+//   border: 1px solid ${({ theme }) => theme.select.borderColor};
 //   outline: none;
 //   height: 3em;
 //   padding-left: 0.5em;
@@ -137,31 +138,112 @@ const fadeOut = keyframes`
 //   ::placeholder {
 //   }
 
+//   @media (max-width: 700px) {
+//     width: 100%;
+//     padding: 0 1em;
+//   }
+
 //   @media (max-width: 500px) {
-//     border: none;
+//     border: 1px solid ${({ theme }) => theme.select.borderColor};
 //   }
 // `
 
-const Wrapper = styled.div`
-  .no-nav {
-    transition: all 0.5s ease;
-
-    /* animation: ${fadeOut} 300ms; */
-    background-color: none;
-  }
-
-  .show-nav {
-    /* animation: ${fadeIn} 300ms; */
-    transition: all 0.5s ease;
-
-    background-color: ${({ theme }) => theme.background};
-  }
-
+const Nav = styled.nav`
+display: grid;
+width:100%;
+  align-items: center;
+  grid-template-areas: 'logo . nav'
+                        'search search search';
   height: 64px;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    img {
+      height: 20px;
+      margin-right: 1em;
+    }
+  }
+
+  h1 {
+    cursor: pointer;
+  }
+
   width: 100%;
-  position: fixed;
-  top: 0;
-  z-index: 999;
+      display: grid;
+      padding: 0.5em 1em;
+
+  .menu {
+    height:64px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1em;
+    grid-area: nav;
+
+    img {
+      height: 30px;
+    }
+  }
+
+  width: 100%;
+    display: grid;
+    gap: 0.5em;
+    grid-area: search;
+    padding-top: 0;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 1em;
+    background-color: ${(theme) => theme.background};
+
+    select {
+      padding: 0 1em;
+      border: 1px solid ${({ theme }) => theme.select.borderColor};
+      height: 3em;
+      width: 30%;
+
+      @media (max-width:700px) {
+        width:100%;
+      }
+
+  @media (max-width: 700px) {
+    height: 64px;
+    background-color: '';
+    padding: 1em;
+
+    grid-template-areas:
+      'logo logo nav'
+      'search search search';
+
+    .search-container {
+      width: 100%;
+      display: grid;
+      padding: 0.5em 1em;
+      background-color: ${({theme}) => theme.background};
+
+      select {
+        width: auto;
+        border: none;
+        margin-bottom: 0.5em;
+      }
+    }
+  }
+    }
+`
+
+const Wrapper = styled.div`
+ 
+`
+
+const NavWrapper = styled.div`
+   .container {
+    .hide {
+      display: none;
+    }
+
+    .search-container {
+    }
+  }
 
   .search-container {
     width: 100%;
@@ -177,11 +259,15 @@ const Wrapper = styled.div`
       padding: 0 1em;
       border: 1px solid ${({ theme }) => theme.select.borderColor};
       height: 3em;
-      /* width: 100%; */
+      width: 30%;
+
+      @media (max-width:700px) {
+        width:100%;
+      }
     }
 
     input {
-      min-width: 20em;
+      width:70%;
       border: 1px solid ${({ theme }) => theme.select.borderColor};
       outline: none;
       height: 3em;
@@ -204,90 +290,39 @@ const Wrapper = styled.div`
       grid-area: logo;
     }
   }
-`
 
-const Nav = styled.nav`
-  display: grid;
-  align-items: center;
-  grid-template-areas: 'logo search nav';
+  .no-nav {
+    /* animation: ${fadeOut} 300ms; */
+    transition: all 0.5s ease;
+
+    background-color: none;
+  }
+
+  .show-nav {
+    /* animation: ${fadeIn} 300ms; */
+    transition: all 0.5s ease;
+
+    background-color: ${({ theme }) => theme.background};
+  }
+
   height: 64px;
-  padding: 0 1em;
-
-  .menu-icon {
-    margin-right: 1em;
-    height: 20px;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-  }
-
-  h1 {
-    cursor: pointer;
-  }
-
-  .search-container {
-    width: 100%;
-    grid-area: search;
-
-    select {
-      height: 3em;
-      width: 9em;
-    }
-
-    .logo {
-      grid-area: logo;
-    }
-  }
-
-  .menu {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 1em;
-    grid-area: nav;
-
-    img {
-      height: 30px;
-    }
-
-    .search-icon {
-      display: none;
-
-      @media (max-width: 700px) {
-        display: block;
-      }
-    }
-  }
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 999;
 
   @media (max-width: 700px) {
-    height: auto;
-    background-color: '';
-    padding: 0.91em;
-
-    grid-template-areas:
-      'logo logo nav'
-      'search search search';
-
-    .search-container {
-      width: 100%;
-      display: grid;
-      padding: 0.5em 0;
-
-      select {
-        width: auto;
-        padding-left: 0.5em;
-        border: none;
-        margin-bottom: 0.5em;
+    .container {
+      .hide {
+        display: none;
       }
-    }
 
-    .hide {
-      display: none;
+      .search-container {
+      }
     }
   }
 `
+
 
 const NavbarMobile = () => {
   const { registerAccount, history } = useSignin()
@@ -404,7 +439,7 @@ const NavbarMobile = () => {
           <React.Fragment></React.Fragment>
         )}
       </UsrMenu>
-
+      <NavWrapper>
       <div className={`container ${!isVisible ? 'show-nav' : 'no-nav'}`}>
         <Nav>
           <div className="logo">
@@ -419,29 +454,7 @@ const NavbarMobile = () => {
               TradingBazaar
             </h3>
           </div>
-          {!isVisible ? (
-            <div
-              className={`search-container ${
-                toggleCatMenu || toggleUserMenu || toggleSearchBar ? 'hide' : ''
-              }`}
-            >
-              <SearchContainer />
 
-              {/* <select name="category" id="category">
-                <option>All Categories</option>
-                {categories.map((category) => {
-                  return (
-                    <option key={category.name} value={category.name}>
-                      {category.name}
-                    </option>
-                  )
-                })}
-              </select>
-              <StyledInput placeholder="What are you looking for today?" /> */}
-            </div>
-          ) : (
-            ''
-          )}
           <div className="menu">
             {!isVisible ? (
               <img
@@ -462,12 +475,24 @@ const NavbarMobile = () => {
             />
           </div>
         </Nav>
+        {!isVisible ? (
+            <div
+              className={`search-container ${
+                toggleCatMenu || toggleUserMenu || toggleSearchBar ? 'hide' : ''
+              }`}
+            >
+              <SearchContainer />
+            </div>
+          ) : (
+            ''
+          )}
       </div>
       <CategoryMenu
         toggleCatMenu={toggleCatMenu}
         setToggleCatMenu={setToggleCatMenu}
         catMenu={catMenu}
       />
+      </NavWrapper>
     </Wrapper>
   )
 }

@@ -18,7 +18,7 @@ const SearchContainer = () => {
           // searchResults(e.target.value, category)
           dispatch(setSearchText(e.target.value))
         }}
-        // placeholder="What are you looking for today?"
+         placeholder="What are you looking for today?"
         type="text"
       />
     </StyledSearchContainer>
@@ -76,7 +76,6 @@ const CategoryContainer = () => {
 
 const StyledSearchContainer = styled.div`
   width: 100%;
-  padding: 0 1em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -113,7 +112,7 @@ const StyledSearchContainer = styled.div`
     background-color: ${({ theme }) => theme.select.background};
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 700px) {
     flex-direction: column;
 
     select,
