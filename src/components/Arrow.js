@@ -5,12 +5,12 @@ import downArrow from 'assets/icons/down-arrow.svg'
 const Wrapper = styled.div`
 
 .downArrow{
+  display:flex;
+  justify-content: center;
   cursor: pointer;
-	position: absolute;
-	bottom:10%;
-	left: 50%;
 
   img {
+    transform: translateY(-4em);
     width:50px;
     height:auto;
     fill:red;

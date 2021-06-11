@@ -29,7 +29,7 @@ const Menu = styled.div`
 
 
   .menu-list {
-
+    width:100%;
   }
 
   .list {

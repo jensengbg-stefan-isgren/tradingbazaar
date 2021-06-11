@@ -136,7 +136,7 @@ const Hero = () => {
     <Wrapper>
       <Container>
         <div className="title-container">
-          <Arrow onClick={scroll} />
+          
           <h1>We make trading products easy for everyone</h1>
         </div>
         <div id="search">
@@ -168,6 +168,7 @@ const Hero = () => {
           />
         </SearchContainer> */}
       </Container>
+      <Arrow onClick={scroll} />
     </Wrapper>
   )
 }

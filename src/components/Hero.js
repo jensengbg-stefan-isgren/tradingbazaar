@@ -88,7 +88,6 @@ const Wrapper = styled.section`
 //     }
 //   }
 // `
-
 const Container = styled.div`
   height: 100vh;
   position: relative;
@@ -141,13 +140,15 @@ const Hero = () => {
     <Wrapper>
       <Container>
         <div className="title-container">
-          <Arrow />
+        
           <h1>We make trading products easy for everyone</h1>
         </div>
         <div id="search">
           <SearchContainer />
         </div>
+    
       </Container>
+      <Arrow />
     </Wrapper>
   )
 }
