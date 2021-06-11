@@ -103,7 +103,7 @@ const Menu = styled.div`
   left: 100%;
   width: 15em;
   height: calc(100vh - 64px);
-    overflow-x: scroll;
+    overflow-y: scroll;
 
   position: absolute;
   z-index: 999;
